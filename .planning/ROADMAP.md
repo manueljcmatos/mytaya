@@ -82,11 +82,12 @@ Plans:
   2. Statistics dashboard shows overall win rate, ROI percentage, and current streak across all sports
   3. User can filter statistics by sport (football, basketball) to see per-sport performance
   4. Profit chart visualizes prediction performance over time with historical data
-**Plans**: TBD
+**Plans**: 3 plans
 
 Plans:
-- [ ] 04-01: TBD
-- [ ] 04-02: TBD
+- [ ] 04-01-PLAN.md — NBA worker pipeline: API-Basketball client, NBA prediction generation, basketball resolution logic, schema migration
+- [ ] 04-02-PLAN.md — Sport-aware predictions frontend: sport tabs, parameterized queries, NBA card/detail display
+- [ ] 04-03-PLAN.md — Statistics dashboard: Recharts profit chart, hero stat cards, recent picks table, bilingual pages
 
 ### Phase 5: Blog Automation
 **Goal**: The site publishes daily AI-generated sports articles in both languages, boosting SEO and providing fresh content
@@ -144,7 +145,7 @@ Note: Phases 5 and 6 both depend on Phase 3 (not on each other) and could execut
 | 1. Foundation | 0/3 | Planning complete | - |
 | 2. SEO, Compliance & Affiliates | 0/4 | Planning complete | - |
 | 3. Football Predictions | 3/3 | Complete   | 2026-03-07 |
-| 4. NBA Predictions & Statistics | 0/0 | Not started | - |
+| 4. NBA Predictions & Statistics | 0/3 | Planning complete | - |
 | 5. Blog Automation | 0/0 | Not started | - |
 | 6. Prediction Cards & Telegram | 0/0 | Not started | - |
 | 7. PBA, Boxing & Manual Content | 0/0 | Not started | - |
