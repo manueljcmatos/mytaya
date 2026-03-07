@@ -66,11 +66,12 @@ Plans:
   2. Past predictions show resolved results (win/loss) updated automatically after matches conclude
   3. Individual prediction pages display detailed bilingual analysis with proper SEO metadata
   4. User can browse between today's pending predictions and historical resolved predictions
-**Plans**: TBD
+**Plans**: 3 plans
 
 Plans:
-- [ ] 03-01: TBD
-- [ ] 03-02: TBD
+- [ ] 03-01-PLAN.md — Cloudflare Worker data pipeline: API-Football fetch, AI prediction generation, match resolution, league seed migration
+- [ ] 03-02-PLAN.md — Frontend prediction listing: query helpers, i18n, PredictionList React island, predictions/results pages
+- [ ] 03-03-PLAN.md — Individual prediction detail pages with bilingual analysis and SportsEvent SEO schema
 
 ### Phase 4: NBA Predictions & Statistics
 **Goal**: Users can view NBA predictions alongside football, and track prediction performance across sports with win rate, ROI, and streaks
@@ -142,7 +143,7 @@ Note: Phases 5 and 6 both depend on Phase 3 (not on each other) and could execut
 |-------|----------------|--------|-----------|
 | 1. Foundation | 0/3 | Planning complete | - |
 | 2. SEO, Compliance & Affiliates | 0/4 | Planning complete | - |
-| 3. Football Predictions | 0/0 | Not started | - |
+| 3. Football Predictions | 0/3 | Planning complete | - |
 | 4. NBA Predictions & Statistics | 0/0 | Not started | - |
 | 5. Blog Automation | 0/0 | Not started | - |
 | 6. Prediction Cards & Telegram | 0/0 | Not started | - |
