@@ -5,23 +5,23 @@
 See: .planning/PROJECT.md (updated 2026-03-07)
 
 **Core value:** Every Filipino sports bettor visiting mytaya.com finds accurate, timely predictions for basketball, boxing, and football in their preferred language (Filipino or English)
-**Current focus:** Phase 3 -- Football Predictions (Worker + listing pages done, detail pages next)
+**Current focus:** Phase 3 complete -- Football Predictions fully delivered (worker + listing + detail pages)
 
 ## Current Position
 
-Phase: 3 of 7 (Football Predictions)
-Plan: 2 of 3 in current phase (03-01, 03-02 done)
-Status: In Progress
-Last activity: 2026-03-07 -- Completed 03-02-PLAN.md (Prediction Listing Frontend)
+Phase: 4 of 7 (Basketball & Boxing)
+Plan: 0 of ? in current phase (phase 3 complete)
+Status: Phase Transition
+Last activity: 2026-03-07 -- Completed 03-03-PLAN.md (Prediction Detail Pages)
 
-Progress: [######....] 36%
+Progress: [########..] 40%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 9
+- Total plans completed: 10
 - Average duration: 3min
-- Total execution time: 0.50 hours
+- Total execution time: 0.53 hours
 
 **By Phase:**
 
@@ -29,13 +29,14 @@ Progress: [######....] 36%
 |-------|-------|-------|----------|
 | 01-foundation | 3 | 11min | 4min |
 | 02-seo-compliance-affiliates | 4 | 13min | 3min |
-| 03-football-predictions | 2 | 7min | 4min |
+| 03-football-predictions | 3 | 9min | 3min |
 
 **Recent Trend:**
-- Last 5 plans: 02-02 (3min), 02-03 (5min), 02-04 (3min), 03-01 (3min), 03-02 (4min)
+- Last 5 plans: 02-03 (5min), 02-04 (3min), 03-01 (3min), 03-02 (4min), 03-03 (2min)
 - Trend: Consistent
 
 *Updated after each plan completion*
+| Phase 03 P03 | 2min | 2 tasks | 4 files |
 
 ## Accumulated Context
 
@@ -79,6 +80,10 @@ Recent decisions affecting current work:
 - [03-02]: Inline Supabase client creation in PredictionList for client-side island isolation
 - [03-02]: Date grouping uses Intl.DateTimeFormat with Asia/Manila timezone (no date-fns needed)
 - [03-02]: PredictionCard.astro for SSG contexts; PredictionList renders cards inline for client-side
+- [03-03]: Hardcoded bilingual translations in PredictionDetail React island (consistent with PredictionList pattern)
+- [03-03]: Dual SportsEvent JSON-LD: server-side in Astro + client-side in React island (search engines deduplicate)
+- [03-03]: Custom hreflang tags in page slot override Layout defaults for correct /hula/ <-> /predictions/ mapping
+- [03-03]: Supabase join queries for team/league names in both Astro frontmatter and React island
 
 ### Pending Todos
 
@@ -93,5 +98,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-03-07
-Stopped at: Completed 03-02-PLAN.md (Prediction Listing Frontend)
+Stopped at: Completed 03-03-PLAN.md (Prediction Detail Pages) -- Phase 3 complete
 Resume file: None

@@ -24,7 +24,7 @@ Requirements for initial release. Each maps to roadmap phases.
 - [x] **FTBL-02**: Each prediction displays match details: teams, league, time, odds, prediction type
 - [x] **FTBL-03**: Predictions are resolved automatically when match results come in
 - [x] **FTBL-04**: User can view today's pending predictions and past resolved predictions
-- [ ] **FTBL-05**: Individual prediction pages with detailed analysis in both languages
+- [x] **FTBL-05**: Individual prediction pages with detailed analysis in both languages
 
 ### Basketball Predictions
 
@@ -135,7 +135,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | FTBL-02 | Phase 3: Football Predictions | Complete |
 | FTBL-03 | Phase 3: Football Predictions | Complete |
 | FTBL-04 | Phase 3: Football Predictions | Complete |
-| FTBL-05 | Phase 3: Football Predictions | Pending |
+| FTBL-05 | Phase 3: Football Predictions | Complete |
 | BASK-01 | Phase 4: NBA Predictions & Statistics | Pending |
 | BASK-02 | Phase 4: NBA Predictions & Statistics | Pending |
 | BASK-03 | Phase 4: NBA Predictions & Statistics | Pending |
