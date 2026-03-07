@@ -1,0 +1,91 @@
+---
+import { getLangFromUrl, useTranslations } from '../i18n/utils';
+import { SOCIAL_LINKS } from '../lib/constants';
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+const year = new Date().getFullYear();
+
+const predictionLinks = [
+  { href: lang === 'tl' ? '/tl/hula/' : '/en/predictions/', label: t('nav.predictions') },
+  { href: lang === 'tl' ? '/tl/resulta/' : '/en/results/', label: t('nav.results') },
+  { href: SOCIAL_LINKS.telegram, label: 'Telegram', external: true },
+];
+
+const resourceLinks = [
+  { href: lang === 'tl' ? '/tl/mga-operator/' : '/en/operators/', label: t('nav.operators') },
+  { href: lang === 'tl' ? '/tl/blog/' : '/en/blog/', label: t('nav.blog') },
+  { href: '#', label: t('footer.about') },
+  { href: '#', label: t('footer.privacy') },
+  { href: '#', label: t('footer.terms') },
+];
+---
+
+<footer style="background-color: var(--t-bg); border-top: 1px solid var(--t-border);">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <div class="grid grid-cols-2 md:grid-cols-3 gap-8">
+      <!-- Brand -->
+      <div class="col-span-2 md:col-span-1">
+        <a href={`/${lang}/`} class="inline-block">
+          <span style="font-family: var(--font-display);" class="text-xl">
+            <span style="color: var(--color-brand-primary);">MY</span><span style="color: var(--t-text);">TAYA</span>
+          </span>
+        </a>
+        <p class="text-sm mt-3 leading-relaxed" style="color: var(--t-text-sec); font-family: var(--font-body);">
+          {lang === 'tl'
+            ? 'Mga tamang hula sa basketball, football, at boxing para sa Filipino.'
+            : 'Expert sports predictions for basketball, football, and boxing for the Filipino bettor.'}
+        </p>
+      </div>
+
+      <!-- Predictions -->
+      <div>
+        <h4 style="font-family: var(--font-display); color: var(--t-text);" class="font-bold mb-4 text-base tracking-wide">
+          {t('section.predictions')}
+        </h4>
+        <ul class="space-y-2.5">
+          {predictionLinks.map((link) => (
+            <li>
+              <a
+                href={link.href}
+                class="footer-link"
+                {...(link.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+              >
+                {link.label}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <!-- Resources -->
+      <div>
+        <h4 style="font-family: var(--font-display); color: var(--t-text);" class="font-bold mb-4 text-base tracking-wide">
+          {lang === 'tl' ? 'Mga Mapagkukunan' : 'Resources'}
+        </h4>
+        <ul class="space-y-2.5">
+          {resourceLinks.map((link) => (
+            <li>
+              <a href={link.href} class="footer-link">{link.label}</a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+
+    <!-- Bottom bar -->
+    <div class="mt-10 pt-6" style="border-top: 1px solid var(--t-border);">
+      <div class="flex flex-col md:flex-row items-center justify-between gap-4">
+        <p class="text-xs" style="color: var(--t-text-sec);">
+          &copy; {year} MyTaya. {t('footer.rights')}
+          <span class="ml-2 inline-flex items-center gap-1 font-semibold" style="color: var(--color-loss);">
+            18+
+          </span>
+        </p>
+        <p class="text-xs text-center md:text-right max-w-lg" style="color: var(--t-text-sec);">
+          {t('footer.disclaimer')}
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>

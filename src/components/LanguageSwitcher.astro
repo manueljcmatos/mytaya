@@ -1,0 +1,83 @@
+---
+import { getLangFromUrl } from '../i18n/utils';
+import { getAlternatePath } from '../i18n/routes';
+import { getRelativeLocaleUrl } from 'astro:i18n';
+
+const currentLang = getLangFromUrl(Astro.url);
+const alternateLang = currentLang === 'tl' ? 'en' : 'tl';
+
+// Get the current path without locale prefix
+const pathWithoutLocale = Astro.url.pathname.replace(/^\/(tl|en)\//, '/');
+
+// Map to alternate locale path using route mapping
+const alternatePath = getAlternatePath(pathWithoutLocale, currentLang, alternateLang);
+
+// Build full alternate URL with locale prefix
+const alternateUrl = getRelativeLocaleUrl(alternateLang, alternatePath);
+
+// Display info for the alternate language (what user switches TO)
+const alternateLabel = alternateLang === 'en' ? 'EN' : 'TL';
+---
+
+<a
+  href={alternateUrl}
+  class="lang-switcher"
+  aria-label={currentLang === 'tl' ? 'Switch to English' : 'Lumipat sa Filipino'}
+>
+  {alternateLang === 'en' ? (
+    <!-- US flag for English -->
+    <svg class="flag-icon" viewBox="0 0 640 480" xmlns="http://www.w3.org/2000/svg">
+      <g fill-rule="evenodd">
+        <g stroke-width="1pt">
+          <path fill="#bd3d44" d="M0 0h640v37H0zm0 74h640v37H0zm0 74h640v37H0zm0 74h640v37H0zm0 74h640v37H0zm0 74h640v37H0zm0 74h640v37H0z"/>
+          <path fill="#fff" d="M0 37h640v37H0zm0 74h640v37H0zm0 74h640v37H0zm0 74h640v37H0zm0 74h640v37H0zm0 74h640v37H0z"/>
+        </g>
+        <path fill="#192f5d" d="M0 0h364.8v258.5H0z"/>
+        <path fill="#fff" d="m30.4 11 3.4 10.3h10.6l-8.6 6.3 3.3 10.3-8.7-6.4-8.6 6.3L25 27.6l-8.7-6.3h10.9zm60.8 0 3.3 10.3H105l-8.5 6.3 3.2 10.3-8.6-6.4-8.7 6.3 3.3-10.2-8.6-6.3h10.8zm60.8 0 3.3 10.3h10.8l-8.7 6.3 3.3 10.3-8.6-6.4-8.7 6.3 3.3-10.2-8.5-6.3h10.6zm60.8 0 3.3 10.3h10.8l-8.7 6.3 3.3 10.3-8.6-6.4-8.7 6.3 3.2-10.2-8.5-6.3h10.8zm60.8 0 3.3 10.3h10.7l-8.6 6.3 3.3 10.3-8.7-6.4-8.6 6.3 3.2-10.2-8.5-6.3h10.7z" />
+      </g>
+    </svg>
+  ) : (
+    <!-- PH flag for Filipino -->
+    <svg class="flag-icon" viewBox="0 0 640 480" xmlns="http://www.w3.org/2000/svg">
+      <path fill="#0038a8" d="M0 0h640v240H0z"/>
+      <path fill="#ce1126" d="M0 240h640v240H0z"/>
+      <path fill="#fff" d="M0 0l320 240L0 480z"/>
+      <g fill="#fcd116">
+        <path d="m60 240 4.47 13.76h14.47l-11.7 8.5 4.47 13.77L60 267.53l-11.71 8.5 4.47-13.76-11.7-8.5h14.47z"/>
+        <path d="m176.8 108.3 4.47 13.76h14.47l-11.7 8.5 4.47 13.76-11.71-8.5-11.7 8.5 4.47-13.76-11.71-8.5h14.47z"/>
+        <path d="m176.8 371.7 4.47 13.76h14.47l-11.7 8.5 4.47 13.76-11.71-8.5-11.7 8.5 4.47-13.76-11.71-8.5h14.47z"/>
+      </g>
+      <circle cx="118" cy="240" r="36" fill="none" stroke="#fcd116" stroke-width="4"/>
+    </svg>
+  )}
+  <span class="lang-label">{alternateLabel}</span>
+</a>
+
+<style>
+  .lang-switcher {
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
+    padding: 0.375rem 0.625rem;
+    border-radius: 0.375rem;
+    border: 1px solid var(--t-border);
+    color: var(--t-text-sec);
+    text-decoration: none;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    transition: color 0.2s ease, border-color 0.2s ease;
+  }
+  .lang-switcher:hover {
+    color: var(--t-text);
+    border-color: var(--t-border-hover);
+  }
+  .flag-icon {
+    width: 1.125rem;
+    height: 0.8125rem;
+    border-radius: 2px;
+    object-fit: cover;
+  }
+  .lang-label {
+    font-family: var(--font-body);
+  }
+</style>
