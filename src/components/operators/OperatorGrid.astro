@@ -1,0 +1,37 @@
+---
+import type { Operator } from '../../data/operators';
+import OperatorCard from './OperatorCard.astro';
+
+interface Props {
+  operators: Operator[];
+  lang: 'tl' | 'en';
+}
+
+const { operators, lang } = Astro.props;
+---
+
+<div class="operator-grid">
+  {operators.map((operator) => (
+    <OperatorCard operator={operator} lang={lang} />
+  ))}
+</div>
+
+<style>
+  .operator-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+
+  @media (min-width: 768px) {
+    .operator-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .operator-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+</style>
