@@ -5,23 +5,23 @@
 See: .planning/PROJECT.md (updated 2026-03-07)
 
 **Core value:** Every Filipino sports bettor visiting mytaya.com finds accurate, timely predictions for basketball, boxing, and football in their preferred language (Filipino or English)
-**Current focus:** Phase 4 in progress -- NBA predictions worker pipeline delivered, statistics and frontend next
+**Current focus:** Phase 4 in progress -- NBA worker + frontend sport-awareness delivered, statistics page next
 
 ## Current Position
 
 Phase: 4 of 7 (Basketball & Boxing)
-Plan: 1 of 3 in current phase
+Plan: 2 of 3 in current phase
 Status: Executing
-Last activity: 2026-03-07 -- Completed 04-01-PLAN.md (NBA Predictions Worker)
+Last activity: 2026-03-07 -- Completed 04-02-PLAN.md (NBA Predictions Frontend)
 
-Progress: [#########.] 45%
+Progress: [##########] 50%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 11
+- Total plans completed: 12
 - Average duration: 3min
-- Total execution time: 0.58 hours
+- Total execution time: 0.67 hours
 
 **By Phase:**
 
@@ -32,11 +32,12 @@ Progress: [#########.] 45%
 | 03-football-predictions | 3 | 9min | 3min |
 
 **Recent Trend:**
-- Last 5 plans: 02-04 (3min), 03-01 (3min), 03-02 (4min), 03-03 (2min), 04-01 (3min)
+- Last 5 plans: 03-01 (3min), 03-02 (4min), 03-03 (2min), 04-01 (3min), 04-02 (5min)
 - Trend: Consistent
 
 *Updated after each plan completion*
 | Phase 04 P01 | 3min | 2 tasks | 7 files |
+| Phase 04 P02 | 5min | 2 tasks | 7 files |
 
 ## Accumulated Context
 
@@ -86,6 +87,9 @@ Recent decisions affecting current work:
 - [03-03]: Supabase join queries for team/league names in both Astro frontmatter and React island
 - [04-01]: Same x-apisports-key for both API-Football and API-Basketball (no new secret)
 - [04-01]: NBA pipeline isolated with try/catch so football pipeline continues on NBA failure
+- [04-02]: Sport tabs as pill buttons above Today/Past tabs for clear visual hierarchy
+- [04-02]: NBA sport badge uses orange accent color (#f97316) to distinguish from teal football branding
+- [04-02]: Spread/total line values displayed inline with pick type badge on cards
 - [04-01]: Half-point lines prevent pushes on spread/totals; push result supported for whole-number lines
 
 ### Pending Todos
@@ -101,5 +105,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-03-07
-Stopped at: Completed 04-01-PLAN.md (NBA Predictions Worker)
+Stopped at: Completed 04-02-PLAN.md (NBA Predictions Frontend)
 Resume file: None
