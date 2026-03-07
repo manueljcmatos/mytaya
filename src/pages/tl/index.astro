@@ -4,6 +4,7 @@ import HeroSection from '../../components/HeroSection.astro';
 import SportTabs from '../../components/SportTabs.astro';
 import TelegramBanner from '../../components/TelegramBanner.astro';
 import EmptyState from '../../components/EmptyState.astro';
+import LeadCaptureForm from '../../components/LeadCaptureForm';
 import { getLangFromUrl, useTranslations } from '../../i18n/utils';
 
 const lang = getLangFromUrl(Astro.url);
@@ -43,6 +44,13 @@ const t = useTranslations(lang);
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
     <TelegramBanner lang={lang} />
   </div>
+
+  <!-- Lead Capture -->
+  <section class="py-10" style="background-color: var(--t-surface);">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <LeadCaptureForm client:visible lang={lang} />
+    </div>
+  </section>
 
   <!-- Latest Blog Posts -->
   <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
