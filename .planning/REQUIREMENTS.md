@@ -123,13 +123,61 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| (populated during roadmap creation) | | |
+| FOUND-01 | Phase 1: Foundation | Pending |
+| FOUND-02 | Phase 1: Foundation | Pending |
+| FOUND-03 | Phase 1: Foundation | Pending |
+| FOUND-04 | Phase 1: Foundation | Pending |
+| FOUND-05 | Phase 1: Foundation | Pending |
+| FOUND-06 | Phase 1: Foundation | Pending |
+| FOUND-07 | Phase 1: Foundation | Pending |
+| FOUND-08 | Phase 1: Foundation | Pending |
+| FTBL-01 | Phase 3: Football Predictions | Pending |
+| FTBL-02 | Phase 3: Football Predictions | Pending |
+| FTBL-03 | Phase 3: Football Predictions | Pending |
+| FTBL-04 | Phase 3: Football Predictions | Pending |
+| FTBL-05 | Phase 3: Football Predictions | Pending |
+| BASK-01 | Phase 4: NBA Predictions & Statistics | Pending |
+| BASK-02 | Phase 4: NBA Predictions & Statistics | Pending |
+| BASK-03 | Phase 4: NBA Predictions & Statistics | Pending |
+| BASK-04 | Phase 7: PBA, Boxing & Manual Content | Pending |
+| BASK-05 | Phase 7: PBA, Boxing & Manual Content | Pending |
+| BASK-06 | Phase 7: PBA, Boxing & Manual Content | Pending |
+| BOX-01 | Phase 7: PBA, Boxing & Manual Content | Pending |
+| BOX-02 | Phase 7: PBA, Boxing & Manual Content | Pending |
+| BOX-03 | Phase 7: PBA, Boxing & Manual Content | Pending |
+| BOX-04 | Phase 7: PBA, Boxing & Manual Content | Pending |
+| BLOG-01 | Phase 5: Blog Automation | Pending |
+| BLOG-02 | Phase 5: Blog Automation | Pending |
+| BLOG-03 | Phase 5: Blog Automation | Pending |
+| BLOG-04 | Phase 5: Blog Automation | Pending |
+| BLOG-05 | Phase 5: Blog Automation | Pending |
+| STAT-01 | Phase 4: NBA Predictions & Statistics | Pending |
+| STAT-02 | Phase 4: NBA Predictions & Statistics | Pending |
+| STAT-03 | Phase 4: NBA Predictions & Statistics | Pending |
+| STAT-04 | Phase 4: NBA Predictions & Statistics | Pending |
+| STAT-05 | Phase 4: NBA Predictions & Statistics | Pending |
+| CARD-01 | Phase 6: Prediction Cards & Telegram | Pending |
+| CARD-02 | Phase 6: Prediction Cards & Telegram | Pending |
+| CARD-03 | Phase 6: Prediction Cards & Telegram | Pending |
+| TELE-01 | Phase 6: Prediction Cards & Telegram | Pending |
+| TELE-02 | Phase 6: Prediction Cards & Telegram | Pending |
+| TELE-03 | Phase 6: Prediction Cards & Telegram | Pending |
+| SEO-01 | Phase 2: SEO, Compliance & Affiliates | Pending |
+| SEO-02 | Phase 2: SEO, Compliance & Affiliates | Pending |
+| SEO-03 | Phase 2: SEO, Compliance & Affiliates | Pending |
+| SEO-04 | Phase 2: SEO, Compliance & Affiliates | Pending |
+| SEO-05 | Phase 2: SEO, Compliance & Affiliates | Pending |
+| SEO-06 | Phase 2: SEO, Compliance & Affiliates | Pending |
+| AFFL-01 | Phase 2: SEO, Compliance & Affiliates | Pending |
+| AFFL-02 | Phase 2: SEO, Compliance & Affiliates | Pending |
+| AFFL-03 | Phase 2: SEO, Compliance & Affiliates | Pending |
+| AFFL-04 | Phase 2: SEO, Compliance & Affiliates | Pending |
 
 **Coverage:**
-- v1 requirements: 35 total
-- Mapped to phases: 0
-- Unmapped: 35
+- v1 requirements: 49 total
+- Mapped to phases: 49
+- Unmapped: 0
 
 ---
 *Requirements defined: 2026-03-07*
-*Last updated: 2026-03-07 after initial definition*
+*Last updated: 2026-03-07 after roadmap creation*
