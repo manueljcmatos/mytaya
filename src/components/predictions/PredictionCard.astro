@@ -1,0 +1,166 @@
+---
+import ResultBadge from './ResultBadge.astro';
+import { formatMatchTime } from '../../lib/predictions';
+
+interface Prediction {
+  slug: string;
+  pick: string;
+  pick_label_tl: string;
+  pick_label_en: string;
+  odds: number;
+  confidence: string | null;
+  match_date: string;
+  status: string;
+  result: 'win' | 'loss' | 'push' | 'void' | null;
+}
+
+interface Props {
+  prediction: Prediction;
+  lang: 'tl' | 'en';
+}
+
+const { prediction, lang } = Astro.props;
+
+const pickLabel = lang === 'tl' ? prediction.pick_label_tl : prediction.pick_label_en;
+const matchTime = formatMatchTime(prediction.match_date, lang);
+const detailUrl = `/${lang === 'tl' ? 'tl/hula' : 'en/predictions'}/${prediction.slug}`;
+
+const pickTypeMap: Record<string, string> = {
+  home: '1X2',
+  away: '1X2',
+  draw: '1X2',
+  over: 'O/U',
+  under: 'O/U',
+  btts_yes: 'BTTS',
+  btts_no: 'BTTS',
+};
+const pickType = pickTypeMap[prediction.pick] || prediction.pick.toUpperCase();
+---
+
+<a href={detailUrl} class="prediction-card group">
+  <div class="card-header">
+    <span class="match-time">{matchTime} PHT</span>
+    <span class="pick-type-badge">{pickType}</span>
+  </div>
+
+  <div class="card-body">
+    <p class="pick-label">{pickLabel}</p>
+  </div>
+
+  <div class="card-footer">
+    <div class="odds-badge">
+      <span class="odds-label">Odds</span>
+      <span class="odds-value">{Number(prediction.odds).toFixed(2)}</span>
+    </div>
+    {prediction.confidence && (
+      <span class={`confidence confidence-${prediction.confidence}`}>
+        {prediction.confidence}
+      </span>
+    )}
+    {prediction.status === 'settled' && (
+      <ResultBadge result={prediction.result} lang={lang} />
+    )}
+  </div>
+</a>
+
+<style>
+  .prediction-card {
+    display: block;
+    padding: 1rem 1.25rem;
+    border: 1px solid var(--t-border);
+    border-radius: 0.75rem;
+    background-color: var(--t-bg-card, var(--t-surface));
+    transition: box-shadow 0.2s ease, border-color 0.2s ease;
+    text-decoration: none;
+    color: inherit;
+  }
+  .prediction-card:hover {
+    box-shadow: 0 4px 12px rgb(0 0 0 / 0.1);
+    border-color: var(--brand-primary, #0F766E);
+  }
+
+  .card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 0.625rem;
+  }
+  .match-time {
+    font-size: 0.75rem;
+    color: var(--t-text-sec);
+    font-family: var(--font-body);
+  }
+  .pick-type-badge {
+    font-size: 0.625rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 0.125rem 0.5rem;
+    border-radius: 9999px;
+    background-color: rgb(15 118 110 / 0.15);
+    color: var(--brand-primary, #0F766E);
+    font-family: var(--font-display, 'Bebas Neue', sans-serif);
+  }
+
+  .card-body {
+    margin-bottom: 0.75rem;
+  }
+  .pick-label {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--t-text);
+    font-family: var(--font-body);
+    line-height: 1.4;
+  }
+
+  .card-footer {
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
+    flex-wrap: wrap;
+  }
+  .odds-badge {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    font-size: 0.75rem;
+  }
+  .odds-label {
+    color: var(--t-text-sec);
+  }
+  .odds-value {
+    font-weight: 700;
+    color: var(--t-text);
+    font-family: var(--font-display, 'Bebas Neue', sans-serif);
+  }
+
+  .confidence {
+    font-size: 0.6875rem;
+    font-weight: 600;
+    text-transform: capitalize;
+    padding: 0.0625rem 0.5rem;
+    border-radius: 9999px;
+  }
+  .confidence-high {
+    background-color: rgb(16 185 129 / 0.12);
+    color: #34d399;
+  }
+  .confidence-medium {
+    background-color: rgb(245 158 11 / 0.12);
+    color: #fbbf24;
+  }
+  .confidence-low {
+    background-color: rgb(156 163 175 / 0.12);
+    color: #9ca3af;
+  }
+
+  :global([data-theme='light']) .confidence-high {
+    color: #047857;
+  }
+  :global([data-theme='light']) .confidence-medium {
+    color: #92400e;
+  }
+  :global([data-theme='light']) .confidence-low {
+    color: #6b7280;
+  }
+</style>

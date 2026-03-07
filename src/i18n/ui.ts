@@ -79,6 +79,19 @@ export const ui = {
     'predictions.push': 'Push',
     'predictions.pending': 'Pending',
 
+    // Predictions (football)
+    'predictions.title': 'Mga Hula sa Football',
+    'predictions.todayPicks': 'Mga Hula Ngayon',
+    'predictions.pastResults': 'Mga Nakaraang Resulta',
+    'predictions.allLeagues': 'Lahat',
+    'predictions.pick': 'Hula',
+    'predictions.noMatches': 'Walang mga laro ngayon',
+    'predictions.noPastResults': 'Wala pang mga resulta',
+    'predictions.viewDetails': 'Tingnan ang Detalye',
+
+    // Results
+    'results.title': 'Mga Resulta ng Football',
+
     // Sections
     'section.predictions': 'Mga Hula',
     'section.results': 'Mga Resulta',
@@ -162,6 +175,19 @@ export const ui = {
     'predictions.loss': 'Loss',
     'predictions.push': 'Push',
     'predictions.pending': 'Pending',
+
+    // Predictions (football)
+    'predictions.title': 'Football Predictions',
+    'predictions.todayPicks': "Today's Picks",
+    'predictions.pastResults': 'Past Results',
+    'predictions.allLeagues': 'All',
+    'predictions.pick': 'Pick',
+    'predictions.noMatches': 'No matches today',
+    'predictions.noPastResults': 'No results yet',
+    'predictions.viewDetails': 'View Details',
+
+    // Results
+    'results.title': 'Football Results',
 
     // Sections
     'section.predictions': 'Predictions',

@@ -1,0 +1,79 @@
+---
+interface Props {
+  result: 'win' | 'loss' | 'push' | 'void' | null;
+  lang: 'tl' | 'en';
+}
+
+const { result, lang } = Astro.props;
+
+const labels: Record<string, Record<string, string>> = {
+  win: { tl: 'PANALO', en: 'WIN' },
+  loss: { tl: 'TALO', en: 'LOSS' },
+  push: { tl: 'PUSH', en: 'PUSH' },
+  void: { tl: 'VOID', en: 'VOID' },
+  pending: { tl: 'Naghihintay', en: 'Pending' },
+};
+
+const key = result || 'pending';
+const label = labels[key]?.[lang] || labels[key]?.en || key.toUpperCase();
+
+const colorClasses: Record<string, string> = {
+  win: 'badge-win',
+  loss: 'badge-loss',
+  push: 'badge-push',
+  void: 'badge-pending',
+  pending: 'badge-pending',
+};
+
+const colorClass = colorClasses[key] || 'badge-pending';
+---
+
+<span class={`result-badge ${colorClass}`}>{label}</span>
+
+<style>
+  .result-badge {
+    display: inline-block;
+    padding: 0.125rem 0.625rem;
+    border-radius: 9999px;
+    font-size: 0.6875rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    font-family: var(--font-display, 'Bebas Neue', sans-serif);
+    line-height: 1.4;
+  }
+
+  .badge-win {
+    background-color: rgb(16 185 129 / 0.2);
+    color: #34d399;
+  }
+  .badge-loss {
+    background-color: rgb(239 68 68 / 0.2);
+    color: #f87171;
+  }
+  .badge-push {
+    background-color: rgb(245 158 11 / 0.2);
+    color: #fbbf24;
+  }
+  .badge-pending {
+    background-color: rgb(156 163 175 / 0.2);
+    color: #9ca3af;
+  }
+
+  :global([data-theme='light']) .badge-win {
+    background-color: rgb(16 185 129 / 0.12);
+    color: #047857;
+  }
+  :global([data-theme='light']) .badge-loss {
+    background-color: rgb(239 68 68 / 0.12);
+    color: #b91c1c;
+  }
+  :global([data-theme='light']) .badge-push {
+    background-color: rgb(245 158 11 / 0.12);
+    color: #92400e;
+  }
+  :global([data-theme='light']) .badge-pending {
+    background-color: rgb(156 163 175 / 0.12);
+    color: #6b7280;
+  }
+</style>
