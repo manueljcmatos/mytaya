@@ -21,6 +21,9 @@ const translations = {
     next: 'Susunod',
     today: 'Ngayon',
     yesterday: 'Kahapon',
+    allSports: 'Lahat ng Isports',
+    football: 'Football',
+    basketball: 'Basketball',
   },
   en: {
     todayPicks: "Today's Picks",
@@ -40,6 +43,9 @@ const translations = {
     next: 'Next',
     today: 'Today',
     yesterday: 'Yesterday',
+    allSports: 'All Sports',
+    football: 'Football',
+    basketball: 'Basketball',
   },
 } as const;
 
@@ -56,6 +62,9 @@ interface Prediction {
   status: string;
   result: string | null;
   league_id: string | null;
+  sport: string;
+  spread_line?: number;
+  total_line?: number;
 }
 
 interface League {
@@ -79,6 +88,15 @@ const pickTypeMap: Record<string, string> = {
   under: 'O/U',
   btts_yes: 'BTTS',
   btts_no: 'BTTS',
+  moneyline_home: 'ML',
+  moneyline_away: 'ML',
+  spread_home: 'SPREAD',
+  spread_away: 'SPREAD',
+};
+
+const sportIcons: Record<string, string> = {
+  football: '\u26BD',
+  basketball: '\uD83C\uDFC0',
 };
 
 function formatTime(isoDate: string): string {
@@ -149,6 +167,7 @@ function groupByDate(predictions: Prediction[]): Map<string, Prediction[]> {
 export default function PredictionList({ lang, initialTab = 'today' }: Props) {
   const t = translations[lang];
   const [tab, setTab] = useState(initialTab);
+  const [sport, setSport] = useState<string>('all');
   const [predictions, setPredictions] = useState<Prediction[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedLeague, setSelectedLeague] = useState<string | null>(null);
@@ -163,13 +182,18 @@ export default function PredictionList({ lang, initialTab = 'today' }: Props) {
   const fetchLeagues = useCallback(async () => {
     if (!hasSupabase) return;
     const supabase = createClient(supabaseUrl!, supabaseAnonKey!);
-    const { data } = await supabase
+    let query = supabase
       .from('leagues')
       .select('id, name, slug')
-      .eq('sport', 'football')
       .eq('is_active', true);
+
+    if (sport !== 'all') {
+      query = query.eq('sport', sport);
+    }
+
+    const { data } = await query;
     setLeagues(data || []);
-  }, [hasSupabase, supabaseUrl, supabaseAnonKey]);
+  }, [hasSupabase, supabaseUrl, supabaseAnonKey, sport]);
 
   const fetchPredictions = useCallback(async () => {
     if (!hasSupabase) {
@@ -183,14 +207,18 @@ export default function PredictionList({ lang, initialTab = 'today' }: Props) {
 
     const fields = `
       id, slug, pick, pick_label_tl, pick_label_en,
-      odds, confidence, stake, match_date, status, result, league_id
+      odds, confidence, stake, match_date, status, result, league_id,
+      sport, spread_line, total_line
     `;
 
     let query = supabase
       .from('predictions')
       .select(fields, { count: 'exact' })
-      .eq('sport', 'football')
       .eq('published_site', true);
+
+    if (sport !== 'all') {
+      query = query.eq('sport', sport);
+    }
 
     if (tab === 'today') {
       query = query
@@ -214,7 +242,7 @@ export default function PredictionList({ lang, initialTab = 'today' }: Props) {
     setPredictions(data || []);
     setTotalCount(count || 0);
     setLoading(false);
-  }, [hasSupabase, supabaseUrl, supabaseAnonKey, tab, page, selectedLeague]);
+  }, [hasSupabase, supabaseUrl, supabaseAnonKey, tab, page, selectedLeague, sport]);
 
   useEffect(() => {
     fetchLeagues();
@@ -226,6 +254,12 @@ export default function PredictionList({ lang, initialTab = 'today' }: Props) {
 
   const handleTabChange = (newTab: 'today' | 'past') => {
     setTab(newTab);
+    setPage(1);
+  };
+
+  const handleSportChange = (newSport: string) => {
+    setSport(newSport);
+    setSelectedLeague(null);
     setPage(1);
   };
 
@@ -244,9 +278,36 @@ export default function PredictionList({ lang, initialTab = 'today' }: Props) {
     push: { bg: 'rgba(245, 158, 11, 0.2)', text: '#fbbf24' },
   };
 
+  const sportTabs = [
+    { key: 'all', label: t.allSports },
+    { key: 'football', label: t.football },
+    { key: 'basketball', label: t.basketball },
+  ];
+
   return (
     <div>
-      {/* Tab buttons */}
+      {/* Sport tabs */}
+      <div className="flex gap-2 mb-4">
+        {sportTabs.map((s) => (
+          <button
+            key={s.key}
+            onClick={() => handleSportChange(s.key)}
+            className="px-4 py-1.5 rounded-full text-sm font-medium transition-colors"
+            style={{
+              backgroundColor: sport === s.key ? 'var(--brand-primary, #0F766E)' : 'var(--t-surface, #1f2937)',
+              color: sport === s.key ? '#ffffff' : 'var(--t-text-sec, #9ca3af)',
+              border: sport === s.key ? 'none' : '1px solid var(--t-border, #374151)',
+            }}
+          >
+            {s.key !== 'all' && (
+              <span className="mr-1.5" aria-hidden="true">{sportIcons[s.key] || ''}</span>
+            )}
+            {s.label}
+          </button>
+        ))}
+      </div>
+
+      {/* Today/Past tab buttons */}
       <div className="flex gap-1 p-1 rounded-xl mb-6" style={{ backgroundColor: 'var(--t-surface, #1f2937)' }}>
         <button
           onClick={() => handleTabChange('today')}
@@ -341,6 +402,17 @@ export default function PredictionList({ lang, initialTab = 'today' }: Props) {
                       ? t[pred.result as keyof typeof t] || pred.result.toUpperCase()
                       : null;
 
+                    // Build pick type display with spread/total line info
+                    let pickTypeDisplay = pickType;
+                    if ((pred.pick === 'spread_home' || pred.pick === 'spread_away') && pred.spread_line != null) {
+                      const sign = pred.spread_line > 0 ? '+' : '';
+                      pickTypeDisplay = `SPREAD ${sign}${pred.spread_line}`;
+                    } else if ((pred.pick === 'over' || pred.pick === 'under') && pred.sport === 'basketball' && pred.total_line != null) {
+                      pickTypeDisplay = `O/U ${pred.total_line}`;
+                    }
+
+                    const sportIcon = sportIcons[pred.sport] || '';
+
                     return (
                       <a
                         key={pred.id}
@@ -351,14 +423,21 @@ export default function PredictionList({ lang, initialTab = 'today' }: Props) {
                           border: '1px solid var(--t-border, #374151)',
                         }}
                       >
-                        {/* Header row: time + pick type */}
+                        {/* Header row: time + sport icon + pick type */}
                         <div className="flex items-center justify-between mb-2">
-                          <span
-                            className="text-xs"
-                            style={{ color: 'var(--t-text-sec, #9ca3af)' }}
-                          >
-                            {matchTime} PHT
-                          </span>
+                          <div className="flex items-center gap-2">
+                            <span
+                              className="text-xs"
+                              style={{ color: 'var(--t-text-sec, #9ca3af)' }}
+                            >
+                              {matchTime} PHT
+                            </span>
+                            {sport === 'all' && sportIcon && (
+                              <span className="text-xs" aria-hidden="true" title={pred.sport}>
+                                {sportIcon}
+                              </span>
+                            )}
+                          </div>
                           <span
                             className="text-xs font-bold tracking-wider uppercase px-2 py-0.5 rounded-full"
                             style={{
@@ -367,7 +446,7 @@ export default function PredictionList({ lang, initialTab = 'today' }: Props) {
                               fontFamily: "var(--font-display, 'Bebas Neue', sans-serif)",
                             }}
                           >
-                            {pickType}
+                            {pickTypeDisplay}
                           </span>
                         </div>
 

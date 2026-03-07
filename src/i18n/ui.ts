@@ -92,6 +92,28 @@ export const ui = {
     // Results
     'results.title': 'Mga Resulta ng Football',
 
+    // Predictions (sport filtering)
+    'predictions.allSports': 'Lahat ng Isports',
+    'predictions.football': 'Football',
+    'predictions.basketball': 'Basketball',
+
+    // Statistics
+    'stats.title': 'Mga Estadistika',
+    'stats.winRate': 'Win Rate',
+    'stats.roi': 'ROI',
+    'stats.streak': 'Streak',
+    'stats.recentPicks': 'Mga Kamakailang Hula',
+    'stats.profitChart': 'Tsart ng Kita',
+    'stats.noData': 'Wala pang datos',
+    'stats.allTime': 'Lahat ng Oras',
+    'stats.last7': 'Huling 7 Araw',
+    'stats.last30': 'Huling 30 Araw',
+    'stats.match': 'Laro',
+    'stats.pick': 'Hula',
+    'stats.result': 'Resulta',
+    'stats.profit': 'Kita',
+    'stats.units': 'Yunit',
+
     // Sections
     'section.predictions': 'Mga Hula',
     'section.results': 'Mga Resulta',
@@ -188,6 +210,28 @@ export const ui = {
 
     // Results
     'results.title': 'Football Results',
+
+    // Predictions (sport filtering)
+    'predictions.allSports': 'All Sports',
+    'predictions.football': 'Football',
+    'predictions.basketball': 'Basketball',
+
+    // Statistics
+    'stats.title': 'Statistics',
+    'stats.winRate': 'Win Rate',
+    'stats.roi': 'ROI',
+    'stats.streak': 'Streak',
+    'stats.recentPicks': 'Recent Picks',
+    'stats.profitChart': 'Profit Chart',
+    'stats.noData': 'No data yet',
+    'stats.allTime': 'All Time',
+    'stats.last7': 'Last 7 Days',
+    'stats.last30': 'Last 30 Days',
+    'stats.match': 'Match',
+    'stats.pick': 'Pick',
+    'stats.result': 'Result',
+    'stats.profit': 'Profit',
+    'stats.units': 'Units',
 
     // Sections
     'section.predictions': 'Predictions',
