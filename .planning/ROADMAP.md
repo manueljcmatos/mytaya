@@ -98,11 +98,11 @@ Plans:
   2. Each blog post exists in both Filipino and English with proper SEO metadata and Schema.org BlogPosting markup
   3. Blog index page shows paginated articles with featured/recent sections
   4. News sitemap includes blog posts and is formatted for Google News eligibility
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
-- [ ] 05-01: TBD
-- [ ] 05-02: TBD
+- [ ] 05-01-PLAN.md — Worker blog generation module, posts table migration, result appendix in resolver
+- [ ] 05-02-PLAN.md — Blog index with BlogList island, detail pages with BlogPosting schema, news sitemap population
 
 ### Phase 6: Prediction Cards & Telegram
 **Goal**: Every prediction has a shareable branded PNG card, and predictions are automatically published to a Telegram channel throughout the day
@@ -146,6 +146,6 @@ Note: Phases 5 and 6 both depend on Phase 3 (not on each other) and could execut
 | 2. SEO, Compliance & Affiliates | 0/4 | Planning complete | - |
 | 3. Football Predictions | 3/3 | Complete   | 2026-03-07 |
 | 4. NBA Predictions & Statistics | 0/3 | Planning complete | - |
-| 5. Blog Automation | 0/0 | Not started | - |
+| 5. Blog Automation | 0/2 | Planning complete | - |
 | 6. Prediction Cards & Telegram | 0/0 | Not started | - |
 | 7. PBA, Boxing & Manual Content | 0/0 | Not started | - |
