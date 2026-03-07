@@ -73,8 +73,8 @@ Requirements for initial release. Each maps to roadmap phases.
 - [x] **SEO-02**: Schema.org BlogPosting structured data on blog posts
 - [x] **SEO-03**: Proper meta tags (title, description, OG, Twitter cards) on all pages
 - [x] **SEO-04**: Sitemap with i18n support and hreflang annotations
-- [ ] **SEO-05**: Responsible gambling page with PAGCOR compliance awareness
-- [ ] **SEO-06**: Age verification notice and gambling disclaimers on relevant pages
+- [x] **SEO-05**: Responsible gambling page with PAGCOR compliance awareness
+- [x] **SEO-06**: Age verification notice and gambling disclaimers on relevant pages
 
 ### Affiliate & Monetization
 
@@ -166,8 +166,8 @@ Which phases cover which requirements. Updated during roadmap creation.
 | SEO-02 | Phase 2: SEO, Compliance & Affiliates | Complete |
 | SEO-03 | Phase 2: SEO, Compliance & Affiliates | Complete |
 | SEO-04 | Phase 2: SEO, Compliance & Affiliates | Complete |
-| SEO-05 | Phase 2: SEO, Compliance & Affiliates | Pending |
-| SEO-06 | Phase 2: SEO, Compliance & Affiliates | Pending |
+| SEO-05 | Phase 2: SEO, Compliance & Affiliates | Complete |
+| SEO-06 | Phase 2: SEO, Compliance & Affiliates | Complete |
 | AFFL-01 | Phase 2: SEO, Compliance & Affiliates | Pending |
 | AFFL-02 | Phase 2: SEO, Compliance & Affiliates | Pending |
 | AFFL-03 | Phase 2: SEO, Compliance & Affiliates | Pending |
