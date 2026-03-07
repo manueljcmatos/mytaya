@@ -5,23 +5,23 @@
 See: .planning/PROJECT.md (updated 2026-03-07)
 
 **Core value:** Every Filipino sports bettor visiting mytaya.com finds accurate, timely predictions for basketball, boxing, and football in their preferred language (Filipino or English)
-**Current focus:** Phase 4 complete -- NBA worker, frontend sport-awareness, and statistics dashboard all delivered
+**Current focus:** Phase 5 in progress -- blog automation pipeline with bilingual article generation
 
 ## Current Position
 
-Phase: 4 of 7 (Basketball & Boxing)
-Plan: 3 of 3 in current phase
-Status: Phase Complete
-Last activity: 2026-03-07 -- Completed 04-03-PLAN.md (Statistics Dashboard)
+Phase: 5 of 7 (Blog Automation)
+Plan: 1 of 2 in current phase
+Status: In Progress
+Last activity: 2026-03-07 -- Completed 05-01-PLAN.md (Blog Generation Pipeline)
 
-Progress: [############] 57%
+Progress: [##############] 64%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 13
+- Total plans completed: 14
 - Average duration: 3min
-- Total execution time: 0.72 hours
+- Total execution time: 0.77 hours
 
 **By Phase:**
 
@@ -32,13 +32,14 @@ Progress: [############] 57%
 | 03-football-predictions | 3 | 9min | 3min |
 
 **Recent Trend:**
-- Last 5 plans: 03-02 (4min), 03-03 (2min), 04-01 (3min), 04-02 (5min), 04-03 (3min)
+- Last 5 plans: 03-03 (2min), 04-01 (3min), 04-02 (5min), 04-03 (3min), 05-01 (3min)
 - Trend: Consistent
 
 *Updated after each plan completion*
 | Phase 04 P01 | 3min | 2 tasks | 7 files |
 | Phase 04 P02 | 5min | 2 tasks | 7 files |
 | Phase 04 P03 | 3min | 2 tasks | 10 files |
+| Phase 05 P01 | 3min | 2 tasks | 5 files |
 
 ## Accumulated Context
 
@@ -95,6 +96,9 @@ Recent decisions affecting current work:
 - [04-03]: Recharts 3.8.0 for charting -- pure React, SVG-based, works with CSS vars for theme-aware styling
 - [04-03]: Statistics computed on-read from predictions table (no separate aggregation table)
 - [04-03]: Streak calculation skips push results to count only consecutive wins or losses
+- [05-01]: Sequential await for prediction pipelines instead of ctx.waitUntil to ensure blog generation runs after predictions exist in DB
+- [05-01]: Programmatic blog slug generation with sport prefix (not AI-generated) per research pitfall #5
+- [05-01]: Shared appendResultToPost helper between football and NBA resolvers for bilingual result appendix
 
 ### Pending Todos
 
@@ -109,5 +113,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-03-07
-Stopped at: Completed 04-03-PLAN.md (Statistics Dashboard)
+Stopped at: Completed 05-01-PLAN.md (Blog Generation Pipeline)
 Resume file: None
