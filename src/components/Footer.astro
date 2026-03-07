@@ -1,6 +1,7 @@
 ---
 import { getLangFromUrl, useTranslations } from '../i18n/utils';
 import { SOCIAL_LINKS } from '../lib/constants';
+import GamblingDisclaimer from './compliance/GamblingDisclaimer.astro';
 
 const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
@@ -15,6 +16,7 @@ const predictionLinks = [
 const resourceLinks = [
   { href: lang === 'tl' ? '/tl/mga-operator/' : '/en/operators/', label: t('nav.operators') },
   { href: lang === 'tl' ? '/tl/blog/' : '/en/blog/', label: t('nav.blog') },
+  { href: lang === 'tl' ? '/tl/responsableng-pagsusugal/' : '/en/responsible-gambling/', label: t('nav.responsibleGambling') },
   { href: '#', label: t('footer.about') },
   { href: '#', label: t('footer.privacy') },
   { href: '#', label: t('footer.terms') },
@@ -79,12 +81,10 @@ const resourceLinks = [
         <p class="text-xs" style="color: var(--t-text-sec);">
           &copy; {year} MyTaya. {t('footer.rights')}
           <span class="ml-2 inline-flex items-center gap-1 font-semibold" style="color: var(--color-loss);">
-            18+
+            21+
           </span>
         </p>
-        <p class="text-xs text-center md:text-right max-w-lg" style="color: var(--t-text-sec);">
-          {t('footer.disclaimer')}
-        </p>
+        <GamblingDisclaimer lang={lang} variant="compact" />
       </div>
     </div>
   </div>

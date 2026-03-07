@@ -8,6 +8,7 @@ export const ui = {
     'nav.results': 'Mga Resulta',
     'nav.blog': 'Blog',
     'nav.operators': 'Mga Operator',
+    'nav.responsibleGambling': 'Responsableng Pagsusugal',
 
     // Hero
     'hero.title': 'Mga Tamang Hula sa Sports',
@@ -28,6 +29,19 @@ export const ui = {
     'footer.contact': 'Makipag-ugnayan',
     'footer.privacy': 'Patakaran sa Privacy',
     'footer.terms': 'Mga Tuntunin',
+
+    // Compliance
+    'compliance.ageNotice': 'Para sa 21 taong gulang pataas lamang.',
+    'compliance.warning': 'Ang pagsusugal ay maaaring magdulot ng adiksyon. Alamin kung kailan titigil.',
+    'compliance.hotline': 'PAGCOR Hotline: (02) 8538-9090',
+
+    // Lead capture
+    'lead.emailPlaceholder': 'Ilagay ang iyong email',
+    'lead.subscribe': 'Mag-subscribe',
+    'lead.cta': 'Makakuha ng libreng hula araw-araw',
+    'lead.success': 'Salamat sa pag-subscribe!',
+    'lead.error': 'May nangyaring mali. Subukan ulit.',
+    'lead.telegramCta': 'Sumali rin sa aming Telegram',
 
     // Empty states
     'empty.predictions': 'Wala pang mga hula. Babalik kami!',
@@ -78,6 +92,7 @@ export const ui = {
     'nav.results': 'Results',
     'nav.blog': 'Blog',
     'nav.operators': 'Operators',
+    'nav.responsibleGambling': 'Responsible Gambling',
 
     // Hero
     'hero.title': 'Expert Sports Predictions',
@@ -98,6 +113,19 @@ export const ui = {
     'footer.contact': 'Contact',
     'footer.privacy': 'Privacy Policy',
     'footer.terms': 'Terms of Service',
+
+    // Compliance
+    'compliance.ageNotice': 'For 21 years old and above only.',
+    'compliance.warning': 'Gambling can be addictive. Know when to stop.',
+    'compliance.hotline': 'PAGCOR Hotline: (02) 8538-9090',
+
+    // Lead capture
+    'lead.emailPlaceholder': 'Enter your email',
+    'lead.subscribe': 'Subscribe',
+    'lead.cta': 'Get free daily predictions',
+    'lead.success': 'Thanks for subscribing!',
+    'lead.error': 'Something went wrong. Try again.',
+    'lead.telegramCta': 'Also join our Telegram',
 
     // Empty states
     'empty.predictions': 'No predictions yet. Stay tuned!',
