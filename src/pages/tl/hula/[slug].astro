@@ -11,7 +11,6 @@ export async function getStaticPaths() {
   const { data } = await supabase
     .from('predictions')
     .select('slug')
-    .eq('sport', 'football')
     .eq('published_site', true);
 
   return (data || []).map((p) => ({ params: { slug: p.slug } }));
@@ -20,15 +19,15 @@ export async function getStaticPaths() {
 const { slug } = Astro.params;
 
 // Fetch prediction for SEO metadata
-let title = 'Hula sa Football - MyTaya';
-let description = 'Tingnan ang detalyadong hula sa football mula sa MyTaya.';
+let title = 'Hula sa Sports - MyTaya';
+let description = 'Tingnan ang detalyadong hula sa sports mula sa MyTaya.';
 let schema: Record<string, unknown> | undefined;
 
 if (supabase && slug) {
   const { data: pred } = await supabase
     .from('predictions')
     .select(`
-      slug, pick_label_tl, analysis_tl, match_date,
+      slug, pick_label_tl, analysis_tl, match_date, sport,
       home_team:teams!predictions_home_team_id_fkey(name),
       away_team:teams!predictions_away_team_id_fkey(name)
     `)
@@ -43,12 +42,13 @@ if (supabase && slug) {
 
     const homeTeam = (pred.home_team as any)?.name || 'Home';
     const awayTeam = (pred.away_team as any)?.name || 'Away';
+    const sportName = pred.sport === 'basketball' ? 'Basketball' : 'Football';
 
     schema = buildSportsEventSchema({
       title: `${homeTeam} vs ${awayTeam}`,
       homeTeam,
       awayTeam,
-      sport: 'Football',
+      sport: sportName,
       startDate: pred.match_date,
       url: `${SITE.url}/tl/hula/${slug}/`,
       description: pred.pick_label_tl,

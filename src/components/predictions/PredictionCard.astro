@@ -12,6 +12,9 @@ interface Prediction {
   match_date: string;
   status: string;
   result: 'win' | 'loss' | 'push' | 'void' | null;
+  sport?: string;
+  spread_line?: number;
+  total_line?: number;
 }
 
 interface Props {
@@ -33,14 +36,35 @@ const pickTypeMap: Record<string, string> = {
   under: 'O/U',
   btts_yes: 'BTTS',
   btts_no: 'BTTS',
+  moneyline_home: 'ML',
+  moneyline_away: 'ML',
+  spread_home: 'SPREAD',
+  spread_away: 'SPREAD',
 };
-const pickType = pickTypeMap[prediction.pick] || prediction.pick.toUpperCase();
+
+const sportIcons: Record<string, string> = {
+  football: '\u26BD',
+  basketball: '\uD83C\uDFC0',
+};
+
+let pickTypeDisplay = pickTypeMap[prediction.pick] || prediction.pick.toUpperCase();
+if ((prediction.pick === 'spread_home' || prediction.pick === 'spread_away') && prediction.spread_line != null) {
+  const sign = prediction.spread_line > 0 ? '+' : '';
+  pickTypeDisplay = `SPREAD ${sign}${prediction.spread_line}`;
+} else if ((prediction.pick === 'over' || prediction.pick === 'under') && prediction.sport === 'basketball' && prediction.total_line != null) {
+  pickTypeDisplay = `O/U ${prediction.total_line}`;
+}
+
+const sportIcon = prediction.sport ? (sportIcons[prediction.sport] || '') : '';
 ---
 
 <a href={detailUrl} class="prediction-card group">
   <div class="card-header">
-    <span class="match-time">{matchTime} PHT</span>
-    <span class="pick-type-badge">{pickType}</span>
+    <div class="header-left">
+      <span class="match-time">{matchTime} PHT</span>
+      {sportIcon && <span class="sport-icon" aria-hidden="true">{sportIcon}</span>}
+    </div>
+    <span class="pick-type-badge">{pickTypeDisplay}</span>
   </div>
 
   <div class="card-body">
@@ -85,10 +109,18 @@ const pickType = pickTypeMap[prediction.pick] || prediction.pick.toUpperCase();
     justify-content: space-between;
     margin-bottom: 0.625rem;
   }
+  .header-left {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
   .match-time {
     font-size: 0.75rem;
     color: var(--t-text-sec);
     font-family: var(--font-body);
+  }
+  .sport-icon {
+    font-size: 0.75rem;
   }
   .pick-type-badge {
     font-size: 0.625rem;

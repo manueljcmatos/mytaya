@@ -6,6 +6,9 @@ const translations = {
     matchWinner: 'Panalo sa Laro',
     overUnder: 'Over/Under',
     btts: 'Parehong Maggo-gol',
+    moneyline: 'Moneyline',
+    spread: 'Spread',
+    totalPoints: 'Kabuuang Puntos',
     pick: 'Hula',
     odds: 'Odds',
     confidence: 'Kumpiyansa',
@@ -24,11 +27,15 @@ const translations = {
     low: 'Mababa',
     loading: 'Naglo-load...',
     vs: 'vs',
+    conference: 'Kumperensya',
   },
   en: {
     matchWinner: 'Match Winner',
     overUnder: 'Over/Under',
     btts: 'Both Teams to Score',
+    moneyline: 'Moneyline',
+    spread: 'Spread',
+    totalPoints: 'Total Points',
     pick: 'Pick',
     odds: 'Odds',
     confidence: 'Confidence',
@@ -47,6 +54,7 @@ const translations = {
     low: 'Low',
     loading: 'Loading...',
     vs: 'vs',
+    conference: 'Conference',
   },
 } as const;
 
@@ -71,6 +79,9 @@ interface Prediction {
   home_team_name: string | null;
   away_team_name: string | null;
   league_name: string | null;
+  sport: string;
+  spread_line: number | null;
+  total_line: number | null;
 }
 
 interface Props {
@@ -78,7 +89,7 @@ interface Props {
   lang: 'tl' | 'en';
 }
 
-const pickTypeMap: Record<string, { key: 'matchWinner' | 'overUnder' | 'btts'; label: string }> = {
+const pickTypeMap: Record<string, { key: 'matchWinner' | 'overUnder' | 'btts' | 'moneyline' | 'spread' | 'totalPoints'; label: string }> = {
   home: { key: 'matchWinner', label: '1X2' },
   away: { key: 'matchWinner', label: '1X2' },
   draw: { key: 'matchWinner', label: '1X2' },
@@ -86,6 +97,15 @@ const pickTypeMap: Record<string, { key: 'matchWinner' | 'overUnder' | 'btts'; l
   under: { key: 'overUnder', label: 'O/U' },
   btts_yes: { key: 'btts', label: 'BTTS' },
   btts_no: { key: 'btts', label: 'BTTS' },
+  moneyline_home: { key: 'moneyline', label: 'ML' },
+  moneyline_away: { key: 'moneyline', label: 'ML' },
+  spread_home: { key: 'spread', label: 'SPREAD' },
+  spread_away: { key: 'spread', label: 'SPREAD' },
+};
+
+const sportIcons: Record<string, string> = {
+  football: '\u26BD',
+  basketball: '\uD83C\uDFC0',
 };
 
 const confidenceColors: Record<string, { bg: string; text: string }> = {
@@ -178,6 +198,9 @@ export default function PredictionDetail({ slug, lang }: Props) {
         home_team_name: data.home_team?.name || null,
         away_team_name: data.away_team?.name || null,
         league_name: data.league?.name || null,
+        sport: data.sport || 'football',
+        spread_line: data.spread_line ?? null,
+        total_line: data.total_line ?? null,
       };
 
       setPrediction(pred);
@@ -199,7 +222,7 @@ export default function PredictionDetail({ slug, lang }: Props) {
       '@type': 'SportsEvent',
       name: `${homeTeam} vs ${awayTeam}`,
       startDate: prediction.match_date,
-      sport: 'Football',
+      sport: prediction.sport === 'basketball' ? 'Basketball' : 'Football',
       homeTeam: { '@type': 'SportsTeam', name: homeTeam },
       awayTeam: { '@type': 'SportsTeam', name: awayTeam },
       url: window.location.href,
@@ -298,8 +321,24 @@ export default function PredictionDetail({ slug, lang }: Props) {
         {t.backToPredictions}
       </a>
 
-      {/* Header: League badge + date */}
+      {/* Header: Sport badge + League badge + date */}
       <div className="flex items-center gap-3 mb-4 flex-wrap">
+        {prediction.sport && (
+          <span
+            className="text-xs font-bold tracking-wider uppercase px-3 py-1 rounded-full"
+            style={{
+              backgroundColor: prediction.sport === 'basketball'
+                ? 'rgba(249, 115, 22, 0.15)'
+                : 'rgba(15, 118, 110, 0.15)',
+              color: prediction.sport === 'basketball'
+                ? '#f97316'
+                : 'var(--brand-primary, #0F766E)',
+              fontFamily: "var(--font-display, 'Bebas Neue', sans-serif)",
+            }}
+          >
+            {sportIcons[prediction.sport] || ''} {prediction.sport === 'basketball' ? 'NBA' : prediction.sport.toUpperCase()}
+          </span>
+        )}
         {leagueName && (
           <span
             className="text-xs font-bold tracking-wider uppercase px-3 py-1 rounded-full"
@@ -381,6 +420,34 @@ export default function PredictionDetail({ slug, lang }: Props) {
             {pickTypeName}
           </span>
         </div>
+
+        {/* NBA spread/total line info */}
+        {prediction.sport === 'basketball' && (prediction.spread_line != null || prediction.total_line != null) && (
+          <div className="flex items-center gap-4 mb-3 flex-wrap">
+            {prediction.spread_line != null && (prediction.pick === 'spread_home' || prediction.pick === 'spread_away') && (
+              <span
+                className="text-xs font-semibold px-2.5 py-1 rounded-lg"
+                style={{
+                  backgroundColor: 'rgba(249, 115, 22, 0.1)',
+                  color: '#f97316',
+                }}
+              >
+                {t.spread}: {prediction.spread_line > 0 ? '+' : ''}{prediction.spread_line}
+              </span>
+            )}
+            {prediction.total_line != null && (prediction.pick === 'over' || prediction.pick === 'under') && (
+              <span
+                className="text-xs font-semibold px-2.5 py-1 rounded-lg"
+                style={{
+                  backgroundColor: 'rgba(249, 115, 22, 0.1)',
+                  color: '#f97316',
+                }}
+              >
+                {t.totalPoints}: {prediction.pick === 'over' ? 'Over' : 'Under'} {prediction.total_line}
+              </span>
+            )}
+          </div>
+        )}
 
         {/* Pick label */}
         <p
