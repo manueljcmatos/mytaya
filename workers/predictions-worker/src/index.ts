@@ -1,8 +1,11 @@
-import type { Env, MatchContext, PredictionInsert } from './types';
+import type { Env, MatchContext, NbaMatchContext, PredictionInsert } from './types';
 import { createSupabaseClient } from './supabase';
 import { fetchTodayFixtures, fetchOdds, TARGET_LEAGUES } from './api-football';
+import { fetchNbaGames, fetchNbaOdds, NBA_LEAGUE } from './api-basketball';
+import type { ApiBasketballGame } from './api-basketball';
 import { generatePrediction } from './prediction-gen';
-import { resolveFinishedMatches } from './resolver';
+import { generateNbaPrediction } from './prediction-gen';
+import { resolveFinishedMatches, resolveNbaMatches } from './resolver';
 import type { ApiFootballFixture } from './types';
 
 /** Delay helper for rate limiting */
@@ -303,6 +306,169 @@ async function fetchAndGeneratePredictions(env: Env): Promise<void> {
   console.log(`Prediction generation complete: ${created}/${selected.length} created`);
 }
 
+/**
+ * Select 3-5 best NBA games from the pool.
+ */
+function selectBestNbaGames(
+  games: ApiBasketballGame[],
+  maxPicks: number
+): ApiBasketballGame[] {
+  if (games.length <= maxPicks) return games;
+  // NBA is single-league, just take first N games
+  return games.slice(0, maxPicks);
+}
+
+/**
+ * NBA prediction pipeline: fetch today's NBA games, generate AI predictions,
+ * and store them in Supabase.
+ */
+async function fetchAndGenerateNbaPredictions(env: Env): Promise<void> {
+  const supabase = createSupabaseClient(env);
+  const today = getTodayPHT();
+
+  console.log(`Fetching NBA games for ${today}`);
+
+  const allGames = await fetchNbaGames(env.API_FOOTBALL_KEY, today);
+  console.log(`Found ${allGames.length} NBA games`);
+
+  if (allGames.length === 0) {
+    console.log('No NBA games today');
+    return;
+  }
+
+  // Select 3-5 best games
+  const selected = selectBestNbaGames(allGames, 5);
+  console.log(`Selected ${selected.length} NBA games for predictions`);
+
+  // Get NBA league UUID
+  const nbaLeagueId = await getLeagueId(supabase, NBA_LEAGUE.id);
+  if (!nbaLeagueId) {
+    console.error('NBA league not found in DB -- run migration 004 first');
+    return;
+  }
+
+  let created = 0;
+
+  for (const game of selected) {
+    try {
+      // Fetch odds
+      const odds = await fetchNbaOdds(env.API_FOOTBALL_KEY, game.id);
+      await delay(1100);
+
+      // Default odds if not available
+      const matchOdds = odds ?? {
+        moneyline: { home: 1.9, away: 1.9 },
+        spread: { home_line: -5.5, home_odds: 1.9, away_odds: 1.9 },
+        totals: { line: 215.5, over_odds: 1.9, under_odds: 1.9 },
+        source: 'estimated',
+      };
+
+      // Upsert teams
+      const homeTeamId = await upsertTeam(
+        supabase,
+        game.teams.home.id,
+        game.teams.home.name,
+        nbaLeagueId
+      );
+      const awayTeamId = await upsertTeam(
+        supabase,
+        game.teams.away.id,
+        game.teams.away.name,
+        nbaLeagueId
+      );
+
+      // Build NBA match context for AI
+      const matchContext: NbaMatchContext = {
+        homeTeam: game.teams.home.name,
+        awayTeam: game.teams.away.name,
+        league: NBA_LEAGUE.name,
+        leagueSlug: NBA_LEAGUE.slug,
+        fixtureId: game.id,
+        matchDate: game.date,
+        spread: matchOdds.spread.home_line,
+        totalLine: matchOdds.totals.line,
+        odds: {
+          moneyline_home: matchOdds.moneyline.home,
+          moneyline_away: matchOdds.moneyline.away,
+          spread_home: matchOdds.spread.home_odds,
+          spread_away: matchOdds.spread.away_odds,
+          over: matchOdds.totals.over_odds,
+          under: matchOdds.totals.under_odds,
+        },
+      };
+
+      // Generate AI prediction
+      const prediction = await generateNbaPrediction(env.AI, matchContext);
+
+      // Build slug (nba-home-vs-away-date)
+      const slug = buildSlug(
+        NBA_LEAGUE.slug,
+        game.teams.home.name,
+        game.teams.away.name,
+        today
+      );
+
+      // Determine which odds value to store based on the pick
+      let oddsValue = matchOdds.moneyline.home;
+      switch (prediction.pick) {
+        case 'moneyline_away':
+          oddsValue = matchOdds.moneyline.away;
+          break;
+        case 'spread_home':
+          oddsValue = matchOdds.spread.home_odds;
+          break;
+        case 'spread_away':
+          oddsValue = matchOdds.spread.away_odds;
+          break;
+        case 'over':
+          oddsValue = matchOdds.totals.over_odds;
+          break;
+        case 'under':
+          oddsValue = matchOdds.totals.under_odds;
+          break;
+      }
+
+      // Insert prediction into Supabase
+      const predictionInsert: PredictionInsert = {
+        slug,
+        league_id: nbaLeagueId,
+        home_team_id: homeTeamId,
+        away_team_id: awayTeamId,
+        match_date: game.date,
+        sport: 'basketball',
+        pick: prediction.pick,
+        pick_label_tl: prediction.pick_label_tl,
+        pick_label_en: prediction.pick_label_en,
+        analysis_tl: prediction.analysis_tl,
+        analysis_en: prediction.analysis_en,
+        odds: oddsValue,
+        odds_source: matchOdds.source,
+        confidence: prediction.confidence,
+        stake: prediction.stake,
+        published_site: true,
+        api_fixture_id: game.id,
+        spread_line: matchOdds.spread.home_line,
+        total_line: matchOdds.totals.line,
+      };
+
+      const { error: insertError } = await supabase
+        .from('predictions')
+        .upsert(predictionInsert, { onConflict: 'slug' });
+
+      if (insertError) {
+        console.error(`Error inserting NBA prediction for ${slug}:`, insertError.message);
+      } else {
+        created++;
+        console.log(`Created NBA prediction: ${slug} (${prediction.pick})`);
+      }
+    } catch (err) {
+      console.error(`Error processing NBA game ${game.id}:`, err);
+    }
+  }
+
+  console.log(`NBA prediction generation complete: ${created}/${selected.length} created`);
+}
+
 // Cloudflare Worker scheduled handler.
 // Dispatches based on cron pattern:
 // - "0 6 * * *": Daily fetch + generate predictions (06:00 UTC = 14:00 PHT)
@@ -317,9 +483,25 @@ export default {
       if (controller.cron === '0 6 * * *') {
         console.log('Running daily prediction generation...');
         ctx.waitUntil(fetchAndGeneratePredictions(env));
+
+        // NBA pipeline -- wrapped in try/catch so football continues even if NBA fails
+        try {
+          console.log('Running NBA prediction generation...');
+          ctx.waitUntil(fetchAndGenerateNbaPredictions(env));
+        } catch (nbaError) {
+          console.error('NBA prediction generation failed:', nbaError);
+        }
       } else if (controller.cron === '*/30 * * * *') {
         console.log('Running match resolution...');
         ctx.waitUntil(resolveFinishedMatches(env));
+
+        // NBA resolution -- wrapped in try/catch so football resolution continues
+        try {
+          console.log('Running NBA match resolution...');
+          ctx.waitUntil(resolveNbaMatches(env));
+        } catch (nbaError) {
+          console.error('NBA match resolution failed:', nbaError);
+        }
       }
     } catch (error) {
       console.error('Scheduled handler error:', error);
