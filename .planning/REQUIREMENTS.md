@@ -10,13 +10,13 @@ Requirements for initial release. Each maps to roadmap phases.
 ### Foundation
 
 - [x] **FOUND-01**: Site renders in Filipino (Tagalog) and English with auto-detection based on browser language
-- [ ] **FOUND-02**: User can manually toggle between Filipino and English from any page
+- [x] **FOUND-02**: User can manually toggle between Filipino and English from any page
 - [x] **FOUND-03**: Each language has its own URL structure with proper hreflang tags for SEO
 - [x] **FOUND-04**: Supabase schema stores predictions with paired bilingual columns (title_tl/title_en, etc.)
 - [x] **FOUND-05**: Predictions table captures odds at prediction time for ROI calculation
 - [x] **FOUND-06**: User can toggle dark/light theme with persistence across sessions
 - [x] **FOUND-07**: Site is installable as PWA with offline support and push notification capability
-- [ ] **FOUND-08**: Fresh Philippine-inspired visual identity (NOT betpro clone) with responsive design
+- [x] **FOUND-08**: Fresh Philippine-inspired visual identity (NOT betpro clone) with responsive design
 
 ### Football Predictions
 
@@ -124,13 +124,13 @@ Which phases cover which requirements. Updated during roadmap creation.
 | Requirement | Phase | Status |
 |-------------|-------|--------|
 | FOUND-01 | Phase 1: Foundation | Complete |
-| FOUND-02 | Phase 1: Foundation | Pending |
+| FOUND-02 | Phase 1: Foundation | Complete |
 | FOUND-03 | Phase 1: Foundation | Complete |
 | FOUND-04 | Phase 1: Foundation | Complete |
 | FOUND-05 | Phase 1: Foundation | Complete |
 | FOUND-06 | Phase 1: Foundation | Complete |
 | FOUND-07 | Phase 1: Foundation | Complete |
-| FOUND-08 | Phase 1: Foundation | Pending |
+| FOUND-08 | Phase 1: Foundation | Complete |
 | FTBL-01 | Phase 3: Football Predictions | Pending |
 | FTBL-02 | Phase 3: Football Predictions | Pending |
 | FTBL-03 | Phase 3: Football Predictions | Pending |
