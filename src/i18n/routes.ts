@@ -31,7 +31,8 @@ export function getAlternatePath(
   // Try exact match first
   if (map[normalizedPath]) return map[normalizedPath];
 
-  // Then try prefix match for nested routes (e.g., /hula/some-slug/)
+  // Then try prefix match for nested routes (e.g., /hula/some-slug/ -> /predictions/some-slug/)
+  // This handles prediction detail [slug] pages: /hula/[slug] <-> /predictions/[slug]
   for (const [from, to] of Object.entries(map)) {
     if (normalizedPath.startsWith(from) && from !== '/') {
       return normalizedPath.replace(from, to);

@@ -1,0 +1,73 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+import PredictionDetail from '../../../components/predictions/PredictionDetail';
+import { supabase } from '../../../lib/supabase';
+import { buildSportsEventSchema } from '../../../lib/seo';
+import { SITE } from '../../../lib/constants';
+
+export async function getStaticPaths() {
+  if (!supabase) return [];
+
+  const { data } = await supabase
+    .from('predictions')
+    .select('slug')
+    .eq('sport', 'football')
+    .eq('published_site', true);
+
+  return (data || []).map((p) => ({ params: { slug: p.slug } }));
+}
+
+const { slug } = Astro.params;
+
+// Fetch prediction for SEO metadata
+let title = 'Hula sa Football - MyTaya';
+let description = 'Tingnan ang detalyadong hula sa football mula sa MyTaya.';
+let schema: Record<string, unknown> | undefined;
+
+if (supabase && slug) {
+  const { data: pred } = await supabase
+    .from('predictions')
+    .select(`
+      slug, pick_label_tl, analysis_tl, match_date,
+      home_team:teams!predictions_home_team_id_fkey(name),
+      away_team:teams!predictions_away_team_id_fkey(name)
+    `)
+    .eq('slug', slug)
+    .single();
+
+  if (pred) {
+    title = `${pred.pick_label_tl} - MyTaya`;
+    if (pred.analysis_tl) {
+      description = pred.analysis_tl.substring(0, 160);
+    }
+
+    const homeTeam = (pred.home_team as any)?.name || 'Home';
+    const awayTeam = (pred.away_team as any)?.name || 'Away';
+
+    schema = buildSportsEventSchema({
+      title: `${homeTeam} vs ${awayTeam}`,
+      homeTeam,
+      awayTeam,
+      sport: 'Football',
+      startDate: pred.match_date,
+      url: `${SITE.url}/tl/hula/${slug}/`,
+      description: pred.pick_label_tl,
+    });
+  }
+}
+
+const enAlternate = `/en/predictions/${slug}/`;
+---
+
+<Layout title={title} description={description} schema={schema} lang="tl">
+  <Fragment slot="head">
+    <link rel="alternate" hreflang="en" href={`${SITE.url}${enAlternate}`} />
+    <link rel="alternate" hreflang="fil" href={`${SITE.url}/tl/hula/${slug}/`} />
+    <link rel="alternate" hreflang="x-default" href={`${SITE.url}/tl/hula/${slug}/`} />
+    <meta property="og:url" content={`${SITE.url}/tl/hula/${slug}/`} />
+  </Fragment>
+
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+    <PredictionDetail client:load slug={slug!} lang="tl" />
+  </div>
+</Layout>
