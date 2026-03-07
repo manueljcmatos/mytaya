@@ -1,0 +1,224 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import GamblingDisclaimer from '../../components/compliance/GamblingDisclaimer.astro';
+import AgeNotice from '../../components/compliance/AgeNotice.astro';
+
+const lang = 'tl';
+
+const organizationSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: 'MyTaya',
+  url: 'https://mytaya.com',
+  logo: 'https://mytaya.com/favicon.svg',
+  sameAs: [],
+  description: 'Mga tamang hula sa basketball, football, at boxing para sa Filipino.',
+};
+---
+
+<Layout
+  title="Responsableng Pagsusugal | MyTaya"
+  description="Alamin ang tungkol sa responsableng pagsusugal, mga palatandaan ng problema sa pagsusugal, at mga mapagkukunan ng tulong mula sa PAGCOR."
+  lang={lang}
+  schema={organizationSchema}
+>
+  <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+
+    <!-- Page header -->
+    <header class="mb-10">
+      <h1 class="page-title">Responsableng Pagsusugal</h1>
+      <AgeNotice lang={lang} />
+    </header>
+
+    <!-- What is responsible gambling -->
+    <section class="content-section">
+      <h2 class="content-heading">Ano ang Responsableng Pagsusugal?</h2>
+      <p>
+        Ang responsableng pagsusugal ay nangangahulugang pagsusugal bilang isang libangan
+        at hindi bilang paraan ng pagkita ng pera. Kasama rito ang pagtatakda ng limitasyon
+        sa oras at pera na ginagastos, at ang pag-alam kung kailan titigil.
+      </p>
+      <p>
+        Dapat mong tandaan na ang pagsusugal ay para sa kasiyahan lamang. Huwag kailanman
+        magsugal ng pera na hindi mo kayang mawala.
+      </p>
+    </section>
+
+    <!-- Signs of problem gambling -->
+    <section class="content-section">
+      <h2 class="content-heading">Mga Palatandaan ng Problema sa Pagsusugal</h2>
+      <ul class="content-list">
+        <li>Pagsusugal ng higit sa kayang gastusin</li>
+        <li>Pagtatago ng pagsusugal mula sa pamilya at mga kaibigan</li>
+        <li>Pakiramdam na kailangan mag-sugal ng mas malaki para mabawi ang pagkatalo</li>
+        <li>Hindi makapigil sa pagsusugal kahit gusto nang tumigil</li>
+        <li>Pag-utang para makapagsugal</li>
+        <li>Pagpapabaya sa trabaho, pag-aaral, o pamilya dahil sa pagsusugal</li>
+        <li>Pagkakabalisa, pagkairitable, o depression na may kaugnayan sa pagsusugal</li>
+      </ul>
+    </section>
+
+    <!-- Self-exclusion resources -->
+    <section class="content-section">
+      <h2 class="content-heading">Mga Mapagkukunan ng Tulong</h2>
+      <p>
+        Kung sa tingin mo ay may problema ka sa pagsusugal, may mga mapagkukunan na
+        makakatulong sa iyo:
+      </p>
+      <ul class="content-list">
+        <li>
+          <strong>Self-exclusion:</strong> Maraming licensed na operator ang nag-aalok ng
+          self-exclusion programs na nagbibigay-daan sa iyo na i-block ang iyong sarili mula
+          sa pagsusugal sa loob ng isang takdang panahon.
+        </li>
+        <li>
+          <strong>Mga support group:</strong> Ang Gamblers Anonymous ay may mga grupo sa
+          Pilipinas na makakatulong sa iyo.
+        </li>
+        <li>
+          <strong>Propesyonal na tulong:</strong> Makipag-usap sa isang mental health
+          professional kung naaapektuhan na ang iyong pang-araw-araw na buhay.
+        </li>
+      </ul>
+    </section>
+
+    <!-- PAGCOR information -->
+    <section class="content-section">
+      <h2 class="content-heading">PAGCOR at Regulasyon</h2>
+      <p>
+        Ang Philippine Amusement and Gaming Corporation (PAGCOR) ang pangunahing
+        regulatory body para sa lahat ng uri ng pagsusugal sa Pilipinas. Ang PAGCOR
+        ay nag-aatas na ang pagsusugal ay para lamang sa mga indibidwal na 21 taong
+        gulang pataas.
+      </p>
+      <div class="hotline-card">
+        <p class="hotline-label">PAGCOR Hotline</p>
+        <p class="hotline-number">(02) 8538-9090</p>
+        <a
+          href="https://www.pagcor.ph/regulatory/responsible-gaming.php"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="hotline-link"
+        >
+          Bisitahin ang PAGCOR Responsible Gaming
+        </a>
+      </div>
+    </section>
+
+    <!-- MyTaya disclaimer -->
+    <section class="content-section">
+      <h2 class="content-heading">Tungkol sa MyTaya</h2>
+      <p>
+        Ang MyTaya ay isang predictions platform lamang. Hindi kami tumatanggap ng taya,
+        hindi kami nag-ooperate ng sportsbook, at hindi kami isang gambling operator.
+        Nagbibigay kami ng mga hula at pagsusuri sa sports para sa mga Pilipinong mahilig
+        sa sports betting.
+      </p>
+      <p>
+        Kapag gumagamit ng aming mga hula, tandaan na ang sports betting ay may panganib
+        at walang garantiya. Palaging magsugal nang responsable at sa loob lamang ng
+        iyong budget.
+      </p>
+    </section>
+
+    <!-- Full disclaimer component -->
+    <div class="mt-10">
+      <GamblingDisclaimer lang={lang} variant="full" />
+    </div>
+  </div>
+</Layout>
+
+<style>
+  .page-title {
+    font-family: var(--font-display);
+    font-size: 2.5rem;
+    letter-spacing: 0.05em;
+    color: var(--t-text);
+    margin-bottom: 1.25rem;
+  }
+
+  .content-section {
+    margin-bottom: 2.5rem;
+  }
+
+  .content-heading {
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    letter-spacing: 0.05em;
+    color: var(--t-text);
+    margin-bottom: 0.75rem;
+  }
+
+  .content-section p {
+    font-family: var(--font-body);
+    font-size: 0.9375rem;
+    line-height: 1.75;
+    color: var(--t-text-body);
+    margin-bottom: 0.75rem;
+  }
+
+  .content-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.625rem;
+  }
+
+  .content-list li {
+    font-family: var(--font-body);
+    font-size: 0.9375rem;
+    line-height: 1.6;
+    color: var(--t-text-body);
+    padding-left: 1.25rem;
+    position: relative;
+  }
+
+  .content-list li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.5em;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background-color: var(--color-brand-primary);
+  }
+
+  .hotline-card {
+    margin-top: 1rem;
+    padding: 1.25rem;
+    border: 1px solid var(--t-border);
+    border-radius: 0.75rem;
+    background-color: var(--t-bg-card);
+  }
+
+  .hotline-label {
+    font-size: 0.8125rem;
+    color: var(--t-text-sec);
+    margin: 0 0 0.25rem;
+    font-family: var(--font-body);
+  }
+
+  .hotline-number {
+    font-family: var(--font-display);
+    font-size: 1.75rem;
+    letter-spacing: 0.05em;
+    color: var(--color-brand-primary);
+    margin: 0 0 0.75rem;
+  }
+
+  .hotline-link {
+    font-size: 0.8125rem;
+    color: var(--color-brand-primary);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    font-family: var(--font-body);
+    transition: color 0.2s;
+  }
+
+  .hotline-link:hover {
+    color: var(--color-brand-light);
+  }
+</style>

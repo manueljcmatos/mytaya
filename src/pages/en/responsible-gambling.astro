@@ -1,0 +1,219 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import GamblingDisclaimer from '../../components/compliance/GamblingDisclaimer.astro';
+import AgeNotice from '../../components/compliance/AgeNotice.astro';
+
+const lang = 'en';
+
+const organizationSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: 'MyTaya',
+  url: 'https://mytaya.com',
+  logo: 'https://mytaya.com/favicon.svg',
+  sameAs: [],
+  description: 'Expert sports predictions for basketball, football, and boxing for the Filipino bettor.',
+};
+---
+
+<Layout
+  title="Responsible Gambling | MyTaya"
+  description="Learn about responsible gambling, signs of problem gambling, and support resources from PAGCOR."
+  lang={lang}
+  schema={organizationSchema}
+>
+  <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+
+    <!-- Page header -->
+    <header class="mb-10">
+      <h1 class="page-title">Responsible Gambling</h1>
+      <AgeNotice lang={lang} />
+    </header>
+
+    <!-- What is responsible gambling -->
+    <section class="content-section">
+      <h2 class="content-heading">What is Responsible Gambling?</h2>
+      <p>
+        Responsible gambling means treating gambling as entertainment, not as a way to
+        make money. It involves setting limits on the time and money you spend, and
+        knowing when to stop.
+      </p>
+      <p>
+        Remember that gambling should be fun. Never gamble with money you cannot afford
+        to lose.
+      </p>
+    </section>
+
+    <!-- Signs of problem gambling -->
+    <section class="content-section">
+      <h2 class="content-heading">Signs of Problem Gambling</h2>
+      <ul class="content-list">
+        <li>Spending more money on gambling than you can afford</li>
+        <li>Hiding your gambling from family and friends</li>
+        <li>Feeling the need to bet more to recover losses</li>
+        <li>Being unable to stop gambling even when you want to</li>
+        <li>Borrowing money to gamble</li>
+        <li>Neglecting work, studies, or family due to gambling</li>
+        <li>Experiencing anxiety, irritability, or depression related to gambling</li>
+      </ul>
+    </section>
+
+    <!-- Self-exclusion resources -->
+    <section class="content-section">
+      <h2 class="content-heading">Support Resources</h2>
+      <p>
+        If you think you may have a gambling problem, there are resources that can help:
+      </p>
+      <ul class="content-list">
+        <li>
+          <strong>Self-exclusion:</strong> Many licensed operators offer self-exclusion
+          programs that allow you to block yourself from gambling for a set period.
+        </li>
+        <li>
+          <strong>Support groups:</strong> Gamblers Anonymous has groups in the Philippines
+          that can provide support and guidance.
+        </li>
+        <li>
+          <strong>Professional help:</strong> Talk to a mental health professional if
+          gambling is affecting your daily life.
+        </li>
+      </ul>
+    </section>
+
+    <!-- PAGCOR information -->
+    <section class="content-section">
+      <h2 class="content-heading">PAGCOR and Regulation</h2>
+      <p>
+        The Philippine Amusement and Gaming Corporation (PAGCOR) is the primary regulatory
+        body for all forms of gambling in the Philippines. PAGCOR mandates that gambling
+        is for individuals 21 years old and above only.
+      </p>
+      <div class="hotline-card">
+        <p class="hotline-label">PAGCOR Hotline</p>
+        <p class="hotline-number">(02) 8538-9090</p>
+        <a
+          href="https://www.pagcor.ph/regulatory/responsible-gaming.php"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="hotline-link"
+        >
+          Visit PAGCOR Responsible Gaming
+        </a>
+      </div>
+    </section>
+
+    <!-- MyTaya disclaimer -->
+    <section class="content-section">
+      <h2 class="content-heading">About MyTaya</h2>
+      <p>
+        MyTaya is a predictions platform only. We do not accept wagers, we do not operate
+        a sportsbook, and we are not a gambling operator. We provide sports predictions
+        and analysis for Filipino sports betting enthusiasts.
+      </p>
+      <p>
+        When using our predictions, remember that sports betting carries risk and there
+        are no guarantees. Always gamble responsibly and within your budget.
+      </p>
+    </section>
+
+    <!-- Full disclaimer component -->
+    <div class="mt-10">
+      <GamblingDisclaimer lang={lang} variant="full" />
+    </div>
+  </div>
+</Layout>
+
+<style>
+  .page-title {
+    font-family: var(--font-display);
+    font-size: 2.5rem;
+    letter-spacing: 0.05em;
+    color: var(--t-text);
+    margin-bottom: 1.25rem;
+  }
+
+  .content-section {
+    margin-bottom: 2.5rem;
+  }
+
+  .content-heading {
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    letter-spacing: 0.05em;
+    color: var(--t-text);
+    margin-bottom: 0.75rem;
+  }
+
+  .content-section p {
+    font-family: var(--font-body);
+    font-size: 0.9375rem;
+    line-height: 1.75;
+    color: var(--t-text-body);
+    margin-bottom: 0.75rem;
+  }
+
+  .content-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.625rem;
+  }
+
+  .content-list li {
+    font-family: var(--font-body);
+    font-size: 0.9375rem;
+    line-height: 1.6;
+    color: var(--t-text-body);
+    padding-left: 1.25rem;
+    position: relative;
+  }
+
+  .content-list li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.5em;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background-color: var(--color-brand-primary);
+  }
+
+  .hotline-card {
+    margin-top: 1rem;
+    padding: 1.25rem;
+    border: 1px solid var(--t-border);
+    border-radius: 0.75rem;
+    background-color: var(--t-bg-card);
+  }
+
+  .hotline-label {
+    font-size: 0.8125rem;
+    color: var(--t-text-sec);
+    margin: 0 0 0.25rem;
+    font-family: var(--font-body);
+  }
+
+  .hotline-number {
+    font-family: var(--font-display);
+    font-size: 1.75rem;
+    letter-spacing: 0.05em;
+    color: var(--color-brand-primary);
+    margin: 0 0 0.75rem;
+  }
+
+  .hotline-link {
+    font-size: 0.8125rem;
+    color: var(--color-brand-primary);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    font-family: var(--font-body);
+    transition: color 0.2s;
+  }
+
+  .hotline-link:hover {
+    color: var(--color-brand-light);
+  }
+</style>

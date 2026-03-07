@@ -1,0 +1,192 @@
+---
+interface Props {
+  lang: 'tl' | 'en';
+  variant?: 'compact' | 'full';
+}
+
+const { lang, variant = 'compact' } = Astro.props;
+
+const text = {
+  tl: {
+    ageNotice: 'Para sa 21 taong gulang pataas lamang.',
+    warning: 'Ang pagsusugal ay maaaring magdulot ng adiksyon. Alamin kung kailan titigil.',
+    hotline: 'PAGCOR Hotline: (02) 8538-9090',
+    title: 'Responsableng Pagsusugal',
+    siteDisclaimer: 'Ang MyTaya ay isang predictions platform lamang. Hindi kami tumatanggap ng taya o nag-ooperate ng sportsbook.',
+    selfExclusion: 'Kung sa tingin mo ay may problema ka sa pagsusugal, humingi ng tulong. Maaari kang makipag-ugnayan sa PAGCOR o sa iyong lokal na tagapayo.',
+    learnMore: 'Alamin Pa',
+    learnMoreUrl: '/tl/responsableng-pagsusugal/',
+  },
+  en: {
+    ageNotice: 'For 21 years old and above only.',
+    warning: 'Gambling can be addictive. Know when to stop.',
+    hotline: 'PAGCOR Hotline: (02) 8538-9090',
+    title: 'Responsible Gambling',
+    siteDisclaimer: 'MyTaya is a predictions platform only. We do not accept wagers or operate a sportsbook.',
+    selfExclusion: 'If you think you may have a gambling problem, seek help. You can contact PAGCOR or your local counseling service.',
+    learnMore: 'Learn More',
+    learnMoreUrl: '/en/responsible-gambling/',
+  },
+};
+
+const t = text[lang];
+---
+
+{variant === 'compact' ? (
+  <div class="gambling-disclaimer gambling-disclaimer--compact">
+    <span class="age-badge">21+</span>
+    <span class="disclaimer-text">{t.warning}</span>
+  </div>
+) : (
+  <div class="gambling-disclaimer gambling-disclaimer--full">
+    <div class="disclaimer-header">
+      <span class="age-badge age-badge--large">21+</span>
+      <h3 class="disclaimer-title">{t.title}</h3>
+    </div>
+    <div class="disclaimer-body">
+      <p class="disclaimer-notice">{t.ageNotice}</p>
+      <p class="disclaimer-warning">{t.warning}</p>
+      <p class="disclaimer-site">{t.siteDisclaimer}</p>
+      <p class="disclaimer-help">{t.selfExclusion}</p>
+      <p class="disclaimer-hotline">{t.hotline}</p>
+    </div>
+    <div class="disclaimer-footer">
+      <a href="https://www.pagcor.ph/regulatory/responsible-gaming.php" target="_blank" rel="noopener noreferrer" class="disclaimer-link">
+        PAGCOR Responsible Gaming
+      </a>
+      <a href={t.learnMoreUrl} class="disclaimer-link disclaimer-link--primary">
+        {t.learnMore}
+      </a>
+    </div>
+  </div>
+)}
+
+<style>
+  .gambling-disclaimer {
+    font-family: var(--font-body);
+  }
+
+  /* Compact variant */
+  .gambling-disclaimer--compact {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .disclaimer-text {
+    font-size: 0.75rem;
+    color: var(--t-text-sec);
+  }
+
+  /* Age badge */
+  .age-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 0.375rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #fff;
+    background-color: var(--color-loss);
+    flex-shrink: 0;
+  }
+
+  .age-badge--large {
+    width: 3rem;
+    height: 3rem;
+    font-size: 1.125rem;
+    border-radius: 0.5rem;
+  }
+
+  /* Full variant */
+  .gambling-disclaimer--full {
+    border: 1px solid var(--t-border);
+    border-radius: 0.75rem;
+    padding: 1.5rem;
+    background-color: var(--t-bg-card);
+  }
+
+  .disclaimer-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--t-border);
+  }
+
+  .disclaimer-title {
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    letter-spacing: 0.05em;
+    color: var(--t-text);
+    margin: 0;
+  }
+
+  .disclaimer-body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .disclaimer-notice {
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: var(--color-loss);
+    margin: 0;
+  }
+
+  .disclaimer-warning {
+    font-size: 0.875rem;
+    color: var(--t-text);
+    font-weight: 500;
+    margin: 0;
+  }
+
+  .disclaimer-site,
+  .disclaimer-help {
+    font-size: 0.8125rem;
+    color: var(--t-text-sec);
+    line-height: 1.6;
+    margin: 0;
+  }
+
+  .disclaimer-hotline {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--color-brand-primary);
+    margin: 0;
+  }
+
+  .disclaimer-footer {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--t-border);
+  }
+
+  .disclaimer-link {
+    font-size: 0.8125rem;
+    color: var(--t-text-sec);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    transition: color 0.2s;
+  }
+
+  .disclaimer-link:hover {
+    color: var(--t-text);
+  }
+
+  .disclaimer-link--primary {
+    color: var(--color-brand-primary);
+    font-weight: 500;
+  }
+
+  .disclaimer-link--primary:hover {
+    color: var(--color-brand-light);
+  }
+</style>
