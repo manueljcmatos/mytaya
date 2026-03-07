@@ -48,7 +48,7 @@ export interface MatchContext {
   };
 }
 
-/** Pick types supported by the prediction engine */
+/** Pick types supported by the football prediction engine */
 export type PickType =
   | 'home'
   | 'away'
@@ -58,6 +58,38 @@ export type PickType =
   | 'btts_yes'
   | 'btts_no';
 
+/** NBA-specific pick types */
+export type NbaPickType =
+  | 'moneyline_home'
+  | 'moneyline_away'
+  | 'spread_home'
+  | 'spread_away'
+  | 'over'
+  | 'under';
+
+/** Combined pick type for all sports */
+export type AllPickType = PickType | NbaPickType;
+
+/** Context for NBA match prediction generation */
+export interface NbaMatchContext {
+  homeTeam: string;
+  awayTeam: string;
+  league: string;
+  leagueSlug: string;
+  fixtureId: number;
+  matchDate: string;
+  spread: number;
+  totalLine: number;
+  odds: {
+    moneyline_home: number;
+    moneyline_away: number;
+    spread_home: number;
+    spread_away: number;
+    over: number;
+    under: number;
+  };
+}
+
 /** Shape for inserting a prediction into Supabase */
 export interface PredictionInsert {
   slug: string;
@@ -65,8 +97,8 @@ export interface PredictionInsert {
   home_team_id: string;
   away_team_id: string;
   match_date: string;
-  sport: 'football';
-  pick: PickType;
+  sport: 'football' | 'basketball';
+  pick: PickType | NbaPickType;
   pick_label_tl: string;
   pick_label_en: string;
   analysis_tl: string;
@@ -77,4 +109,6 @@ export interface PredictionInsert {
   stake: number;
   published_site: boolean;
   api_fixture_id: number;
+  spread_line?: number;
+  total_line?: number;
 }
