@@ -1,22 +1,16 @@
 ---
 import Layout from '../../../layouts/Layout.astro';
-import SportTabs from '../../../components/SportTabs.astro';
-import EmptyState from '../../../components/EmptyState.astro';
+import PredictionList from '../../../components/predictions/PredictionList';
 import { getLangFromUrl, useTranslations } from '../../../i18n/utils';
 
 const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
-const activeSport = Astro.url.searchParams.get('sport') || '';
 ---
 
-<Layout title={`${t('nav.predictions')} - MyTaya`} lang={lang}>
+<Layout title={`${t('predictions.title')} - MyTaya`} lang={lang}>
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-    <h1 class="text-4xl sm:text-5xl tracking-wide mb-6 text-gradient-brand">{t('nav.predictions')}</h1>
+    <h1 class="text-4xl sm:text-5xl tracking-wide mb-6 text-gradient-brand">{t('predictions.title')}</h1>
 
-    <div class="mb-8">
-      <SportTabs lang={lang} activeSport={activeSport} />
-    </div>
-
-    <EmptyState message={t('empty.predictions')} icon="\u{1F3AF}" />
+    <PredictionList client:load lang="en" initialTab="today" />
   </div>
 </Layout>
