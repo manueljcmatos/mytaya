@@ -1,0 +1,200 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+import { getAllBlogSlugs, getBlogPostBySlug } from '../../../lib/posts';
+import { buildBlogPostingSchema, buildBreadcrumbSchema } from '../../../lib/seo';
+import { SITE } from '../../../lib/constants';
+
+export async function getStaticPaths() {
+  const slugs = await getAllBlogSlugs();
+  return slugs
+    .filter((s) => s.slug_en)
+    .map((s) => ({ params: { slug: s.slug_en } }));
+}
+
+const { slug } = Astro.params;
+
+let title = 'Blog - MyTaya';
+let description = 'Read our expert sports prediction analysis.';
+let schema: Record<string, unknown> | undefined;
+let breadcrumbSchema: Record<string, unknown> | undefined;
+let post: any = null;
+let predictionSlug: string | null = null;
+let slugTl: string | null = null;
+
+if (slug) {
+  post = await getBlogPostBySlug(slug, 'en');
+
+  if (post) {
+    title = `${post.title_en} - MyTaya`;
+    if (post.excerpt_en) {
+      description = post.excerpt_en.substring(0, 160);
+    }
+    slugTl = post.slug_tl;
+
+    if (post.prediction?.slug) {
+      predictionSlug = post.prediction.slug;
+    }
+
+    schema = buildBlogPostingSchema({
+      title: post.title_en,
+      description: post.excerpt_en || '',
+      datePublished: post.published_at,
+      url: `${SITE.url}/en/blog/${post.slug_en}/`,
+      lang: 'en',
+    });
+
+    breadcrumbSchema = buildBreadcrumbSchema([
+      { name: 'Home', url: `${SITE.url}/en/` },
+      { name: 'Blog', url: `${SITE.url}/en/blog/` },
+      { name: post.title_en, url: `${SITE.url}/en/blog/${post.slug_en}/` },
+    ]);
+  }
+}
+
+const tlAlternate = slugTl ? `/tl/blog/${slugTl}/` : '/tl/blog/';
+
+// Parse content sections for result callout rendering
+function parseContent(content: string | null): { body: string; resultSection: string | null; resultType: string | null } {
+  if (!content) return { body: '', resultSection: null, resultType: null };
+
+  const resultMatch = content.match(/## Result\s*\n([\s\S]*?)(?=\n## |$)/i);
+  if (!resultMatch) return { body: content, resultSection: null, resultType: null };
+
+  const resultText = resultMatch[1].trim();
+  const body = content.replace(/## Result\s*\n[\s\S]*?(?=\n## |$)/i, '').trim();
+
+  let resultType: string | null = null;
+  const lowerResult = resultText.toLowerCase();
+  if (lowerResult.includes('win') || lowerResult.includes('panalo')) resultType = 'win';
+  else if (lowerResult.includes('loss') || lowerResult.includes('talo') || lowerResult.includes('lost')) resultType = 'loss';
+  else if (lowerResult.includes('push')) resultType = 'push';
+
+  return { body, resultSection: resultText, resultType };
+}
+
+const parsed = post ? parseContent(post.content_en) : { body: '', resultSection: null, resultType: null };
+
+const resultStyles: Record<string, { bg: string; border: string }> = {
+  win: { bg: 'bg-emerald-500/10', border: 'border-emerald-500' },
+  loss: { bg: 'bg-red-500/10', border: 'border-red-500' },
+  push: { bg: 'bg-amber-500/10', border: 'border-amber-500' },
+};
+
+function formatDate(isoDate: string): string {
+  return new Intl.DateTimeFormat('en-PH', {
+    timeZone: 'Asia/Manila',
+    month: 'long',
+    day: 'numeric',
+    year: 'numeric',
+  }).format(new Date(isoDate));
+}
+
+function renderMarkdown(text: string): string {
+  return text
+    .split('\n\n')
+    .map((block) => {
+      const trimmed = block.trim();
+      if (!trimmed) return '';
+      if (trimmed.startsWith('### ')) return `<h3 class="text-xl font-bold mt-6 mb-3" style="color: var(--t-text, #f9fafb); font-family: var(--font-display, 'Bebas Neue', sans-serif);">${trimmed.slice(4)}</h3>`;
+      if (trimmed.startsWith('## ')) return `<h2 class="text-2xl font-bold mt-8 mb-4" style="color: var(--t-text, #f9fafb); font-family: var(--font-display, 'Bebas Neue', sans-serif);">${trimmed.slice(3)}</h2>`;
+      return `<p class="mb-4 leading-relaxed" style="color: var(--t-text-sec, #d1d5db);">${trimmed}</p>`;
+    })
+    .join('\n');
+}
+---
+
+<Layout title={title} description={description} schema={schema} lang="en">
+  <Fragment slot="head">
+    <link rel="alternate" hreflang="fil" href={`${SITE.url}${tlAlternate}`} />
+    <link rel="alternate" hreflang="en" href={`${SITE.url}/en/blog/${slug}/`} />
+    <link rel="alternate" hreflang="x-default" href={`${SITE.url}${tlAlternate}`} />
+    <meta property="og:url" content={`${SITE.url}/en/blog/${slug}/`} />
+    {breadcrumbSchema && (
+      <script type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
+    )}
+  </Fragment>
+
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+    {post ? (
+      <>
+        {/* Breadcrumb */}
+        <nav class="flex items-center gap-2 text-xs mb-6" style="color: var(--t-text-sec, #9ca3af);">
+          <a href="/en/" class="hover:underline">Home</a>
+          <span aria-hidden="true">&rsaquo;</span>
+          <a href="/en/blog/" class="hover:underline">Blog</a>
+          <span aria-hidden="true">&rsaquo;</span>
+          <span style="color: var(--t-text, #f9fafb);">{post.title_en}</span>
+        </nav>
+
+        {/* Article header */}
+        <article>
+          <header class="mb-8">
+            <div class="flex items-center gap-2 mb-3">
+              <span
+                class="text-xs font-bold uppercase tracking-wider px-2 py-0.5 rounded-full"
+                style={`background-color: ${post.sport === 'basketball' ? 'rgba(249, 115, 22, 0.15)' : 'rgba(15, 118, 110, 0.15)'}; color: ${post.sport === 'basketball' ? '#f97316' : 'var(--brand-primary, #0F766E)'};`}
+              >
+                {post.sport}
+              </span>
+            </div>
+            <h1
+              class="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4 leading-tight"
+              style="color: var(--t-text, #f9fafb); font-family: var(--font-display, 'Bebas Neue', sans-serif);"
+            >
+              {post.title_en}
+            </h1>
+            <div class="flex items-center gap-3 text-sm" style="color: var(--t-text-sec, #9ca3af);">
+              <time datetime={post.published_at}>{formatDate(post.published_at)}</time>
+              {post.read_time_minutes && (
+                <>
+                  <span aria-hidden="true">&middot;</span>
+                  <span>{post.read_time_minutes} min read</span>
+                </>
+              )}
+            </div>
+          </header>
+
+          {/* Article body */}
+          <div class="prose-custom" set:html={renderMarkdown(parsed.body)} />
+
+          {/* Result callout */}
+          {parsed.resultSection && parsed.resultType && (
+            <div class={`mt-8 p-6 rounded-xl border-l-4 ${resultStyles[parsed.resultType]?.bg || ''} ${resultStyles[parsed.resultType]?.border || ''}`}>
+              <h2
+                class="text-xl font-bold mb-3"
+                style="color: var(--t-text, #f9fafb); font-family: var(--font-display, 'Bebas Neue', sans-serif);"
+              >
+                Result
+              </h2>
+              <div set:html={renderMarkdown(parsed.resultSection)} />
+            </div>
+          )}
+
+          {/* Cross-link to prediction */}
+          {predictionSlug && (
+            <div
+              class="mt-8 p-4 rounded-xl flex items-center justify-between"
+              style="background-color: var(--t-surface, #1f2937); border: 1px solid var(--t-border, #374151);"
+            >
+              <span style="color: var(--t-text-sec, #9ca3af);">View our prediction for this match</span>
+              <a
+                href={`/en/predictions/${predictionSlug}/`}
+                class="px-4 py-2 rounded-lg text-sm font-medium"
+                style="background-color: var(--brand-primary, #0F766E); color: #ffffff;"
+              >
+                View Prediction
+              </a>
+            </div>
+          )}
+        </article>
+      </>
+    ) : (
+      <div class="text-center py-20">
+        <p style="color: var(--t-text-sec, #9ca3af);">Article not found.</p>
+        <a href="/en/blog/" class="mt-4 inline-block underline" style="color: var(--brand-primary, #0F766E);">
+          Back to Blog
+        </a>
+      </div>
+    )}
+  </div>
+</Layout>
