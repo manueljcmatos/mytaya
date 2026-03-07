@@ -69,10 +69,10 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### SEO & Compliance
 
-- [ ] **SEO-01**: Schema.org SportsEvent structured data on prediction pages
-- [ ] **SEO-02**: Schema.org BlogPosting structured data on blog posts
-- [ ] **SEO-03**: Proper meta tags (title, description, OG, Twitter cards) on all pages
-- [ ] **SEO-04**: Sitemap with i18n support and hreflang annotations
+- [x] **SEO-01**: Schema.org SportsEvent structured data on prediction pages
+- [x] **SEO-02**: Schema.org BlogPosting structured data on blog posts
+- [x] **SEO-03**: Proper meta tags (title, description, OG, Twitter cards) on all pages
+- [x] **SEO-04**: Sitemap with i18n support and hreflang annotations
 - [ ] **SEO-05**: Responsible gambling page with PAGCOR compliance awareness
 - [ ] **SEO-06**: Age verification notice and gambling disclaimers on relevant pages
 
@@ -162,10 +162,10 @@ Which phases cover which requirements. Updated during roadmap creation.
 | TELE-01 | Phase 6: Prediction Cards & Telegram | Pending |
 | TELE-02 | Phase 6: Prediction Cards & Telegram | Pending |
 | TELE-03 | Phase 6: Prediction Cards & Telegram | Pending |
-| SEO-01 | Phase 2: SEO, Compliance & Affiliates | Pending |
-| SEO-02 | Phase 2: SEO, Compliance & Affiliates | Pending |
-| SEO-03 | Phase 2: SEO, Compliance & Affiliates | Pending |
-| SEO-04 | Phase 2: SEO, Compliance & Affiliates | Pending |
+| SEO-01 | Phase 2: SEO, Compliance & Affiliates | Complete |
+| SEO-02 | Phase 2: SEO, Compliance & Affiliates | Complete |
+| SEO-03 | Phase 2: SEO, Compliance & Affiliates | Complete |
+| SEO-04 | Phase 2: SEO, Compliance & Affiliates | Complete |
 | SEO-05 | Phase 2: SEO, Compliance & Affiliates | Pending |
 | SEO-06 | Phase 2: SEO, Compliance & Affiliates | Pending |
 | AFFL-01 | Phase 2: SEO, Compliance & Affiliates | Pending |
