@@ -28,9 +28,9 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Basketball Predictions
 
-- [ ] **BASK-01**: Daily NBA predictions are fetched via API-Basketball or API-Football
+- [x] **BASK-01**: Daily NBA predictions are fetched via API-Basketball or API-Football
 - [ ] **BASK-02**: NBA predictions display teams, conference, odds, spread, and prediction type
-- [ ] **BASK-03**: NBA predictions are resolved automatically when game results come in
+- [x] **BASK-03**: NBA predictions are resolved automatically when game results come in
 - [ ] **BASK-04**: PBA predictions can be created manually with full match details and analysis
 - [ ] **BASK-05**: NCAA Philippines / UAAP predictions can be created manually
 - [ ] **BASK-06**: User can filter predictions by league (NBA, PBA, NCAA PH)
@@ -136,9 +136,9 @@ Which phases cover which requirements. Updated during roadmap creation.
 | FTBL-03 | Phase 3: Football Predictions | Complete |
 | FTBL-04 | Phase 3: Football Predictions | Complete |
 | FTBL-05 | Phase 3: Football Predictions | Complete |
-| BASK-01 | Phase 4: NBA Predictions & Statistics | Pending |
+| BASK-01 | Phase 4: NBA Predictions & Statistics | Complete |
 | BASK-02 | Phase 4: NBA Predictions & Statistics | Pending |
-| BASK-03 | Phase 4: NBA Predictions & Statistics | Pending |
+| BASK-03 | Phase 4: NBA Predictions & Statistics | Complete |
 | BASK-04 | Phase 7: PBA, Boxing & Manual Content | Pending |
 | BASK-05 | Phase 7: PBA, Boxing & Manual Content | Pending |
 | BASK-06 | Phase 7: PBA, Boxing & Manual Content | Pending |

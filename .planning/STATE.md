@@ -5,23 +5,23 @@
 See: .planning/PROJECT.md (updated 2026-03-07)
 
 **Core value:** Every Filipino sports bettor visiting mytaya.com finds accurate, timely predictions for basketball, boxing, and football in their preferred language (Filipino or English)
-**Current focus:** Phase 3 complete -- Football Predictions fully delivered (worker + listing + detail pages)
+**Current focus:** Phase 4 in progress -- NBA predictions worker pipeline delivered, statistics and frontend next
 
 ## Current Position
 
 Phase: 4 of 7 (Basketball & Boxing)
-Plan: 0 of ? in current phase (phase 3 complete)
-Status: Phase Transition
-Last activity: 2026-03-07 -- Completed 03-03-PLAN.md (Prediction Detail Pages)
+Plan: 1 of 3 in current phase
+Status: Executing
+Last activity: 2026-03-07 -- Completed 04-01-PLAN.md (NBA Predictions Worker)
 
-Progress: [########..] 40%
+Progress: [#########.] 45%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 10
+- Total plans completed: 11
 - Average duration: 3min
-- Total execution time: 0.53 hours
+- Total execution time: 0.58 hours
 
 **By Phase:**
 
@@ -32,11 +32,11 @@ Progress: [########..] 40%
 | 03-football-predictions | 3 | 9min | 3min |
 
 **Recent Trend:**
-- Last 5 plans: 02-03 (5min), 02-04 (3min), 03-01 (3min), 03-02 (4min), 03-03 (2min)
+- Last 5 plans: 02-04 (3min), 03-01 (3min), 03-02 (4min), 03-03 (2min), 04-01 (3min)
 - Trend: Consistent
 
 *Updated after each plan completion*
-| Phase 03 P03 | 2min | 2 tasks | 4 files |
+| Phase 04 P01 | 3min | 2 tasks | 7 files |
 
 ## Accumulated Context
 
@@ -84,6 +84,9 @@ Recent decisions affecting current work:
 - [03-03]: Dual SportsEvent JSON-LD: server-side in Astro + client-side in React island (search engines deduplicate)
 - [03-03]: Custom hreflang tags in page slot override Layout defaults for correct /hula/ <-> /predictions/ mapping
 - [03-03]: Supabase join queries for team/league names in both Astro frontmatter and React island
+- [04-01]: Same x-apisports-key for both API-Football and API-Basketball (no new secret)
+- [04-01]: NBA pipeline isolated with try/catch so football pipeline continues on NBA failure
+- [04-01]: Half-point lines prevent pushes on spread/totals; push result supported for whole-number lines
 
 ### Pending Todos
 
@@ -98,5 +101,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-03-07
-Stopped at: Completed 03-03-PLAN.md (Prediction Detail Pages) -- Phase 3 complete
+Stopped at: Completed 04-01-PLAN.md (NBA Predictions Worker)
 Resume file: None
