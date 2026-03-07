@@ -1,0 +1,93 @@
+---
+import { getLangFromUrl, useTranslations } from '../i18n/utils';
+import { SOCIAL_LINKS } from '../lib/constants';
+
+interface Props {
+  lang?: string;
+}
+
+const lang = Astro.props.lang || getLangFromUrl(Astro.url);
+const t = useTranslations(lang as 'tl' | 'en');
+
+const predictionsPath = lang === 'tl' ? '/tl/hula/' : '/en/predictions/';
+---
+
+<section class="hero-section relative overflow-hidden">
+  <!-- Background pattern -->
+  <div class="hero-bg absolute inset-0 pointer-events-none" aria-hidden="true"></div>
+
+  <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20 lg:py-28">
+    <div class="text-center max-w-3xl mx-auto">
+      <!-- Headline -->
+      <h1 class="text-5xl sm:text-6xl lg:text-7xl tracking-wide leading-none mb-4">
+        <span class="text-gradient-brand">{t('hero.title')}</span>
+      </h1>
+
+      <!-- Subtitle -->
+      <p class="text-lg sm:text-xl text-[var(--t-text-sec)] mb-8 max-w-xl mx-auto leading-relaxed" style="font-family: var(--font-body);">
+        {t('hero.subtitle')}
+      </p>
+
+      <!-- CTA Buttons -->
+      <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+        <a href={predictionsPath} class="btn-primary btn-hero">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+          {t('cta.predictions')}
+        </a>
+        <a href={SOCIAL_LINKS.telegram} target="_blank" rel="noopener noreferrer" class="btn-outline btn-hero">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
+          {t('cta.telegram')}
+        </a>
+      </div>
+
+      <!-- Sport badges -->
+      <div class="flex items-center justify-center gap-3 mt-10">
+        <span class="sport-badge">
+          <span class="text-base">&#127936;</span>
+          {t('sport.basketball')}
+        </span>
+        <span class="sport-badge-separator" aria-hidden="true"></span>
+        <span class="sport-badge">
+          <span class="text-base">&#9917;</span>
+          {t('sport.football')}
+        </span>
+        <span class="sport-badge-separator" aria-hidden="true"></span>
+        <span class="sport-badge">
+          <span class="text-base">&#129354;</span>
+          {t('sport.boxing')}
+        </span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero-section {
+    background: linear-gradient(180deg, color-mix(in srgb, var(--color-brand-primary) 6%, transparent) 0%, transparent 100%);
+  }
+  .hero-bg {
+    background-image:
+      radial-gradient(circle at 20% 50%, color-mix(in srgb, var(--color-brand-primary) 8%, transparent) 0%, transparent 50%),
+      radial-gradient(circle at 80% 20%, color-mix(in srgb, var(--color-brand-light) 5%, transparent) 0%, transparent 40%);
+  }
+  .btn-hero {
+    padding: 0.875rem 2rem;
+    font-size: 1rem;
+  }
+  .sport-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: var(--t-text-sec);
+    font-family: var(--font-body);
+  }
+  .sport-badge-separator {
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background-color: var(--t-text-sec);
+    opacity: 0.4;
+  }
+</style>

@@ -1,0 +1,78 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import HeroSection from '../../components/HeroSection.astro';
+import SportTabs from '../../components/SportTabs.astro';
+import TelegramBanner from '../../components/TelegramBanner.astro';
+import EmptyState from '../../components/EmptyState.astro';
+import { getLangFromUrl, useTranslations } from '../../i18n/utils';
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+---
+
+<Layout title="MyTaya - Expert Sports Predictions" lang={lang}>
+  <!-- Hero -->
+  <HeroSection lang={lang} />
+
+  <!-- Sport Tabs -->
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 pb-4">
+    <div class="flex justify-center">
+      <SportTabs lang={lang} />
+    </div>
+  </div>
+
+  <!-- Today's Predictions -->
+  <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div class="section-header">
+      <h2 class="section-title">{t('section.predictions')}</h2>
+      <a href="/en/predictions/" class="link-arrow">{t('cta.viewAll')}</a>
+    </div>
+    <EmptyState message={t('empty.predictions')} icon="\u{1F3AF}" />
+  </section>
+
+  <!-- Recent Results -->
+  <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div class="section-header">
+      <h2 class="section-title">{t('section.results')}</h2>
+      <a href="/en/results/" class="link-arrow">{t('cta.viewAll')}</a>
+    </div>
+    <EmptyState message={t('empty.results')} icon="\u{1F4CA}" />
+  </section>
+
+  <!-- Telegram CTA -->
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <TelegramBanner lang={lang} />
+  </div>
+
+  <!-- Latest Blog Posts -->
+  <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div class="section-header">
+      <h2 class="section-title">{t('section.blog')}</h2>
+      <a href="/en/blog/" class="link-arrow">{t('cta.viewAll')}</a>
+    </div>
+    <EmptyState message={t('empty.blog')} icon="\u{1F4DD}" />
+  </section>
+
+  <!-- Operators -->
+  <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pb-16">
+    <div class="section-header">
+      <h2 class="section-title">{t('section.operators')}</h2>
+      <a href="/en/operators/" class="link-arrow">{t('cta.viewAll')}</a>
+    </div>
+    <EmptyState message={t('empty.operators')} icon="\u{1F3E2}" />
+  </section>
+</Layout>
+
+<style>
+  .section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1.25rem;
+  }
+  .section-title {
+    font-size: 1.75rem;
+    letter-spacing: 0.05em;
+    color: var(--t-text);
+  }
+</style>
