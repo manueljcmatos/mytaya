@@ -1,0 +1,310 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+import GamblingDisclaimer from '../../../components/compliance/GamblingDisclaimer.astro';
+import { operators } from '../../../data/operators';
+import type { Operator } from '../../../data/operators';
+
+export function getStaticPaths() {
+  return operators.map((op) => ({
+    params: { slug: op.slug },
+    props: { operator: op },
+  }));
+}
+
+interface Props {
+  operator: Operator;
+}
+
+const { operator } = Astro.props;
+const lang = 'tl' as const;
+
+const fullStars = Math.floor(operator.rating);
+const hasHalfStar = operator.rating % 1 >= 0.5;
+
+const reviewParagraphs = operator.review[lang].split('\n\n').filter(Boolean);
+const description = reviewParagraphs[0]?.substring(0, 155) + '...';
+---
+
+<Layout
+  title={`${operator.name} Review - MyTaya`}
+  description={description}
+  lang={lang}
+>
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+    <!-- Header -->
+    <div class="review-header">
+      <div class="review-logo" aria-label={operator.name}>
+        <span class="logo-initials">{operator.name.substring(0, 2).toUpperCase()}</span>
+      </div>
+      <div class="review-title-area">
+        <h1 class="review-name">{operator.name} Review</h1>
+        <div class="review-rating" aria-label={`Rating: ${operator.rating} out of 5`}>
+          {Array.from({ length: 5 }).map((_, i) => (
+            <span class={`star ${i < fullStars ? 'star-filled' : i === fullStars && hasHalfStar ? 'star-half' : 'star-empty'}`}>
+              {i < fullStars ? '\u2605' : i === fullStars && hasHalfStar ? '\u2605' : '\u2606'}
+            </span>
+          ))}
+          <span class="rating-number">{operator.rating} / 5</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Welcome Bonus Callout -->
+    <div class="bonus-callout card-brand">
+      <div class="bonus-callout-inner">
+        <span class="bonus-label">Welcome Bonus</span>
+        <span class="bonus-value">{operator.welcomeBonus[lang]}</span>
+      </div>
+      <a
+        href={operator.affiliateUrl}
+        rel="sponsored nofollow noopener"
+        target="_blank"
+        class="btn-primary"
+      >
+        Kunin ang Bonus
+      </a>
+    </div>
+
+    <!-- Review Content -->
+    <div class="review-content">
+      <h2>Buong Review</h2>
+      {reviewParagraphs.map((paragraph) => (
+        <p>{paragraph}</p>
+      ))}
+    </div>
+
+    <!-- Features -->
+    <div class="review-section">
+      <h2>Mga Pangunahing Feature</h2>
+      <ul class="features-list">
+        {operator.features.map((feature) => (
+          <li class="feature-item">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+            {feature}
+          </li>
+        ))}
+      </ul>
+    </div>
+
+    <!-- Sports Covered -->
+    <div class="review-section">
+      <h2>Mga Sports na Saklaw</h2>
+      <div class="sports-tags">
+        {operator.sportsCovered.map((sport) => (
+          <span class="sport-tag">{sport}</span>
+        ))}
+      </div>
+    </div>
+
+    <!-- CTA -->
+    <div class="review-cta">
+      <a
+        href={operator.affiliateUrl}
+        rel="sponsored nofollow noopener"
+        target="_blank"
+        class="btn-primary"
+      >
+        Mag-sign Up sa {operator.name}
+      </a>
+      <a href="/tl/mga-operator/" class="link-arrow">
+        Tingnan Lahat ng Operator
+      </a>
+    </div>
+
+    <!-- Gambling Disclaimer -->
+    <GamblingDisclaimer lang="tl" variant="full" />
+  </div>
+</Layout>
+
+<style>
+  .review-header {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    margin-bottom: 2rem;
+  }
+
+  .review-logo {
+    width: 4rem;
+    height: 4rem;
+    border-radius: 0.75rem;
+    background: linear-gradient(135deg, var(--color-brand-primary), var(--color-brand-light));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .logo-initials {
+    color: #FFFFFF;
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    letter-spacing: 0.05em;
+  }
+
+  .review-title-area {
+    flex: 1;
+  }
+
+  .review-name {
+    font-size: 2rem;
+    color: var(--t-text);
+    margin: 0;
+    line-height: 1.2;
+  }
+
+  @media (min-width: 640px) {
+    .review-name {
+      font-size: 2.5rem;
+    }
+  }
+
+  .review-rating {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    margin-top: 0.25rem;
+  }
+
+  .star {
+    font-size: 1.125rem;
+    line-height: 1;
+  }
+
+  .star-filled { color: var(--color-push); }
+  .star-half { color: var(--color-push); opacity: 0.6; }
+  .star-empty { color: var(--t-text-sec); opacity: 0.3; }
+
+  .rating-number {
+    font-family: var(--font-body);
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--t-text-sec);
+    margin-left: 0.375rem;
+  }
+
+  .bonus-callout {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1.5rem;
+    margin-bottom: 2.5rem;
+  }
+
+  @media (min-width: 640px) {
+    .bonus-callout {
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+    }
+  }
+
+  .bonus-callout-inner {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .bonus-label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--t-brand);
+  }
+
+  .bonus-value {
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: var(--t-text);
+    font-family: var(--font-body);
+  }
+
+  .review-content {
+    margin-bottom: 2rem;
+  }
+
+  .review-content h2 {
+    font-size: 1.5rem;
+    color: var(--t-text);
+    margin: 0 0 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--t-border);
+  }
+
+  .review-content p {
+    font-size: 0.9375rem;
+    color: var(--t-text-body);
+    line-height: 1.8;
+    margin-bottom: 1rem;
+  }
+
+  .review-section {
+    margin-bottom: 2rem;
+  }
+
+  .review-section h2 {
+    font-size: 1.5rem;
+    color: var(--t-text);
+    margin: 0 0 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--t-border);
+  }
+
+  .features-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.625rem;
+  }
+
+  @media (min-width: 640px) {
+    .features-list {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  .feature-item {
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
+    font-size: 0.9375rem;
+    color: var(--t-text-body);
+    font-family: var(--font-body);
+  }
+
+  .feature-item svg {
+    color: var(--t-brand);
+    flex-shrink: 0;
+  }
+
+  .sports-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .sport-tag {
+    padding: 0.375rem 0.875rem;
+    border-radius: 9999px;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    font-family: var(--font-body);
+    color: var(--t-brand);
+    background-color: color-mix(in srgb, var(--t-brand) 8%, transparent);
+    border: 1px solid color-mix(in srgb, var(--t-brand) 15%, transparent);
+  }
+
+  .review-cta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1.5rem;
+    padding: 1.5rem 0;
+    margin-bottom: 1rem;
+    border-top: 1px solid var(--t-border);
+    border-bottom: 1px solid var(--t-border);
+  }
+</style>

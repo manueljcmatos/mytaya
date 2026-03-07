@@ -1,16 +1,129 @@
 ---
 import Layout from '../../../layouts/Layout.astro';
-import EmptyState from '../../../components/EmptyState.astro';
-import { getLangFromUrl, useTranslations } from '../../../i18n/utils';
+import OperatorGrid from '../../../components/operators/OperatorGrid.astro';
+import GamblingDisclaimer from '../../../components/compliance/GamblingDisclaimer.astro';
+import { operators } from '../../../data/operators';
+import { getLangFromUrl } from '../../../i18n/utils';
 
 const lang = getLangFromUrl(Astro.url);
-const t = useTranslations(lang);
 ---
 
-<Layout title={`${t('nav.operators')} - MyTaya`} lang={lang}>
+<Layout
+  title="PAGCOR Licensed Operators - MyTaya"
+  description="Compare PAGCOR-licensed sports betting operators in the Philippines. Find the best welcome bonuses, features, and reviews."
+  lang={lang}
+>
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-    <h1 class="text-4xl sm:text-5xl tracking-wide mb-6 text-gradient-brand">{t('nav.operators')}</h1>
+    <h1 class="text-4xl sm:text-5xl tracking-wide mb-4 text-gradient-brand">PAGCOR Licensed Operators</h1>
+    <p class="intro-text">
+      Compare the top PAGCOR-licensed sports betting operators available in the Philippines. All operators listed below hold valid licenses and offer competitive welcome bonuses for new players.
+    </p>
 
-    <EmptyState message={t('empty.operators')} icon="\u{1F3E2}" />
+    <!-- Comparison Summary -->
+    <div class="comparison-summary card">
+      <h2 class="summary-title">Quick Comparison</h2>
+      <div class="summary-table-wrapper">
+        <table class="summary-table">
+          <thead>
+            <tr>
+              <th>Operator</th>
+              <th>Welcome Bonus</th>
+              <th>Rating</th>
+            </tr>
+          </thead>
+          <tbody>
+            {operators.map((op) => (
+              <tr>
+                <td class="op-name">{op.name}</td>
+                <td class="op-bonus">{op.welcomeBonus.en}</td>
+                <td class="op-rating">
+                  <span class="rating-star">{'\u2605'}</span> {op.rating}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Operator Cards -->
+    <OperatorGrid operators={operators} lang="en" />
+
+    <!-- Gambling Disclaimer -->
+    <GamblingDisclaimer lang="en" variant="full" />
   </div>
 </Layout>
+
+<style>
+  .intro-text {
+    font-size: 1rem;
+    color: var(--t-text-sec);
+    line-height: 1.7;
+    max-width: 42rem;
+    margin-bottom: 2rem;
+  }
+
+  .comparison-summary {
+    padding: 1.25rem 1.5rem;
+    margin-bottom: 2rem;
+  }
+
+  .summary-title {
+    font-size: 1.25rem;
+    color: var(--t-text);
+    margin: 0 0 0.875rem;
+  }
+
+  .summary-table-wrapper {
+    overflow-x: auto;
+  }
+
+  .summary-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: var(--font-body);
+    font-size: 0.875rem;
+  }
+
+  .summary-table thead th {
+    text-align: left;
+    padding: 0.5rem 0.75rem;
+    color: var(--t-brand);
+    font-weight: 600;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border-bottom: 1px solid var(--t-border);
+  }
+
+  .summary-table tbody td {
+    padding: 0.625rem 0.75rem;
+    border-bottom: 1px solid var(--t-border);
+    color: var(--t-text-body);
+  }
+
+  .summary-table tbody tr:last-child td {
+    border-bottom: none;
+  }
+
+  .summary-table tbody tr:hover {
+    background-color: var(--t-bg-hover);
+  }
+
+  .op-name {
+    font-weight: 600;
+    color: var(--t-text);
+  }
+
+  .op-bonus {
+    font-size: 0.8125rem;
+  }
+
+  .op-rating {
+    white-space: nowrap;
+  }
+
+  .rating-star {
+    color: var(--color-push);
+  }
+</style>
