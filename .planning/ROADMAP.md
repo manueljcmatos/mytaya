@@ -32,11 +32,12 @@ Decimal phases appear between their surrounding integers in numeric order.
   3. Supabase predictions table exists with bilingual columns and odds-tracking fields, queryable via PostgREST
   4. User can toggle dark/light theme and the preference persists across browser sessions
   5. Site is installable as a PWA from the browser, with a fresh Philippine-inspired visual identity that is clearly distinct from betpro.cl
-**Plans**: TBD
+**Plans**: 3 plans
 
 Plans:
-- [ ] 01-01: TBD
-- [ ] 01-02: TBD
+- [ ] 01-01-PLAN.md — Project setup: Astro 5 + Tailwind v4 + i18n config + theme system + Supabase schema
+- [ ] 01-02-PLAN.md — Layout, Header, Footer, Language Switcher, Theme Toggle components
+- [ ] 01-03-PLAN.md — Bilingual homepage + section pages with empty states + visual checkpoint
 
 ### Phase 2: SEO, Compliance & Affiliates
 **Goal**: The site meets Google YMYL trust requirements and PAGCOR compliance standards, with monetization infrastructure in place
@@ -137,7 +138,7 @@ Note: Phases 5 and 6 both depend on Phase 3 (not on each other) and could execut
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Foundation | 0/0 | Not started | - |
+| 1. Foundation | 0/3 | Planning complete | - |
 | 2. SEO, Compliance & Affiliates | 0/0 | Not started | - |
 | 3. Football Predictions | 0/0 | Not started | - |
 | 4. NBA Predictions & Statistics | 0/0 | Not started | - |
