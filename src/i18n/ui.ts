@@ -114,6 +114,12 @@ export const ui = {
     'stats.profit': 'Kita',
     'stats.units': 'Yunit',
 
+    // Blog
+    'blog.featured': 'Tampok na Artikulo',
+    'blog.readMore': 'Basahin pa',
+    'blog.readTime': '{min} min basahin',
+    'blog.filterAll': 'Lahat',
+
     // Sections
     'section.predictions': 'Mga Hula',
     'section.results': 'Mga Resulta',
@@ -232,6 +238,12 @@ export const ui = {
     'stats.result': 'Result',
     'stats.profit': 'Profit',
     'stats.units': 'Units',
+
+    // Blog
+    'blog.featured': 'Featured Article',
+    'blog.readMore': 'Read more',
+    'blog.readTime': '{min} min read',
+    'blog.filterAll': 'All',
 
     // Sections
     'section.predictions': 'Predictions',
