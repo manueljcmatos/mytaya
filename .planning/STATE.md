@@ -5,23 +5,23 @@
 See: .planning/PROJECT.md (updated 2026-03-07)
 
 **Core value:** Every Filipino sports bettor visiting mytaya.com finds accurate, timely predictions for basketball, boxing, and football in their preferred language (Filipino or English)
-**Current focus:** Phase 4 in progress -- NBA worker + frontend sport-awareness delivered, statistics page next
+**Current focus:** Phase 4 complete -- NBA worker, frontend sport-awareness, and statistics dashboard all delivered
 
 ## Current Position
 
 Phase: 4 of 7 (Basketball & Boxing)
-Plan: 2 of 3 in current phase
-Status: Executing
-Last activity: 2026-03-07 -- Completed 04-02-PLAN.md (NBA Predictions Frontend)
+Plan: 3 of 3 in current phase
+Status: Phase Complete
+Last activity: 2026-03-07 -- Completed 04-03-PLAN.md (Statistics Dashboard)
 
-Progress: [##########] 50%
+Progress: [############] 57%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 12
+- Total plans completed: 13
 - Average duration: 3min
-- Total execution time: 0.67 hours
+- Total execution time: 0.72 hours
 
 **By Phase:**
 
@@ -32,12 +32,13 @@ Progress: [##########] 50%
 | 03-football-predictions | 3 | 9min | 3min |
 
 **Recent Trend:**
-- Last 5 plans: 03-01 (3min), 03-02 (4min), 03-03 (2min), 04-01 (3min), 04-02 (5min)
+- Last 5 plans: 03-02 (4min), 03-03 (2min), 04-01 (3min), 04-02 (5min), 04-03 (3min)
 - Trend: Consistent
 
 *Updated after each plan completion*
 | Phase 04 P01 | 3min | 2 tasks | 7 files |
 | Phase 04 P02 | 5min | 2 tasks | 7 files |
+| Phase 04 P03 | 3min | 2 tasks | 10 files |
 
 ## Accumulated Context
 
@@ -91,6 +92,9 @@ Recent decisions affecting current work:
 - [04-02]: NBA sport badge uses orange accent color (#f97316) to distinguish from teal football branding
 - [04-02]: Spread/total line values displayed inline with pick type badge on cards
 - [04-01]: Half-point lines prevent pushes on spread/totals; push result supported for whole-number lines
+- [04-03]: Recharts 3.8.0 for charting -- pure React, SVG-based, works with CSS vars for theme-aware styling
+- [04-03]: Statistics computed on-read from predictions table (no separate aggregation table)
+- [04-03]: Streak calculation skips push results to count only consecutive wins or losses
 
 ### Pending Todos
 
@@ -105,5 +109,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-03-07
-Stopped at: Completed 04-02-PLAN.md (NBA Predictions Frontend)
+Stopped at: Completed 04-03-PLAN.md (Statistics Dashboard)
 Resume file: None

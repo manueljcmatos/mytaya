@@ -52,11 +52,11 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Statistics & Tracking
 
-- [ ] **STAT-01**: Dashboard shows overall win rate across all sports
-- [ ] **STAT-02**: Dashboard shows ROI based on tracked odds
-- [ ] **STAT-03**: Dashboard shows current streak (wins/losses)
-- [ ] **STAT-04**: Statistics can be filtered by sport (football, basketball, boxing)
-- [ ] **STAT-05**: Profit chart visualizes performance over time
+- [x] **STAT-01**: Dashboard shows overall win rate across all sports
+- [x] **STAT-02**: Dashboard shows ROI based on tracked odds
+- [x] **STAT-03**: Dashboard shows current streak (wins/losses)
+- [x] **STAT-04**: Statistics can be filtered by sport (football, basketball, boxing)
+- [x] **STAT-05**: Profit chart visualizes performance over time
 
 ### Prediction Cards & Telegram
 
@@ -151,11 +151,11 @@ Which phases cover which requirements. Updated during roadmap creation.
 | BLOG-03 | Phase 5: Blog Automation | Pending |
 | BLOG-04 | Phase 5: Blog Automation | Pending |
 | BLOG-05 | Phase 5: Blog Automation | Pending |
-| STAT-01 | Phase 4: NBA Predictions & Statistics | Pending |
-| STAT-02 | Phase 4: NBA Predictions & Statistics | Pending |
-| STAT-03 | Phase 4: NBA Predictions & Statistics | Pending |
-| STAT-04 | Phase 4: NBA Predictions & Statistics | Pending |
-| STAT-05 | Phase 4: NBA Predictions & Statistics | Pending |
+| STAT-01 | Phase 4: NBA Predictions & Statistics | Complete |
+| STAT-02 | Phase 4: NBA Predictions & Statistics | Complete |
+| STAT-03 | Phase 4: NBA Predictions & Statistics | Complete |
+| STAT-04 | Phase 4: NBA Predictions & Statistics | Complete |
+| STAT-05 | Phase 4: NBA Predictions & Statistics | Complete |
 | CARD-01 | Phase 6: Prediction Cards & Telegram | Pending |
 | CARD-02 | Phase 6: Prediction Cards & Telegram | Pending |
 | CARD-03 | Phase 6: Prediction Cards & Telegram | Pending |
