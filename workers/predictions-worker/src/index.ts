@@ -1,0 +1,328 @@
+import type { Env, MatchContext, PredictionInsert } from './types';
+import { createSupabaseClient } from './supabase';
+import { fetchTodayFixtures, fetchOdds, TARGET_LEAGUES } from './api-football';
+import { generatePrediction } from './prediction-gen';
+import { resolveFinishedMatches } from './resolver';
+import type { ApiFootballFixture } from './types';
+
+/** Delay helper for rate limiting */
+function delay(ms: number): Promise<void> {
+  return new Promise((r) => setTimeout(r, ms));
+}
+
+/**
+ * Get today's date string in Asia/Manila timezone (YYYY-MM-DD).
+ */
+function getTodayPHT(): string {
+  return new Intl.DateTimeFormat('en-CA', {
+    timeZone: 'Asia/Manila',
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  }).format(new Date());
+}
+
+/**
+ * Generate a URL-safe slug for a prediction.
+ * Format: league-home-vs-away-YYYY-MM-DD
+ */
+function buildSlug(
+  leagueSlug: string,
+  homeTeam: string,
+  awayTeam: string,
+  date: string
+): string {
+  const slugify = (s: string) =>
+    s
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/(^-|-$)/g, '');
+  return `${leagueSlug}-${slugify(homeTeam)}-vs-${slugify(awayTeam)}-${date}`;
+}
+
+/**
+ * Select 3-5 best fixtures from the pool.
+ * Prefer matches with odds available and spread across leagues.
+ */
+function selectBestFixtures(
+  fixtures: ApiFootballFixture[],
+  maxPicks: number
+): ApiFootballFixture[] {
+  if (fixtures.length <= maxPicks) return fixtures;
+
+  // Spread picks across leagues: take at most 1-2 per league
+  const byLeague = new Map<number, ApiFootballFixture[]>();
+  for (const f of fixtures) {
+    const existing = byLeague.get(f.league.id) ?? [];
+    existing.push(f);
+    byLeague.set(f.league.id, existing);
+  }
+
+  const selected: ApiFootballFixture[] = [];
+
+  // First pass: one per league
+  for (const [, leagueFixtures] of byLeague) {
+    if (selected.length >= maxPicks) break;
+    selected.push(leagueFixtures[0]);
+  }
+
+  // Second pass: fill remaining from any league
+  if (selected.length < maxPicks) {
+    for (const f of fixtures) {
+      if (selected.length >= maxPicks) break;
+      if (!selected.includes(f)) {
+        selected.push(f);
+      }
+    }
+  }
+
+  return selected;
+}
+
+/**
+ * Upsert a team by API team ID. Returns the team's UUID.
+ * Uses select-then-insert pattern since teams table uses slug as unique, not api_team_id.
+ */
+async function upsertTeam(
+  supabase: ReturnType<typeof createSupabaseClient>,
+  apiTeamId: number,
+  teamName: string,
+  leagueId: string
+): Promise<string> {
+  // Try to find existing team by api_team_id
+  const { data: existing } = await supabase
+    .from('teams')
+    .select('id')
+    .eq('api_team_id', apiTeamId)
+    .single();
+
+  if (existing) return existing.id;
+
+  // Insert new team
+  const slug = teamName
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/(^-|-$)/g, '');
+
+  const { data: inserted, error } = await supabase
+    .from('teams')
+    .upsert(
+      {
+        name: teamName,
+        slug,
+        league_id: leagueId,
+        api_team_id: apiTeamId,
+      },
+      { onConflict: 'api_team_id', ignoreDuplicates: false }
+    )
+    .select('id')
+    .single();
+
+  if (error) {
+    // If slug conflict, try with api_team_id suffix
+    const { data: fallback, error: fallbackErr } = await supabase
+      .from('teams')
+      .upsert(
+        {
+          name: teamName,
+          slug: `${slug}-${apiTeamId}`,
+          league_id: leagueId,
+          api_team_id: apiTeamId,
+        },
+        { onConflict: 'api_team_id', ignoreDuplicates: false }
+      )
+      .select('id')
+      .single();
+
+    if (fallbackErr) {
+      throw new Error(`Failed to upsert team ${teamName}: ${fallbackErr.message}`);
+    }
+    return fallback!.id;
+  }
+
+  return inserted!.id;
+}
+
+/**
+ * Look up league UUID by api_league_id.
+ */
+async function getLeagueId(
+  supabase: ReturnType<typeof createSupabaseClient>,
+  apiLeagueId: number
+): Promise<string | null> {
+  const { data } = await supabase
+    .from('leagues')
+    .select('id')
+    .eq('api_league_id', apiLeagueId)
+    .single();
+
+  return data?.id ?? null;
+}
+
+/**
+ * Main prediction pipeline: fetch today's fixtures, generate AI predictions,
+ * and store them in Supabase.
+ */
+async function fetchAndGeneratePredictions(env: Env): Promise<void> {
+  const supabase = createSupabaseClient(env);
+  const today = getTodayPHT();
+
+  console.log(`Fetching fixtures for ${today}`);
+
+  // Fetch all fixtures for target leagues
+  const allFixtures = await fetchTodayFixtures(env.API_FOOTBALL_KEY, today);
+  console.log(`Found ${allFixtures.length} fixtures across target leagues`);
+
+  if (allFixtures.length === 0) {
+    console.log('No fixtures today, skipping prediction generation');
+    return;
+  }
+
+  // Select 3-5 best fixtures
+  const selected = selectBestFixtures(allFixtures, 5);
+  console.log(`Selected ${selected.length} fixtures for predictions`);
+
+  let created = 0;
+
+  for (const fixture of selected) {
+    try {
+      // Find league slug from our config
+      const leagueConfig = TARGET_LEAGUES.find(
+        (l) => l.id === fixture.league.id
+      );
+      if (!leagueConfig) continue;
+
+      // Look up league UUID
+      const leagueId = await getLeagueId(supabase, fixture.league.id);
+      if (!leagueId) {
+        console.error(
+          `League not found in DB for api_league_id ${fixture.league.id}`
+        );
+        continue;
+      }
+
+      // Fetch odds
+      const odds = await fetchOdds(env.API_FOOTBALL_KEY, fixture.fixture.id);
+      await delay(1100);
+
+      // Default odds if not available
+      const matchOdds = odds ?? {
+        home: 2.0,
+        draw: 3.0,
+        away: 3.5,
+        source: 'estimated',
+      };
+
+      // Upsert teams
+      const homeTeamId = await upsertTeam(
+        supabase,
+        fixture.teams.home.id,
+        fixture.teams.home.name,
+        leagueId
+      );
+      const awayTeamId = await upsertTeam(
+        supabase,
+        fixture.teams.away.id,
+        fixture.teams.away.name,
+        leagueId
+      );
+
+      // Build match context for AI
+      const matchContext: MatchContext = {
+        homeTeam: fixture.teams.home.name,
+        awayTeam: fixture.teams.away.name,
+        league: fixture.league.name,
+        leagueSlug: leagueConfig.slug,
+        fixtureId: fixture.fixture.id,
+        matchDate: fixture.fixture.date,
+        odds: {
+          home: matchOdds.home,
+          draw: matchOdds.draw,
+          away: matchOdds.away,
+        },
+      };
+
+      // Generate AI prediction
+      const prediction = await generatePrediction(env.AI, matchContext);
+
+      // Build slug (league-home-vs-away-date format per research pitfall #4)
+      const slug = buildSlug(
+        leagueConfig.slug,
+        fixture.teams.home.name,
+        fixture.teams.away.name,
+        today
+      );
+
+      // Determine which odds value to store based on the pick
+      let oddsValue = matchOdds.home;
+      if (prediction.pick === 'away') oddsValue = matchOdds.away;
+      else if (prediction.pick === 'draw') oddsValue = matchOdds.draw;
+      else if (['over', 'under', 'btts_yes', 'btts_no'].includes(prediction.pick)) {
+        oddsValue = 1.9; // Default for non-1X2 picks
+      }
+
+      // Insert prediction into Supabase
+      const predictionInsert: PredictionInsert = {
+        slug,
+        league_id: leagueId,
+        home_team_id: homeTeamId,
+        away_team_id: awayTeamId,
+        match_date: fixture.fixture.date,
+        sport: 'football',
+        pick: prediction.pick,
+        pick_label_tl: prediction.pick_label_tl,
+        pick_label_en: prediction.pick_label_en,
+        analysis_tl: prediction.analysis_tl,
+        analysis_en: prediction.analysis_en,
+        odds: oddsValue,
+        odds_source: matchOdds.source,
+        confidence: prediction.confidence,
+        stake: prediction.stake,
+        published_site: true,
+        api_fixture_id: fixture.fixture.id,
+      };
+
+      const { error: insertError } = await supabase
+        .from('predictions')
+        .upsert(predictionInsert, { onConflict: 'slug' });
+
+      if (insertError) {
+        console.error(`Error inserting prediction for ${slug}:`, insertError.message);
+      } else {
+        created++;
+        console.log(`Created prediction: ${slug} (${prediction.pick})`);
+      }
+    } catch (err) {
+      console.error(
+        `Error processing fixture ${fixture.fixture.id}:`,
+        err
+      );
+    }
+  }
+
+  console.log(`Prediction generation complete: ${created}/${selected.length} created`);
+}
+
+// Cloudflare Worker scheduled handler.
+// Dispatches based on cron pattern:
+// - "0 6 * * *": Daily fetch + generate predictions (06:00 UTC = 14:00 PHT)
+// - "*/30 * * * *": Resolve finished matches every 30 minutes
+export default {
+  async scheduled(
+    controller: ScheduledController,
+    env: Env,
+    ctx: ExecutionContext
+  ): Promise<void> {
+    try {
+      if (controller.cron === '0 6 * * *') {
+        console.log('Running daily prediction generation...');
+        ctx.waitUntil(fetchAndGeneratePredictions(env));
+      } else if (controller.cron === '*/30 * * * *') {
+        console.log('Running match resolution...');
+        ctx.waitUntil(resolveFinishedMatches(env));
+      }
+    } catch (error) {
+      console.error('Scheduled handler error:', error);
+    }
+  },
+};
