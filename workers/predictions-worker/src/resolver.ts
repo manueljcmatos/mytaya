@@ -1,4 +1,5 @@
 import type { Env } from './types';
+import type { SupabaseClient } from '@supabase/supabase-js';
 import { createSupabaseClient } from './supabase';
 import { fetchFixtureResult } from './api-football';
 import { fetchNbaGameResult } from './api-basketball';
@@ -6,6 +7,52 @@ import { fetchNbaGameResult } from './api-basketball';
 /** Delay helper for rate limiting */
 function delay(ms: number): Promise<void> {
   return new Promise((r) => setTimeout(r, ms));
+}
+
+/**
+ * Append a bilingual result section to the linked blog post after a prediction is settled.
+ */
+async function appendResultToPost(
+  supabase: SupabaseClient,
+  predictionId: string,
+  result: string,
+  homeScore: number,
+  awayScore: number
+): Promise<void> {
+  const { data: linkedPost } = await supabase
+    .from('posts')
+    .select('id, content_en, content_tl')
+    .eq('prediction_id', predictionId)
+    .single();
+
+  if (!linkedPost) return;
+
+  const resultLabelTl =
+    result === 'win'
+      ? 'PANALO'
+      : result === 'loss'
+        ? 'TALO'
+        : 'PUSH';
+
+  const resultEn = `\n\n## Result\n\n**Final Score:** ${homeScore}-${awayScore}\n**Outcome:** ${result.toUpperCase()}\n\n`;
+  const resultTl = `\n\n## Resulta\n\n**Pinal na Iskor:** ${homeScore}-${awayScore}\n**Kinalabasan:** ${resultLabelTl}\n\n`;
+
+  const { error } = await supabase
+    .from('posts')
+    .update({
+      content_en: linkedPost.content_en + resultEn,
+      content_tl: linkedPost.content_tl + resultTl,
+    })
+    .eq('id', linkedPost.id);
+
+  if (error) {
+    console.error(
+      `Error appending result to blog post ${linkedPost.id}:`,
+      error.message
+    );
+  } else {
+    console.log(`Appended result to blog post ${linkedPost.id}`);
+  }
 }
 
 /**
@@ -108,6 +155,9 @@ export async function resolveFinishedMatches(env: Env): Promise<void> {
         console.log(
           `Resolved prediction ${pred.id}: ${result} (${homeGoals}-${awayGoals})`
         );
+
+        // Append result to linked blog post
+        await appendResultToPost(supabase, pred.id, result, homeGoals, awayGoals);
       }
     } catch (err) {
       console.error(`Error resolving fixture ${pred.api_fixture_id}:`, err);
@@ -249,6 +299,9 @@ export async function resolveNbaMatches(env: Env): Promise<void> {
         console.log(
           `Resolved NBA prediction ${pred.id}: ${result} (${homeScore}-${awayScore})`
         );
+
+        // Append result to linked blog post
+        await appendResultToPost(supabase, pred.id, result, homeScore, awayScore);
       }
     } catch (err) {
       console.error(`Error resolving NBA game ${pred.api_fixture_id}:`, err);

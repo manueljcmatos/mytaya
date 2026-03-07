@@ -6,6 +6,7 @@ import type { ApiBasketballGame } from './api-basketball';
 import { generatePrediction } from './prediction-gen';
 import { generateNbaPrediction } from './prediction-gen';
 import { resolveFinishedMatches, resolveNbaMatches } from './resolver';
+import { generateBlogArticles } from './blog-gen';
 import type { ApiFootballFixture } from './types';
 
 /** Delay helper for rate limiting */
@@ -481,15 +482,24 @@ export default {
   ): Promise<void> {
     try {
       if (controller.cron === '0 6 * * *') {
+        // Run prediction pipelines sequentially so predictions exist in DB before blog generation
         console.log('Running daily prediction generation...');
-        ctx.waitUntil(fetchAndGeneratePredictions(env));
+        await fetchAndGeneratePredictions(env);
 
-        // NBA pipeline -- wrapped in try/catch so football continues even if NBA fails
+        // NBA pipeline -- wrapped in try/catch so football predictions are preserved even if NBA fails
         try {
           console.log('Running NBA prediction generation...');
-          ctx.waitUntil(fetchAndGenerateNbaPredictions(env));
+          await fetchAndGenerateNbaPredictions(env);
         } catch (nbaError) {
           console.error('NBA prediction generation failed:', nbaError);
+        }
+
+        // Blog generation runs after all predictions exist (per research pitfall #4)
+        try {
+          console.log('Running blog article generation...');
+          await generateBlogArticles(env);
+        } catch (blogError) {
+          console.error('Blog article generation failed:', blogError);
         }
       } else if (controller.cron === '*/30 * * * *') {
         console.log('Running match resolution...');
