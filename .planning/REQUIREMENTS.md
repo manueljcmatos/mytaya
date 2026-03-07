@@ -78,9 +78,9 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Affiliate & Monetization
 
-- [ ] **AFFL-01**: Affiliate operator cards featuring PAGCOR-licensed PH operators
-- [ ] **AFFL-02**: Operator cards display name, logo, welcome bonus, and affiliate link
-- [ ] **AFFL-03**: Operators page with comparison and detailed reviews
+- [x] **AFFL-01**: Affiliate operator cards featuring PAGCOR-licensed PH operators
+- [x] **AFFL-02**: Operator cards display name, logo, welcome bonus, and affiliate link
+- [x] **AFFL-03**: Operators page with comparison and detailed reviews
 - [ ] **AFFL-04**: Lead capture form with email validation (Zod) for newsletter/tips signup
 
 ## v2 Requirements
@@ -168,9 +168,9 @@ Which phases cover which requirements. Updated during roadmap creation.
 | SEO-04 | Phase 2: SEO, Compliance & Affiliates | Complete |
 | SEO-05 | Phase 2: SEO, Compliance & Affiliates | Complete |
 | SEO-06 | Phase 2: SEO, Compliance & Affiliates | Complete |
-| AFFL-01 | Phase 2: SEO, Compliance & Affiliates | Pending |
-| AFFL-02 | Phase 2: SEO, Compliance & Affiliates | Pending |
-| AFFL-03 | Phase 2: SEO, Compliance & Affiliates | Pending |
+| AFFL-01 | Phase 2: SEO, Compliance & Affiliates | Complete |
+| AFFL-02 | Phase 2: SEO, Compliance & Affiliates | Complete |
+| AFFL-03 | Phase 2: SEO, Compliance & Affiliates | Complete |
 | AFFL-04 | Phase 2: SEO, Compliance & Affiliates | Pending |
 
 **Coverage:**
