@@ -46,9 +46,9 @@ Requirements for initial release. Each maps to roadmap phases.
 
 - [x] **BLOG-01**: AI-generated daily sports articles published via Cloudflare Worker
 - [x] **BLOG-02**: Blog posts are generated in both Filipino and English
-- [ ] **BLOG-03**: Blog has paginated index with featured/recent articles
-- [ ] **BLOG-04**: Individual blog post pages with proper SEO metadata
-- [ ] **BLOG-05**: News sitemap generated for Google News eligibility
+- [x] **BLOG-03**: Blog has paginated index with featured/recent articles
+- [x] **BLOG-04**: Individual blog post pages with proper SEO metadata
+- [x] **BLOG-05**: News sitemap generated for Google News eligibility
 
 ### Statistics & Tracking
 
@@ -148,9 +148,9 @@ Which phases cover which requirements. Updated during roadmap creation.
 | BOX-04 | Phase 7: PBA, Boxing & Manual Content | Pending |
 | BLOG-01 | Phase 5: Blog Automation | Complete |
 | BLOG-02 | Phase 5: Blog Automation | Complete |
-| BLOG-03 | Phase 5: Blog Automation | Pending |
-| BLOG-04 | Phase 5: Blog Automation | Pending |
-| BLOG-05 | Phase 5: Blog Automation | Pending |
+| BLOG-03 | Phase 5: Blog Automation | Complete |
+| BLOG-04 | Phase 5: Blog Automation | Complete |
+| BLOG-05 | Phase 5: Blog Automation | Complete |
 | STAT-01 | Phase 4: NBA Predictions & Statistics | Complete |
 | STAT-02 | Phase 4: NBA Predictions & Statistics | Complete |
 | STAT-03 | Phase 4: NBA Predictions & Statistics | Complete |

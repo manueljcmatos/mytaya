@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-03-07)
 
 **Core value:** Every Filipino sports bettor visiting mytaya.com finds accurate, timely predictions for basketball, boxing, and football in their preferred language (Filipino or English)
-**Current focus:** Phase 5 in progress -- blog automation pipeline with bilingual article generation
+**Current focus:** Phase 5 complete -- blog automation pipeline and frontend done
 
 ## Current Position
 
 Phase: 5 of 7 (Blog Automation)
-Plan: 1 of 2 in current phase
-Status: In Progress
-Last activity: 2026-03-07 -- Completed 05-01-PLAN.md (Blog Generation Pipeline)
+Plan: 2 of 2 in current phase (COMPLETE)
+Status: Phase Complete
+Last activity: 2026-03-07 -- Completed 05-02-PLAN.md (Blog Frontend)
 
-Progress: [##############] 64%
+Progress: [################] 73%
 
 ## Performance Metrics
 
@@ -40,6 +40,7 @@ Progress: [##############] 64%
 | Phase 04 P02 | 5min | 2 tasks | 7 files |
 | Phase 04 P03 | 3min | 2 tasks | 10 files |
 | Phase 05 P01 | 3min | 2 tasks | 5 files |
+| Phase 05 P02 | 8min | 2 tasks | 8 files |
 
 ## Accumulated Context
 
@@ -99,6 +100,10 @@ Recent decisions affecting current work:
 - [05-01]: Sequential await for prediction pipelines instead of ctx.waitUntil to ensure blog generation runs after predictions exist in DB
 - [05-01]: Programmatic blog slug generation with sport prefix (not AI-generated) per research pitfall #5
 - [05-01]: Shared appendResultToPost helper between football and NBA resolvers for bilingual result appendix
+- [05-02]: Inline Supabase client in BlogList React island consistent with PredictionList pattern
+- [05-02]: Result section parsed from markdown content via regex matching ## Result/Resulta headers
+- [05-02]: News sitemap generates 2 entries per post (EN + TL) with XML entity escaping
+- [05-02]: Blog detail pages render markdown with basic heading/paragraph parsing (no full markdown lib)
 
 ### Pending Todos
 
@@ -113,5 +118,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-03-07
-Stopped at: Completed 05-01-PLAN.md (Blog Generation Pipeline)
+Stopped at: Completed 05-02-PLAN.md (Blog Frontend)
 Resume file: None
