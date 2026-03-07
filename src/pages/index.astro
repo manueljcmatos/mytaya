@@ -1,0 +1,6 @@
+---
+// Root page: detect browser language and redirect to appropriate locale
+const preferred = Astro.preferredLocale || 'tl';
+const target = preferred === 'en' ? '/en/' : '/tl/';
+return Astro.redirect(target, 302);
+---
