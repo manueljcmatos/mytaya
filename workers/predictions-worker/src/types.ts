@@ -90,6 +90,25 @@ export interface NbaMatchContext {
   };
 }
 
+/** Shape for inserting a blog post into Supabase */
+export interface BlogPostInsert {
+  slug: string;
+  slug_en: string;
+  slug_tl: string;
+  title_tl: string;
+  title_en: string;
+  content_tl: string;
+  content_en: string;
+  excerpt_tl: string;
+  excerpt_en: string;
+  category: 'analysis';
+  sport: 'football' | 'basketball';
+  prediction_id: string;
+  read_time_minutes: number;
+  is_published: boolean;
+  published_at: string;
+}
+
 /** Shape for inserting a prediction into Supabase */
 export interface PredictionInsert {
   slug: string;
