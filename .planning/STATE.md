@@ -5,23 +5,23 @@
 See: .planning/PROJECT.md (updated 2026-03-07)
 
 **Core value:** Every Filipino sports bettor visiting mytaya.com finds accurate, timely predictions for basketball, boxing, and football in their preferred language (Filipino or English)
-**Current focus:** Phase 2 Complete -- Ready for Phase 3
+**Current focus:** Phase 3 -- Football Predictions (Worker pipeline complete, frontend next)
 
 ## Current Position
 
-Phase: 2 of 7 (SEO, Compliance & Affiliates) -- COMPLETE
-Plan: 4 of 4 in current phase (02-01, 02-02, 02-03, 02-04 done)
-Status: Phase Complete
-Last activity: 2026-03-07 -- Completed 02-04-PLAN.md (Lead Capture)
+Phase: 3 of 7 (Football Predictions)
+Plan: 1 of 3 in current phase (03-01 done)
+Status: In Progress
+Last activity: 2026-03-07 -- Completed 03-01-PLAN.md (Predictions Worker Pipeline)
 
-Progress: [######....] 28%
+Progress: [######....] 32%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 7
+- Total plans completed: 8
 - Average duration: 3min
-- Total execution time: 0.40 hours
+- Total execution time: 0.43 hours
 
 **By Phase:**
 
@@ -29,9 +29,10 @@ Progress: [######....] 28%
 |-------|-------|-------|----------|
 | 01-foundation | 3 | 11min | 4min |
 | 02-seo-compliance-affiliates | 4 | 13min | 3min |
+| 03-football-predictions | 1 | 3min | 3min |
 
 **Recent Trend:**
-- Last 5 plans: 01-03 (3min), 02-01 (2min), 02-02 (3min), 02-03 (5min), 02-04 (3min)
+- Last 5 plans: 02-01 (2min), 02-02 (3min), 02-03 (5min), 02-04 (3min), 03-01 (3min)
 - Trend: Consistent
 
 *Updated after each plan completion*
@@ -69,6 +70,11 @@ Recent decisions affecting current work:
 - [02-04]: Hardcoded bilingual translations in React island (can't use Astro's useTranslations)
 - [02-04]: Supabase client created inline in LeadCaptureForm for client-side island isolation
 - [02-04]: Upsert on email conflict to prevent duplicate lead errors
+- [03-01]: Workers AI with @cf/meta/llama-3.1-8b-instruct for bilingual prediction generation (free, Cloudflare-native)
+- [03-01]: Fallback prediction from odds when AI parsing fails
+- [03-01]: Team upsert by api_team_id with slug-conflict fallback using api_team_id suffix
+- [03-01]: Prediction slug format: league-home-vs-away-date to avoid duplicate conflicts
+- [03-01]: Default 1.9 odds for non-1X2 picks when specific odds unavailable
 
 ### Pending Todos
 
@@ -83,5 +89,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-03-07
-Stopped at: Completed 02-04-PLAN.md (Lead Capture) -- Phase 2 Complete
+Stopped at: Completed 03-01-PLAN.md (Predictions Worker Pipeline)
 Resume file: None
