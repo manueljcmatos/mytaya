@@ -49,11 +49,13 @@ Plans:
   3. Affiliate operator cards display PAGCOR-licensed operators with name, logo, bonus, and affiliate link on a dedicated operators page
   4. Lead capture form validates email input and stores submissions, accessible from site footer or dedicated signup section
   5. XML sitemap with hreflang annotations and news sitemap are generated and accessible at standard paths
-**Plans**: TBD
+**Plans**: 4 plans
 
 Plans:
-- [ ] 02-01: TBD
-- [ ] 02-02: TBD
+- [ ] 02-01-PLAN.md — Schema.org JSON-LD builders (SportsEvent, BlogPosting, Organization, Breadcrumb) + Google News sitemap endpoint
+- [ ] 02-02-PLAN.md — PAGCOR compliance: responsible gambling pages, disclaimer components, Footer 21+ update
+- [ ] 02-03-PLAN.md — Affiliate operator data, card components, listing pages, and individual review pages
+- [ ] 02-04-PLAN.md — Lead capture form with Zod validation, Supabase leads table, homepage integration
 
 ### Phase 3: Football Predictions
 **Goal**: Users can view daily football predictions that are automatically fetched, displayed, and resolved without manual intervention
@@ -139,7 +141,7 @@ Note: Phases 5 and 6 both depend on Phase 3 (not on each other) and could execut
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Foundation | 0/3 | Planning complete | - |
-| 2. SEO, Compliance & Affiliates | 0/0 | Not started | - |
+| 2. SEO, Compliance & Affiliates | 0/4 | Planning complete | - |
 | 3. Football Predictions | 0/0 | Not started | - |
 | 4. NBA Predictions & Statistics | 0/0 | Not started | - |
 | 5. Blog Automation | 0/0 | Not started | - |
