@@ -6,6 +6,7 @@ const routeMap: Record<string, Record<string, string>> = {
     '/blog/': '/blog/',
     '/mga-operator/': '/operators/',
     '/responsableng-pagsusugal/': '/responsible-gambling/',
+    '/estadistika/': '/statistics/',
   },
   en: {
     '/': '/',
@@ -14,6 +15,7 @@ const routeMap: Record<string, Record<string, string>> = {
     '/blog/': '/blog/',
     '/operators/': '/mga-operator/',
     '/responsible-gambling/': '/responsableng-pagsusugal/',
+    '/statistics/': '/estadistika/',
   },
 };
 
