@@ -60,8 +60,8 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Prediction Cards & Telegram
 
-- [ ] **CARD-01**: PNG prediction cards are generated for each prediction via Cloudflare Worker
-- [ ] **CARD-02**: Cards include match details, odds, prediction, and MyTaya branding
+- [x] **CARD-01**: PNG prediction cards are generated for each prediction via Cloudflare Worker
+- [x] **CARD-02**: Cards include match details, odds, prediction, and MyTaya branding
 - [ ] **CARD-03**: Cards are shareable on social media and Telegram
 - [ ] **TELE-01**: Telegram bot publishes predictions to group channel automatically
 - [ ] **TELE-02**: Predictions are drip-fed throughout the day (not all at once)
@@ -156,8 +156,8 @@ Which phases cover which requirements. Updated during roadmap creation.
 | STAT-03 | Phase 4: NBA Predictions & Statistics | Complete |
 | STAT-04 | Phase 4: NBA Predictions & Statistics | Complete |
 | STAT-05 | Phase 4: NBA Predictions & Statistics | Complete |
-| CARD-01 | Phase 6: Prediction Cards & Telegram | Pending |
-| CARD-02 | Phase 6: Prediction Cards & Telegram | Pending |
+| CARD-01 | Phase 6: Prediction Cards & Telegram | Complete |
+| CARD-02 | Phase 6: Prediction Cards & Telegram | Complete |
 | CARD-03 | Phase 6: Prediction Cards & Telegram | Pending |
 | TELE-01 | Phase 6: Prediction Cards & Telegram | Pending |
 | TELE-02 | Phase 6: Prediction Cards & Telegram | Pending |

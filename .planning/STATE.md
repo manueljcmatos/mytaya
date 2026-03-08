@@ -5,23 +5,23 @@
 See: .planning/PROJECT.md (updated 2026-03-07)
 
 **Core value:** Every Filipino sports bettor visiting mytaya.com finds accurate, timely predictions for basketball, boxing, and football in their preferred language (Filipino or English)
-**Current focus:** Phase 5 complete -- blog automation pipeline and frontend done
+**Current focus:** Phase 6 in progress -- prediction cards and Telegram integration
 
 ## Current Position
 
-Phase: 5 of 7 (Blog Automation)
-Plan: 2 of 2 in current phase (COMPLETE)
-Status: Phase Complete
-Last activity: 2026-03-07 -- Completed 05-02-PLAN.md (Blog Frontend)
+Phase: 6 of 7 (Prediction Cards & Telegram)
+Plan: 1 of 2 in current phase (COMPLETE)
+Status: In Progress
+Last activity: 2026-03-07 -- Completed 06-01-PLAN.md (Card Generation)
 
-Progress: [################] 73%
+Progress: [##################] 79%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 14
+- Total plans completed: 15
 - Average duration: 3min
-- Total execution time: 0.77 hours
+- Total execution time: 0.82 hours
 
 **By Phase:**
 
@@ -32,7 +32,7 @@ Progress: [################] 73%
 | 03-football-predictions | 3 | 9min | 3min |
 
 **Recent Trend:**
-- Last 5 plans: 03-03 (2min), 04-01 (3min), 04-02 (5min), 04-03 (3min), 05-01 (3min)
+- Last 5 plans: 04-02 (5min), 04-03 (3min), 05-01 (3min), 05-02 (8min), 06-01 (3min)
 - Trend: Consistent
 
 *Updated after each plan completion*
@@ -41,6 +41,7 @@ Progress: [################] 73%
 | Phase 04 P03 | 3min | 2 tasks | 10 files |
 | Phase 05 P01 | 3min | 2 tasks | 5 files |
 | Phase 05 P02 | 8min | 2 tasks | 8 files |
+| Phase 06 P01 | 3min | 2 tasks | 9 files |
 
 ## Accumulated Context
 
@@ -104,6 +105,11 @@ Recent decisions affecting current work:
 - [05-02]: Result section parsed from markdown content via regex matching ## Result/Resulta headers
 - [05-02]: News sitemap generates 2 entries per post (EN + TL) with XML entity escaping
 - [05-02]: Blog detail pages render markdown with basic heading/paragraph parsing (no full markdown lib)
+- [06-01]: R2 public URL uses cards.mytaya.com placeholder constant -- user configures R2 public access
+- [06-01]: Fonts loaded from R2 at fonts/ prefix -- must be manually uploaded (BebasNeue-Regular.ttf, Inter-Regular.ttf)
+- [06-01]: Card generation always wrapped in try/catch so pipelines are never disrupted
+- [06-01]: Result card overwrites prediction card URL (result is final state)
+- [06-01]: Resolver queries extended with teams join for team names needed by card templates
 
 ### Pending Todos
 
@@ -118,5 +124,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-03-07
-Stopped at: Completed 05-02-PLAN.md (Blog Frontend)
+Stopped at: Completed 06-01-PLAN.md (Card Generation)
 Resume file: None
