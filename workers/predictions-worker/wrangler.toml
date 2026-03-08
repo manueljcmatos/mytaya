@@ -3,13 +3,13 @@ main = "src/index.ts"
 compatibility_date = "2025-03-01"
 
 [triggers]
-crons = ["0 6 * * *", "*/30 * * * *", "0 * * * *"]
+crons = ["0 6 * * *", "*/30 * * * *"]
 
 [ai]
 binding = "AI"
 
 [vars]
-SUPABASE_URL = ""
+SUPABASE_URL = "https://mnjiwzsiaqfpwdlayczo.supabase.co"
 
 # Secrets (set via `wrangler secret put`):
 # wrangler secret put SUPABASE_SERVICE_KEY

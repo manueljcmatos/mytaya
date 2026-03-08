@@ -540,30 +540,6 @@ export default {
         } catch (blogError) {
           console.error('Blog article generation failed:', blogError);
         }
-      } else if (controller.cron === '0 * * * *') {
-        // Hourly cron: drip-publish predictions 2-3h before match time
-        try {
-          console.log('Running hourly Telegram drip publishing...');
-          await publishDuePredictions(env);
-        } catch (telegramErr) {
-          console.error('Telegram drip publishing failed:', telegramErr);
-        }
-
-        // End-of-day recap at 23:00 PHT (15:00 UTC)
-        try {
-          const phtHour = new Intl.DateTimeFormat('en-US', {
-            timeZone: 'Asia/Manila',
-            hour: 'numeric',
-            hour12: false,
-          }).format(new Date());
-
-          if (parseInt(phtHour, 10) === 23) {
-            console.log('Running daily recap...');
-            await sendDailyRecap(env);
-          }
-        } catch (recapErr) {
-          console.error('Daily recap failed:', recapErr);
-        }
       } else if (controller.cron === '*/30 * * * *') {
         console.log('Running match resolution...');
         ctx.waitUntil(resolveFinishedMatches(env));
@@ -574,6 +550,34 @@ export default {
           ctx.waitUntil(resolveNbaMatches(env));
         } catch (nbaError) {
           console.error('NBA match resolution failed:', nbaError);
+        }
+
+        // Telegram drip + recap — run at the top of each hour (minute === 0)
+        const currentMinute = new Date().getUTCMinutes();
+        if (currentMinute < 5) {
+          // Drip-publish predictions 2-3h before match time
+          try {
+            console.log('Running Telegram drip publishing...');
+            await publishDuePredictions(env);
+          } catch (telegramErr) {
+            console.error('Telegram drip publishing failed:', telegramErr);
+          }
+
+          // End-of-day recap at 23:00 PHT (15:00 UTC)
+          try {
+            const phtHour = new Intl.DateTimeFormat('en-US', {
+              timeZone: 'Asia/Manila',
+              hour: 'numeric',
+              hour12: false,
+            }).format(new Date());
+
+            if (parseInt(phtHour, 10) === 23) {
+              console.log('Running daily recap...');
+              await sendDailyRecap(env);
+            }
+          } catch (recapErr) {
+            console.error('Daily recap failed:', recapErr);
+          }
         }
       }
     } catch (error) {
