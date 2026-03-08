@@ -1,0 +1,118 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+import FightCard from '../../../components/boxing/FightCard';
+import { supabase } from '../../../lib/supabase';
+import { buildSportsEventSchema } from '../../../lib/seo';
+import { SITE } from '../../../lib/constants';
+
+export async function getStaticPaths() {
+  if (!supabase) return [];
+
+  const { data } = await supabase
+    .from('predictions')
+    .select('slug')
+    .eq('published_site', true)
+    .eq('sport', 'boxing');
+
+  return (data || []).map((p) => ({ params: { slug: p.slug } }));
+}
+
+const { slug } = Astro.params;
+
+let title = 'Hula sa Boksing - MyTaya';
+let description = 'Tingnan ang detalyadong hula sa boksing at pagsusuri ng laban mula sa MyTaya.';
+let schema: Record<string, unknown> | undefined;
+let ogImage: string | undefined;
+let prediction: Record<string, unknown> | null = null;
+
+if (supabase && slug) {
+  const { data: pred } = await supabase
+    .from('predictions')
+    .select(`
+      id, slug, pick_label_tl, pick_label_en, analysis_tl, analysis_en,
+      odds, confidence, match_date, fighter_1_record, fighter_2_record,
+      weight_class, scheduled_rounds, result, status, card_image_url,
+      home_team:teams!predictions_home_team_id_fkey(name),
+      away_team:teams!predictions_away_team_id_fkey(name)
+    `)
+    .eq('slug', slug)
+    .eq('sport', 'boxing')
+    .single();
+
+  if (pred) {
+    const homeTeam = Array.isArray(pred.home_team) ? pred.home_team[0] : pred.home_team;
+    const awayTeam = Array.isArray(pred.away_team) ? pred.away_team[0] : pred.away_team;
+
+    prediction = {
+      ...pred,
+      home_team: homeTeam || null,
+      away_team: awayTeam || null,
+    };
+
+    const fighter1 = homeTeam?.name || 'Boksingero 1';
+    const fighter2 = awayTeam?.name || 'Boksingero 2';
+
+    title = `${fighter1} vs ${fighter2} - Hula sa Boksing | MyTaya`;
+    if (pred.analysis_tl) {
+      description = (pred.analysis_tl as string).substring(0, 160);
+    }
+
+    if (pred.card_image_url) {
+      ogImage = pred.card_image_url as string;
+    }
+
+    schema = buildSportsEventSchema({
+      title: `${fighter1} vs ${fighter2}`,
+      homeTeam: fighter1,
+      awayTeam: fighter2,
+      sport: 'Boxing',
+      startDate: pred.match_date as string,
+      url: `${SITE.url}/tl/boksing/${slug}/`,
+      description: pred.pick_label_tl as string,
+    });
+  }
+}
+
+const enAlternate = `/en/boxing/${slug}/`;
+---
+
+<Layout title={title} description={description} schema={schema} lang="tl" ogImage={ogImage}>
+  <Fragment slot="head">
+    <link rel="alternate" hreflang="fil" href={`${SITE.url}/tl/boksing/${slug}/`} />
+    <link rel="alternate" hreflang="en" href={`${SITE.url}${enAlternate}`} />
+    <link rel="alternate" hreflang="x-default" href={`${SITE.url}/tl/boksing/${slug}/`} />
+    <meta property="og:url" content={`${SITE.url}/tl/boksing/${slug}/`} />
+  </Fragment>
+
+  <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+    <a
+      href="/tl/boksing/"
+      class="inline-flex items-center gap-1.5 text-sm mb-6 transition-colors"
+      style="color: var(--brand-primary, #0F766E);"
+    >
+      <span aria-hidden="true">&larr;</span>
+      Bumalik sa Boksing
+    </a>
+
+    {prediction ? (
+      <FightCard client:load prediction={prediction as any} lang="tl" expanded={true} />
+    ) : (
+      <div class="text-center py-16">
+        <div class="text-5xl mb-4" aria-hidden="true">&#x1F94A;</div>
+        <h2 class="text-2xl font-bold mb-2" style="color: var(--t-text, #f9fafb);">
+          Hindi nahanap ang hula
+        </h2>
+        <p class="text-sm mb-6" style="color: var(--t-text-sec, #9ca3af);">
+          Maaaring na-delete o mali ang link.
+        </p>
+        <a
+          href="/tl/boksing/"
+          class="inline-block px-6 py-2.5 rounded-lg text-sm font-semibold transition-colors"
+          style="background-color: var(--brand-primary, #0F766E); color: #ffffff;"
+        >
+          Bumalik sa Boksing
+        </a>
+      </div>
+    )}
+  </div>
+</Layout>

@@ -5,6 +5,7 @@ export type Sport = (typeof SPORTS)[number];
 // Navigation items (used by Header component)
 export const NAV_ITEMS = [
   { key: 'nav.predictions' as const, path: { tl: '/tl/hula/', en: '/en/predictions/' } },
+  { key: 'nav.boxing' as const, path: { tl: '/tl/boksing/', en: '/en/boxing/' } },
   { key: 'nav.results' as const, path: { tl: '/tl/resulta/', en: '/en/results/' } },
   { key: 'nav.blog' as const, path: { tl: '/tl/blog/', en: '/en/blog/' } },
   { key: 'nav.operators' as const, path: { tl: '/tl/mga-operator/', en: '/en/operators/' } },

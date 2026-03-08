@@ -1,6 +1,5 @@
 ---
 import { getLangFromUrl, useTranslations } from '../i18n/utils';
-import { SPORTS } from '../lib/constants';
 
 interface Props {
   lang?: string;
@@ -13,10 +12,12 @@ const activeSport = Astro.props.activeSport || '';
 
 const predictionsBase = lang === 'tl' ? '/tl/hula/' : '/en/predictions/';
 
+const boxingBase = lang === 'tl' ? '/tl/boksing/' : '/en/boxing/';
+
 const sportConfig = [
-  { id: 'basketball', icon: '\u{1F3C0}', label: t('sport.basketball') },
-  { id: 'football', icon: '\u26BD', label: t('sport.football') },
-  { id: 'boxing', icon: '\u{1F94A}', label: t('sport.boxing') },
+  { id: 'basketball', icon: '\u{1F3C0}', label: t('sport.basketball'), href: `${predictionsBase}?sport=basketball` },
+  { id: 'football', icon: '\u26BD', label: t('sport.football'), href: `${predictionsBase}?sport=football` },
+  { id: 'boxing', icon: '\u{1F94A}', label: t('sport.boxing'), href: boxingBase },
 ];
 ---
 
@@ -24,7 +25,7 @@ const sportConfig = [
   <div class="tabs-container">
     {sportConfig.map(sport => (
       <a
-        href={`${predictionsBase}?sport=${sport.id}`}
+        href={sport.href}
         class:list={[
           'sport-tab',
           { 'sport-tab--active': activeSport === sport.id }

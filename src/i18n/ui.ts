@@ -8,6 +8,7 @@ export const ui = {
     'nav.results': 'Mga Resulta',
     'nav.blog': 'Blog',
     'nav.operators': 'Mga Operator',
+    'nav.boxing': 'Boksing',
     'nav.responsibleGambling': 'Responsableng Pagsusugal',
 
     // Hero
@@ -120,6 +121,14 @@ export const ui = {
     'blog.readTime': '{min} min basahin',
     'blog.filterAll': 'Lahat',
 
+    // Boxing
+    'boxing.title': 'Mga Hula sa Boksing',
+    'boxing.description': 'Mga ekspertong hula sa boksing at pagsusuri ng laban',
+    'boxing.upcoming': 'Mga Paparating na Laban',
+    'boxing.past': 'Mga Nakaraang Laban',
+    'boxing.rounds': 'Rounds',
+    'boxing.record': 'Rekord',
+
     // Sections
     'section.predictions': 'Mga Hula',
     'section.results': 'Mga Resulta',
@@ -133,6 +142,7 @@ export const ui = {
     'nav.results': 'Results',
     'nav.blog': 'Blog',
     'nav.operators': 'Operators',
+    'nav.boxing': 'Boxing',
     'nav.responsibleGambling': 'Responsible Gambling',
 
     // Hero
@@ -244,6 +254,14 @@ export const ui = {
     'blog.readMore': 'Read more',
     'blog.readTime': '{min} min read',
     'blog.filterAll': 'All',
+
+    // Boxing
+    'boxing.title': 'Boxing Predictions',
+    'boxing.description': 'Expert boxing predictions and fight analysis',
+    'boxing.upcoming': 'Upcoming Fights',
+    'boxing.past': 'Past Fights',
+    'boxing.rounds': 'Rounds',
+    'boxing.record': 'Record',
 
     // Sections
     'section.predictions': 'Predictions',
