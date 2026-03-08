@@ -1,0 +1,18 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+import BoxingList from '../../../components/boxing/BoxingList';
+
+const publicUrl = import.meta.env.PUBLIC_SUPABASE_URL || '';
+const publicKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY || '';
+---
+
+<Layout title="Mga Hula sa Boksing | MyTaya" description="Mga ekspertong hula sa boksing at pagsusuri ng laban para sa Filipino." lang="tl">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+    <h1 class="text-4xl sm:text-5xl tracking-wide mb-2 text-gradient-brand">Mga Hula sa Boksing</h1>
+    <p class="text-sm mb-8" style="color: var(--t-text-sec, #9ca3af);">
+      Mga ekspertong hula sa boksing at pagsusuri ng laban
+    </p>
+
+    <BoxingList client:load lang="tl" publicUrl={publicUrl} publicKey={publicKey} />
+  </div>
+</Layout>
