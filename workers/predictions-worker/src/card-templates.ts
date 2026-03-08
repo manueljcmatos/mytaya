@@ -12,7 +12,7 @@ export interface PredictionCardInput {
   pick: string;
   odds: number;
   confidence: 'high' | 'medium' | 'low';
-  sport: 'football' | 'basketball';
+  sport: 'football' | 'basketball' | 'boxing';
 }
 
 export interface ResultCardInput {
@@ -23,12 +23,28 @@ export interface ResultCardInput {
   league: string;
   pick: string;
   result: 'win' | 'loss' | 'push';
-  sport: 'football' | 'basketball';
+  sport: 'football' | 'basketball' | 'boxing';
+}
+
+export interface BoxingCardInput {
+  fighter1: string;
+  fighter2: string;
+  fighter1Record: string;
+  fighter2Record: string;
+  weightClass: string;
+  scheduledRounds: number;
+  league: string;
+  matchDate: string;
+  pick: string;
+  odds: number;
+  confidence: 'high' | 'medium' | 'low';
 }
 
 /** Get sport-themed accent color */
-function getAccentColor(sport: 'football' | 'basketball'): string {
-  return sport === 'basketball' ? '#f97316' : '#0F766E';
+function getAccentColor(sport: 'football' | 'basketball' | 'boxing'): string {
+  if (sport === 'basketball') return '#f97316';
+  if (sport === 'boxing') return '#DC2626';
+  return '#0F766E';
 }
 
 /** Get confidence badge text and color */
@@ -151,6 +167,68 @@ export function buildResultCardHtml(data: ResultCardInput): string {
   <div style="display: flex; align-items: center; justify-content: space-between; padding: 16px 48px 24px 48px;">
     <span style="font-size: 18px; color: #6B7280;">mytaya.com</span>
     <span style="font-size: 18px; color: #6B7280;">Pick: ${escapeHtml(data.pick.toUpperCase())}</span>
+  </div>
+</div>`;
+}
+
+/**
+ * Build HTML for a boxing prediction card (1200x630).
+ * Fight-card-style layout with fighter records, weight class, and red accent.
+ * Uses Satori-compatible inline flexbox styles.
+ */
+export function buildBoxingCardHtml(data: BoxingCardInput): string {
+  const accent = '#DC2626';
+  const conf = getConfidenceBadge(data.confidence);
+  const dateStr = formatDate(data.matchDate);
+  const roundsLabel = data.scheduledRounds ? `${data.scheduledRounds} Rounds` : '';
+
+  return `
+<div style="display: flex; flex-direction: column; width: 1200px; height: 630px; background-color: #0A0A0A; color: white; font-family: Inter, sans-serif; padding: 0; margin: 0;">
+  <!-- Top bar -->
+  <div style="display: flex; align-items: center; justify-content: space-between; padding: 32px 48px 16px 48px;">
+    <div style="display: flex; align-items: baseline;">
+      <span style="font-family: 'Bebas Neue', sans-serif; font-size: 48px; color: ${accent}; letter-spacing: 2px;">MY</span>
+      <span style="font-family: 'Bebas Neue', sans-serif; font-size: 48px; color: white; letter-spacing: 2px;">TAYA</span>
+    </div>
+    <span style="font-size: 24px; color: #9CA3AF; font-family: Inter, sans-serif;">${escapeHtml(data.weightClass)}</span>
+  </div>
+
+  <!-- Center: Fighters -->
+  <div style="display: flex; align-items: center; justify-content: center; flex: 1; padding: 0 48px; gap: 48px;">
+    <!-- Fighter 1 -->
+    <div style="display: flex; flex-direction: column; align-items: center; flex: 1;">
+      <span style="font-family: 'Bebas Neue', sans-serif; font-size: 48px; color: white; text-align: center; letter-spacing: 1px;">${escapeHtml(data.fighter1)}</span>
+      <span style="font-size: 18px; color: #9CA3AF; margin-top: 8px;">${escapeHtml(data.fighter1Record)}</span>
+    </div>
+
+    <!-- VS -->
+    <span style="font-family: 'Bebas Neue', sans-serif; font-size: 48px; color: ${accent};">VS</span>
+
+    <!-- Fighter 2 -->
+    <div style="display: flex; flex-direction: column; align-items: center; flex: 1;">
+      <span style="font-family: 'Bebas Neue', sans-serif; font-size: 48px; color: white; text-align: center; letter-spacing: 1px;">${escapeHtml(data.fighter2)}</span>
+      <span style="font-size: 18px; color: #9CA3AF; margin-top: 8px;">${escapeHtml(data.fighter2Record)}</span>
+    </div>
+  </div>
+
+  <!-- Bottom accent bar -->
+  <div style="display: flex; align-items: center; justify-content: space-between; background-color: ${accent}; padding: 20px 48px;">
+    <div style="display: flex; align-items: center; gap: 24px;">
+      <span style="font-family: 'Bebas Neue', sans-serif; font-size: 28px; color: white; letter-spacing: 1px;">PICK: ${escapeHtml(data.pick.toUpperCase())}</span>
+      <span style="font-size: 22px; color: rgba(255,255,255,0.9);">@ ${data.odds.toFixed(2)}</span>
+    </div>
+    <div style="display: flex; align-items: center; gap: 16px;">
+      <span style="font-size: 18px; color: rgba(255,255,255,0.8); background-color: rgba(0,0,0,0.3); padding: 4px 12px; border-radius: 4px;">${conf.text}</span>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div style="display: flex; align-items: center; justify-content: space-between; padding: 16px 48px 24px 48px;">
+    <span style="font-size: 18px; color: #6B7280;">mytaya.com</span>
+    <div style="display: flex; align-items: center; gap: 24px;">
+      <span style="font-size: 18px; color: #6B7280;">${escapeHtml(roundsLabel)}</span>
+      <span style="font-size: 18px; color: #6B7280;">${escapeHtml(dateStr)}</span>
+    </div>
   </div>
 </div>`;
 }

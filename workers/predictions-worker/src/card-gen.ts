@@ -7,8 +7,10 @@ import { createSupabaseClient } from './supabase';
 import {
   buildPredictionCardHtml,
   buildResultCardHtml,
+  buildBoxingCardHtml,
   type PredictionCardInput,
   type ResultCardInput,
+  type BoxingCardInput,
 } from './card-templates';
 import type { Env } from './types';
 
@@ -25,7 +27,11 @@ export interface PredictionCardData {
   pick: string;
   odds: number;
   confidence: 'high' | 'medium' | 'low';
-  sport: 'football' | 'basketball';
+  sport: 'football' | 'basketball' | 'boxing';
+  fighter1Record?: string;
+  fighter2Record?: string;
+  weightClass?: string;
+  scheduledRounds?: number;
 }
 
 /** Data needed to generate a result card */
@@ -38,7 +44,7 @@ export interface ResultCardData {
   league: string;
   pick: string;
   result: 'win' | 'loss' | 'push';
-  sport: 'football' | 'basketball';
+  sport: 'football' | 'basketball' | 'boxing';
 }
 
 /**
@@ -62,18 +68,36 @@ export async function generatePredictionCard(
   env: Env,
   data: PredictionCardData
 ): Promise<string> {
-  const cardInput: PredictionCardInput = {
-    homeTeam: data.homeTeam,
-    awayTeam: data.awayTeam,
-    league: data.league,
-    matchDate: data.matchDate,
-    pick: data.pick,
-    odds: data.odds,
-    confidence: data.confidence,
-    sport: data.sport,
-  };
+  let html: string;
 
-  const html = buildPredictionCardHtml(cardInput);
+  if (data.sport === 'boxing') {
+    const boxingInput: BoxingCardInput = {
+      fighter1: data.homeTeam,
+      fighter2: data.awayTeam,
+      fighter1Record: data.fighter1Record ?? '',
+      fighter2Record: data.fighter2Record ?? '',
+      weightClass: data.weightClass ?? 'Boxing',
+      scheduledRounds: data.scheduledRounds ?? 12,
+      league: data.league,
+      matchDate: data.matchDate,
+      pick: data.pick,
+      odds: data.odds,
+      confidence: data.confidence,
+    };
+    html = buildBoxingCardHtml(boxingInput);
+  } else {
+    const cardInput: PredictionCardInput = {
+      homeTeam: data.homeTeam,
+      awayTeam: data.awayTeam,
+      league: data.league,
+      matchDate: data.matchDate,
+      pick: data.pick,
+      odds: data.odds,
+      confidence: data.confidence,
+      sport: data.sport,
+    };
+    html = buildPredictionCardHtml(cardInput);
+  }
 
   // Load fonts from R2
   const [bebasFont, interFont] = await Promise.all([
@@ -177,4 +201,67 @@ export async function generateResultCard(
 
   console.log(`Generated result card: ${publicUrl}`);
   return publicUrl;
+}
+
+/**
+ * Generate cards for published predictions that are missing card_image_url.
+ * Called by the resolver cron to automatically pick up manual predictions.
+ * Processes up to 10 predictions per run to stay within Worker limits.
+ */
+export async function generateMissingCards(env: Env): Promise<void> {
+  const supabase = createSupabaseClient(env);
+
+  const { data: predictions, error } = await supabase
+    .from('predictions')
+    .select(`
+      slug, sport, match_date, pick_label_en, odds, confidence,
+      fighter_1_record, fighter_2_record, weight_class, scheduled_rounds,
+      home_team:teams!predictions_home_team_id_fkey(name),
+      away_team:teams!predictions_away_team_id_fkey(name),
+      league:leagues!predictions_league_id_fkey(name)
+    `)
+    .eq('published_site', true)
+    .is('card_image_url', null)
+    .limit(10);
+
+  if (error) {
+    console.error('Error fetching predictions without cards:', error.message);
+    return;
+  }
+
+  if (!predictions?.length) {
+    console.log('No predictions missing cards');
+    return;
+  }
+
+  console.log(`Generating cards for ${predictions.length} predictions`);
+
+  for (const pred of predictions) {
+    try {
+      const homeTeam = (pred.home_team as any)?.name ?? 'Fighter 1';
+      const awayTeam = (pred.away_team as any)?.name ?? 'Fighter 2';
+      const leagueName = (pred.league as any)?.name ?? 'Boxing';
+
+      const cardData: PredictionCardData = {
+        slug: pred.slug,
+        homeTeam,
+        awayTeam,
+        league: leagueName,
+        matchDate: pred.match_date,
+        pick: pred.pick_label_en,
+        odds: pred.odds,
+        confidence: pred.confidence,
+        sport: pred.sport as PredictionCardData['sport'],
+        fighter1Record: pred.fighter_1_record ?? undefined,
+        fighter2Record: pred.fighter_2_record ?? undefined,
+        weightClass: pred.weight_class ?? undefined,
+        scheduledRounds: pred.scheduled_rounds ?? undefined,
+      };
+
+      await generatePredictionCard(env, cardData);
+      console.log(`Generated missing card for ${pred.slug}`);
+    } catch (cardErr) {
+      console.error(`Failed to generate card for ${pred.slug}:`, cardErr);
+    }
+  }
 }

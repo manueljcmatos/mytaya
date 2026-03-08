@@ -3,7 +3,7 @@ import type { SupabaseClient } from '@supabase/supabase-js';
 import { createSupabaseClient } from './supabase';
 import { fetchFixtureResult } from './api-football';
 import { fetchNbaGameResult } from './api-basketball';
-import { generateResultCard } from './card-gen';
+import { generateResultCard, generateMissingCards } from './card-gen';
 import type { ResultCardData } from './card-gen';
 import { sendResultToTelegram } from './telegram';
 
@@ -219,6 +219,13 @@ export async function resolveFinishedMatches(env: Env): Promise<void> {
   console.log(
     `Resolution complete: ${resolved}/${pendingPredictions.length} resolved`
   );
+
+  // Generate cards for manual predictions that are missing card_image_url
+  try {
+    await generateMissingCards(env);
+  } catch (err) {
+    console.error('generateMissingCards failed (non-blocking):', err);
+  }
 }
 
 /**
