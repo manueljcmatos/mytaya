@@ -128,11 +128,12 @@ Plans:
   2. NCAA Philippines / UAAP predictions can be created and displayed in both languages
   3. User can filter predictions by league (NBA, PBA, NCAA PH) on the basketball predictions page
   4. Boxing section displays editorial predictions in fight card format with fighter profiles, records, odds, and bilingual analysis
-**Plans**: TBD
+**Plans**: 3 plans
 
 Plans:
-- [ ] 07-01: TBD
-- [ ] 07-02: TBD
+- [ ] 07-01-PLAN.md — Database migration (boxing columns, PH league/team seeds, auto-settle trigger) + worker type updates + boxing card template + missing-card cron
+- [ ] 07-02-PLAN.md — Boxing section pages (EN/TL), FightCard component, BoxingList island, detail pages, routes, SportTabs update
+- [ ] 07-03-PLAN.md — Verify PredictionList league filtering works for PBA/NCAA PH alongside NBA
 
 ## Progress
 
@@ -148,4 +149,4 @@ Note: Phases 5 and 6 both depend on Phase 3 (not on each other) and could execut
 | 4. NBA Predictions & Statistics | 0/3 | Planning complete | - |
 | 5. Blog Automation | 0/2 | Planning complete | - |
 | 6. Prediction Cards & Telegram | 0/2 | Planning complete | - |
-| 7. PBA, Boxing & Manual Content | 0/0 | Not started | - |
+| 7. PBA, Boxing & Manual Content | 0/3 | Planning complete | - |
