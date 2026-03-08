@@ -21,21 +21,25 @@ VALUES
   ('Boxing', 'boxing', 'boxing', 'International', 'manual', true)
 ON CONFLICT (slug) DO NOTHING;
 
--- 4. Seed PBA teams (12 current teams)
-INSERT INTO public.teams (name, slug, sport)
-VALUES
-  ('Barangay Ginebra San Miguel', 'barangay-ginebra-san-miguel', 'basketball'),
-  ('San Miguel Beermen', 'san-miguel-beermen', 'basketball'),
-  ('TNT Tropang Giga', 'tnt-tropang-giga', 'basketball'),
-  ('Magnolia Hotshots', 'magnolia-hotshots', 'basketball'),
-  ('Meralco Bolts', 'meralco-bolts', 'basketball'),
-  ('Rain or Shine Elasto Painters', 'rain-or-shine-elasto-painters', 'basketball'),
-  ('NLEX Road Warriors', 'nlex-road-warriors', 'basketball'),
-  ('Phoenix Super LPG Fuel Masters', 'phoenix-super-lpg-fuel-masters', 'basketball'),
-  ('Blackwater Bossing', 'blackwater-bossing', 'basketball'),
-  ('Converge FiberXers', 'converge-fiberxers', 'basketball'),
-  ('Terrafirma Dyip', 'terrafirma-dyip', 'basketball'),
-  ('NorthPort Batang Pier', 'northport-batang-pier', 'basketball')
+-- 4. Seed PBA teams (12 current teams) — linked to PBA league via league_id
+INSERT INTO public.teams (name, slug, league_id)
+SELECT t.name, t.slug, l.id
+FROM (VALUES
+  ('Barangay Ginebra San Miguel', 'barangay-ginebra-san-miguel'),
+  ('San Miguel Beermen', 'san-miguel-beermen'),
+  ('TNT Tropang Giga', 'tnt-tropang-giga'),
+  ('Magnolia Hotshots', 'magnolia-hotshots'),
+  ('Meralco Bolts', 'meralco-bolts'),
+  ('Rain or Shine Elasto Painters', 'rain-or-shine-elasto-painters'),
+  ('NLEX Road Warriors', 'nlex-road-warriors'),
+  ('Phoenix Super LPG Fuel Masters', 'phoenix-super-lpg-fuel-masters'),
+  ('Blackwater Bossing', 'blackwater-bossing'),
+  ('Converge FiberXers', 'converge-fiberxers'),
+  ('Terrafirma Dyip', 'terrafirma-dyip'),
+  ('NorthPort Batang Pier', 'northport-batang-pier')
+) AS t(name, slug)
+CROSS JOIN public.leagues l
+WHERE l.slug = 'pba'
 ON CONFLICT (slug) DO NOTHING;
 
 -- 5. Partial index for boxing queries
