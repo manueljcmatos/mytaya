@@ -1,6 +1,18 @@
 ---
-// Root page: detect browser language and redirect to appropriate locale
-const preferred = Astro.preferredLocale || 'tl';
-const target = preferred === 'en' ? '/en/' : '/tl/';
-return Astro.redirect(target, 302);
+// Root page: instant redirect to default locale
+// Language detection happens client-side for static builds
 ---
+
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="refresh" content="0;url=/tl/" />
+    <link rel="canonical" href="https://mytaya.com/tl/" />
+    <script is:inline>
+      var lang = (navigator.language || '').toLowerCase();
+      var target = lang.startsWith('en') ? '/en/' : '/tl/';
+      window.location.replace(target);
+    </script>
+  </head>
+  <body></body>
+</html>
