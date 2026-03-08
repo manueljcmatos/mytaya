@@ -113,11 +113,11 @@ Plans:
   2. Prediction cards are downloadable and shareable on social media with proper OG image integration
   3. Telegram bot publishes predictions to a group channel automatically with drip scheduling (not all at once)
   4. Match results and resolutions are posted to Telegram when matches conclude
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
-- [ ] 06-01: TBD
-- [ ] 06-02: TBD
+- [ ] 06-01-PLAN.md — Card generation via workers-og: templates, R2 storage, pipeline hooks for prediction and result cards
+- [ ] 06-02-PLAN.md — Telegram bot with drip scheduling, result posting, daily recap, and frontend OG/download integration
 
 ### Phase 7: PBA, Boxing & Manual Content
 **Goal**: Users can find predictions and editorial content for PBA, NCAA Philippines, and boxing -- the sports that define Philippine identity
@@ -147,5 +147,5 @@ Note: Phases 5 and 6 both depend on Phase 3 (not on each other) and could execut
 | 3. Football Predictions | 3/3 | Complete   | 2026-03-07 |
 | 4. NBA Predictions & Statistics | 0/3 | Planning complete | - |
 | 5. Blog Automation | 0/2 | Planning complete | - |
-| 6. Prediction Cards & Telegram | 0/0 | Not started | - |
+| 6. Prediction Cards & Telegram | 0/2 | Planning complete | - |
 | 7. PBA, Boxing & Manual Content | 0/0 | Not started | - |
