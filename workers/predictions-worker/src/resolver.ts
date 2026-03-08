@@ -5,6 +5,7 @@ import { fetchFixtureResult } from './api-football';
 import { fetchNbaGameResult } from './api-basketball';
 import { generateResultCard } from './card-gen';
 import type { ResultCardData } from './card-gen';
+import { sendResultToTelegram } from './telegram';
 
 /** Delay helper for rate limiting */
 function delay(ms: number): Promise<void> {
@@ -180,6 +181,32 @@ export async function resolveFinishedMatches(env: Env): Promise<void> {
         } catch (cardErr) {
           console.error(`Result card generation failed for ${pred.slug}:`, cardErr);
         }
+
+        // Send result to Telegram (non-blocking)
+        try {
+          const homeTeamName = (pred.home_team as any)?.name ?? 'Home';
+          const awayTeamName = (pred.away_team as any)?.name ?? 'Away';
+          // Fetch updated card_image_url after result card generation
+          const { data: updatedPred } = await supabase
+            .from('predictions')
+            .select('card_image_url')
+            .eq('id', pred.id)
+            .single();
+
+          if (updatedPred?.card_image_url) {
+            await sendResultToTelegram(env, {
+              slug: pred.slug,
+              card_image_url: updatedPred.card_image_url,
+              homeTeam: homeTeamName,
+              awayTeam: awayTeamName,
+              homeScore: homeGoals,
+              awayScore: awayGoals,
+              result,
+            });
+          }
+        } catch (telegramErr) {
+          console.error(`Telegram result posting failed for ${pred.slug}:`, telegramErr);
+        }
       }
     } catch (err) {
       console.error(`Error resolving fixture ${pred.api_fixture_id}:`, err);
@@ -343,6 +370,32 @@ export async function resolveNbaMatches(env: Env): Promise<void> {
           await generateResultCard(env, resultCardData);
         } catch (cardErr) {
           console.error(`Result card generation failed for ${pred.slug}:`, cardErr);
+        }
+
+        // Send result to Telegram (non-blocking)
+        try {
+          const homeTeamName = (pred.home_team as any)?.name ?? 'Home';
+          const awayTeamName = (pred.away_team as any)?.name ?? 'Away';
+          // Fetch updated card_image_url after result card generation
+          const { data: updatedPred } = await supabase
+            .from('predictions')
+            .select('card_image_url')
+            .eq('id', pred.id)
+            .single();
+
+          if (updatedPred?.card_image_url) {
+            await sendResultToTelegram(env, {
+              slug: pred.slug,
+              card_image_url: updatedPred.card_image_url,
+              homeTeam: homeTeamName,
+              awayTeam: awayTeamName,
+              homeScore: homeScore,
+              awayScore: awayScore,
+              result,
+            });
+          }
+        } catch (telegramErr) {
+          console.error(`Telegram result posting failed for ${pred.slug}:`, telegramErr);
         }
       }
     } catch (err) {

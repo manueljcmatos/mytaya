@@ -9,6 +9,7 @@ import { resolveFinishedMatches, resolveNbaMatches } from './resolver';
 import { generateBlogArticles } from './blog-gen';
 import { generatePredictionCard } from './card-gen';
 import type { PredictionCardData } from './card-gen';
+import { publishDuePredictions, sendDailyRecap } from './telegram';
 import type { ApiFootballFixture } from './types';
 
 /** Delay helper for rate limiting */
@@ -538,6 +539,30 @@ export default {
           await generateBlogArticles(env);
         } catch (blogError) {
           console.error('Blog article generation failed:', blogError);
+        }
+      } else if (controller.cron === '0 * * * *') {
+        // Hourly cron: drip-publish predictions 2-3h before match time
+        try {
+          console.log('Running hourly Telegram drip publishing...');
+          await publishDuePredictions(env);
+        } catch (telegramErr) {
+          console.error('Telegram drip publishing failed:', telegramErr);
+        }
+
+        // End-of-day recap at 23:00 PHT (15:00 UTC)
+        try {
+          const phtHour = new Intl.DateTimeFormat('en-US', {
+            timeZone: 'Asia/Manila',
+            hour: 'numeric',
+            hour12: false,
+          }).format(new Date());
+
+          if (parseInt(phtHour, 10) === 23) {
+            console.log('Running daily recap...');
+            await sendDailyRecap(env);
+          }
+        } catch (recapErr) {
+          console.error('Daily recap failed:', recapErr);
         }
       } else if (controller.cron === '*/30 * * * *') {
         console.log('Running match resolution...');
