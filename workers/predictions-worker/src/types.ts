@@ -4,6 +4,9 @@ export interface Env {
   SUPABASE_SERVICE_KEY: string;
   API_FOOTBALL_KEY: string;
   AI: Ai;
+  CARDS_BUCKET: R2Bucket;
+  TELEGRAM_BOT_TOKEN: string;
+  TELEGRAM_CHANNEL_ID: string;
 }
 
 /** API-Football v3 fixture response shape */
