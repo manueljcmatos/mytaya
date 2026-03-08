@@ -33,7 +33,7 @@ Requirements for initial release. Each maps to roadmap phases.
 - [x] **BASK-03**: NBA predictions are resolved automatically when game results come in
 - [x] **BASK-04**: PBA predictions can be created manually with full match details and analysis
 - [x] **BASK-05**: NCAA Philippines / UAAP predictions can be created manually
-- [ ] **BASK-06**: User can filter predictions by league (NBA, PBA, NCAA PH)
+- [x] **BASK-06**: User can filter predictions by league (NBA, PBA, NCAA PH)
 
 ### Boxing Predictions
 
@@ -141,7 +141,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | BASK-03 | Phase 4: NBA Predictions & Statistics | Complete |
 | BASK-04 | Phase 7: PBA, Boxing & Manual Content | Complete |
 | BASK-05 | Phase 7: PBA, Boxing & Manual Content | Complete |
-| BASK-06 | Phase 7: PBA, Boxing & Manual Content | Pending |
+| BASK-06 | Phase 7: PBA, Boxing & Manual Content | Complete |
 | BOX-01 | Phase 7: PBA, Boxing & Manual Content | Complete |
 | BOX-02 | Phase 7: PBA, Boxing & Manual Content | Complete |
 | BOX-03 | Phase 7: PBA, Boxing & Manual Content | Pending |
