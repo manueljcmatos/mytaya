@@ -31,14 +31,14 @@ Requirements for initial release. Each maps to roadmap phases.
 - [x] **BASK-01**: Daily NBA predictions are fetched via API-Basketball or API-Football
 - [x] **BASK-02**: NBA predictions display teams, conference, odds, spread, and prediction type
 - [x] **BASK-03**: NBA predictions are resolved automatically when game results come in
-- [ ] **BASK-04**: PBA predictions can be created manually with full match details and analysis
-- [ ] **BASK-05**: NCAA Philippines / UAAP predictions can be created manually
+- [x] **BASK-04**: PBA predictions can be created manually with full match details and analysis
+- [x] **BASK-05**: NCAA Philippines / UAAP predictions can be created manually
 - [ ] **BASK-06**: User can filter predictions by league (NBA, PBA, NCAA PH)
 
 ### Boxing Predictions
 
-- [ ] **BOX-01**: Boxing predictions can be created manually as editorial content
-- [ ] **BOX-02**: Each boxing prediction includes fighter profiles, records, odds, and analysis
+- [x] **BOX-01**: Boxing predictions can be created manually as editorial content
+- [x] **BOX-02**: Each boxing prediction includes fighter profiles, records, odds, and analysis
 - [ ] **BOX-03**: Boxing predictions are displayed in a dedicated section with fight card format
 - [ ] **BOX-04**: Boxing content is available in both Filipino and English
 
@@ -139,11 +139,11 @@ Which phases cover which requirements. Updated during roadmap creation.
 | BASK-01 | Phase 4: NBA Predictions & Statistics | Complete |
 | BASK-02 | Phase 4: NBA Predictions & Statistics | Complete |
 | BASK-03 | Phase 4: NBA Predictions & Statistics | Complete |
-| BASK-04 | Phase 7: PBA, Boxing & Manual Content | Pending |
-| BASK-05 | Phase 7: PBA, Boxing & Manual Content | Pending |
+| BASK-04 | Phase 7: PBA, Boxing & Manual Content | Complete |
+| BASK-05 | Phase 7: PBA, Boxing & Manual Content | Complete |
 | BASK-06 | Phase 7: PBA, Boxing & Manual Content | Pending |
-| BOX-01 | Phase 7: PBA, Boxing & Manual Content | Pending |
-| BOX-02 | Phase 7: PBA, Boxing & Manual Content | Pending |
+| BOX-01 | Phase 7: PBA, Boxing & Manual Content | Complete |
+| BOX-02 | Phase 7: PBA, Boxing & Manual Content | Complete |
 | BOX-03 | Phase 7: PBA, Boxing & Manual Content | Pending |
 | BOX-04 | Phase 7: PBA, Boxing & Manual Content | Pending |
 | BLOG-01 | Phase 5: Blog Automation | Complete |

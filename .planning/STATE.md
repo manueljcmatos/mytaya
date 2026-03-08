@@ -5,21 +5,21 @@
 See: .planning/PROJECT.md (updated 2026-03-07)
 
 **Core value:** Every Filipino sports bettor visiting mytaya.com finds accurate, timely predictions for basketball, boxing, and football in their preferred language (Filipino or English)
-**Current focus:** Phase 6 complete -- prediction cards and Telegram integration done
+**Current focus:** Phase 7 in progress -- PBA, boxing, and manual content workflows
 
 ## Current Position
 
-Phase: 6 of 7 (Prediction Cards & Telegram) COMPLETE
-Plan: 2 of 2 in current phase (COMPLETE)
-Status: Phase Complete
-Last activity: 2026-03-07 -- Completed 06-02-PLAN.md (Telegram Publishing & OG Images)
+Phase: 7 of 7 (PBA Boxing Manual Content)
+Plan: 2 of 3 in current phase
+Status: In Progress
+Last activity: 2026-03-08 -- Completed 07-01-PLAN.md (Boxing & PH Leagues Foundation)
 
-Progress: [####################] 84%
+Progress: [######################] 89%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 16
+- Total plans completed: 17
 - Average duration: 3min
 - Total execution time: 0.89 hours
 
@@ -32,7 +32,7 @@ Progress: [####################] 84%
 | 03-football-predictions | 3 | 9min | 3min |
 
 **Recent Trend:**
-- Last 5 plans: 04-03 (3min), 05-01 (3min), 05-02 (8min), 06-01 (3min), 06-02 (4min)
+- Last 5 plans: 05-01 (3min), 05-02 (8min), 06-01 (3min), 06-02 (4min), 07-01 (3min)
 - Trend: Consistent
 
 *Updated after each plan completion*
@@ -43,6 +43,7 @@ Progress: [####################] 84%
 | Phase 05 P02 | 8min | 2 tasks | 8 files |
 | Phase 06 P01 | 3min | 2 tasks | 9 files |
 | Phase 06 P02 | 4min | 2 tasks | 6 files |
+| Phase 07 P01 | 3min | 2 tasks | 5 files |
 
 ## Accumulated Context
 
@@ -116,6 +117,10 @@ Recent decisions affecting current work:
 - [06-02]: Daily recap sent at 23:00 PHT with record, streak, and ROI
 - [06-02]: Result card Telegram posting re-fetches card_image_url after generation for updated URL
 - [06-02]: Blog pages do not exist yet -- skipped blog OG integration
+- [07-01]: Auto-settle trigger simplifies manual resolution to single result field update via Supabase dashboard
+- [07-01]: generateMissingCards integrated into resolveFinishedMatches (runs every cron cycle, non-blocking)
+- [07-01]: Boxing card uses red accent (#DC2626) with fight-card layout showing fighter records and weight class
+- [07-01]: api_fixture_id made nullable (number | null) to support manual predictions without API source
 
 ### Pending Todos
 
@@ -129,6 +134,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-07
-Stopped at: Completed 06-02-PLAN.md (Telegram Publishing & OG Images) -- Phase 6 complete
+Last session: 2026-03-08
+Stopped at: Completed 07-01-PLAN.md (Boxing & PH Leagues Foundation)
 Resume file: None
