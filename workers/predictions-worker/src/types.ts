@@ -105,7 +105,7 @@ export interface BlogPostInsert {
   excerpt_tl: string;
   excerpt_en: string;
   category: 'analysis';
-  sport: 'football' | 'basketball';
+  sport: 'football' | 'basketball' | 'boxing';
   prediction_id: string;
   read_time_minutes: number;
   is_published: boolean;
@@ -119,7 +119,7 @@ export interface PredictionInsert {
   home_team_id: string;
   away_team_id: string;
   match_date: string;
-  sport: 'football' | 'basketball';
+  sport: 'football' | 'basketball' | 'boxing';
   pick: PickType | NbaPickType;
   pick_label_tl: string;
   pick_label_en: string;
@@ -130,7 +130,11 @@ export interface PredictionInsert {
   confidence: 'high' | 'medium' | 'low';
   stake: number;
   published_site: boolean;
-  api_fixture_id: number;
+  api_fixture_id: number | null;
   spread_line?: number;
   total_line?: number;
+  fighter_1_record?: string;
+  fighter_2_record?: string;
+  weight_class?: string;
+  scheduled_rounds?: number;
 }
