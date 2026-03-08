@@ -24,6 +24,7 @@ const translations = {
     allSports: 'Lahat ng Isports',
     football: 'Football',
     basketball: 'Basketball',
+    boxing: 'Boxing',
   },
   en: {
     todayPicks: "Today's Picks",
@@ -46,6 +47,7 @@ const translations = {
     allSports: 'All Sports',
     football: 'Football',
     basketball: 'Basketball',
+    boxing: 'Boxing',
   },
 } as const;
 
@@ -97,6 +99,7 @@ const pickTypeMap: Record<string, string> = {
 const sportIcons: Record<string, string> = {
   football: '\u26BD',
   basketball: '\uD83C\uDFC0',
+  boxing: '\uD83E\uDD4A',
 };
 
 function formatTime(isoDate: string): string {
@@ -282,6 +285,7 @@ export default function PredictionList({ lang, initialTab = 'today' }: Props) {
     { key: 'all', label: t.allSports },
     { key: 'football', label: t.football },
     { key: 'basketball', label: t.basketball },
+    { key: 'boxing', label: t.boxing },
   ];
 
   return (
