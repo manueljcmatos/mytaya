@@ -5,23 +5,23 @@
 See: .planning/PROJECT.md (updated 2026-03-07)
 
 **Core value:** Every Filipino sports bettor visiting mytaya.com finds accurate, timely predictions for basketball, boxing, and football in their preferred language (Filipino or English)
-**Current focus:** Phase 6 in progress -- prediction cards and Telegram integration
+**Current focus:** Phase 6 complete -- prediction cards and Telegram integration done
 
 ## Current Position
 
-Phase: 6 of 7 (Prediction Cards & Telegram)
-Plan: 1 of 2 in current phase (COMPLETE)
-Status: In Progress
-Last activity: 2026-03-07 -- Completed 06-01-PLAN.md (Card Generation)
+Phase: 6 of 7 (Prediction Cards & Telegram) COMPLETE
+Plan: 2 of 2 in current phase (COMPLETE)
+Status: Phase Complete
+Last activity: 2026-03-07 -- Completed 06-02-PLAN.md (Telegram Publishing & OG Images)
 
-Progress: [##################] 79%
+Progress: [####################] 84%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 15
+- Total plans completed: 16
 - Average duration: 3min
-- Total execution time: 0.82 hours
+- Total execution time: 0.89 hours
 
 **By Phase:**
 
@@ -32,7 +32,7 @@ Progress: [##################] 79%
 | 03-football-predictions | 3 | 9min | 3min |
 
 **Recent Trend:**
-- Last 5 plans: 04-02 (5min), 04-03 (3min), 05-01 (3min), 05-02 (8min), 06-01 (3min)
+- Last 5 plans: 04-03 (3min), 05-01 (3min), 05-02 (8min), 06-01 (3min), 06-02 (4min)
 - Trend: Consistent
 
 *Updated after each plan completion*
@@ -42,6 +42,7 @@ Progress: [##################] 79%
 | Phase 05 P01 | 3min | 2 tasks | 5 files |
 | Phase 05 P02 | 8min | 2 tasks | 8 files |
 | Phase 06 P01 | 3min | 2 tasks | 9 files |
+| Phase 06 P02 | 4min | 2 tasks | 6 files |
 
 ## Accumulated Context
 
@@ -110,6 +111,11 @@ Recent decisions affecting current work:
 - [06-01]: Card generation always wrapped in try/catch so pipelines are never disrupted
 - [06-01]: Result card overwrites prediction card URL (result is final state)
 - [06-01]: Resolver queries extended with teams join for team names needed by card templates
+- [06-02]: Raw Telegram Bot HTTP API (no SDK) to keep worker bundle small
+- [06-02]: Drip publishing window is 2-3 hours before match kickoff via hourly cron
+- [06-02]: Daily recap sent at 23:00 PHT with record, streak, and ROI
+- [06-02]: Result card Telegram posting re-fetches card_image_url after generation for updated URL
+- [06-02]: Blog pages do not exist yet -- skipped blog OG integration
 
 ### Pending Todos
 
@@ -124,5 +130,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-03-07
-Stopped at: Completed 06-01-PLAN.md (Card Generation)
+Stopped at: Completed 06-02-PLAN.md (Telegram Publishing & OG Images) -- Phase 6 complete
 Resume file: None

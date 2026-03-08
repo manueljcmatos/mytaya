@@ -62,10 +62,10 @@ Requirements for initial release. Each maps to roadmap phases.
 
 - [x] **CARD-01**: PNG prediction cards are generated for each prediction via Cloudflare Worker
 - [x] **CARD-02**: Cards include match details, odds, prediction, and MyTaya branding
-- [ ] **CARD-03**: Cards are shareable on social media and Telegram
-- [ ] **TELE-01**: Telegram bot publishes predictions to group channel automatically
-- [ ] **TELE-02**: Predictions are drip-fed throughout the day (not all at once)
-- [ ] **TELE-03**: Results/resolutions are posted to Telegram when matches conclude
+- [x] **CARD-03**: Cards are shareable on social media and Telegram
+- [x] **TELE-01**: Telegram bot publishes predictions to group channel automatically
+- [x] **TELE-02**: Predictions are drip-fed throughout the day (not all at once)
+- [x] **TELE-03**: Results/resolutions are posted to Telegram when matches conclude
 
 ### SEO & Compliance
 
@@ -158,10 +158,10 @@ Which phases cover which requirements. Updated during roadmap creation.
 | STAT-05 | Phase 4: NBA Predictions & Statistics | Complete |
 | CARD-01 | Phase 6: Prediction Cards & Telegram | Complete |
 | CARD-02 | Phase 6: Prediction Cards & Telegram | Complete |
-| CARD-03 | Phase 6: Prediction Cards & Telegram | Pending |
-| TELE-01 | Phase 6: Prediction Cards & Telegram | Pending |
-| TELE-02 | Phase 6: Prediction Cards & Telegram | Pending |
-| TELE-03 | Phase 6: Prediction Cards & Telegram | Pending |
+| CARD-03 | Phase 6: Prediction Cards & Telegram | Complete |
+| TELE-01 | Phase 6: Prediction Cards & Telegram | Complete |
+| TELE-02 | Phase 6: Prediction Cards & Telegram | Complete |
+| TELE-03 | Phase 6: Prediction Cards & Telegram | Complete |
 | SEO-01 | Phase 2: SEO, Compliance & Affiliates | Complete |
 | SEO-02 | Phase 2: SEO, Compliance & Affiliates | Complete |
 | SEO-03 | Phase 2: SEO, Compliance & Affiliates | Complete |
