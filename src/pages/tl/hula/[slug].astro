@@ -22,12 +22,14 @@ const { slug } = Astro.params;
 let title = 'Hula sa Sports - MyTaya';
 let description = 'Tingnan ang detalyadong hula sa sports mula sa MyTaya.';
 let schema: Record<string, unknown> | undefined;
+let ogImage: string | undefined;
+let cardImageUrl: string | undefined;
 
 if (supabase && slug) {
   const { data: pred } = await supabase
     .from('predictions')
     .select(`
-      slug, pick_label_tl, analysis_tl, match_date, sport,
+      slug, pick_label_tl, analysis_tl, match_date, sport, card_image_url,
       home_team:teams!predictions_home_team_id_fkey(name),
       away_team:teams!predictions_away_team_id_fkey(name)
     `)
@@ -38,6 +40,11 @@ if (supabase && slug) {
     title = `${pred.pick_label_tl} - MyTaya`;
     if (pred.analysis_tl) {
       description = pred.analysis_tl.substring(0, 160);
+    }
+
+    if (pred.card_image_url) {
+      ogImage = pred.card_image_url;
+      cardImageUrl = pred.card_image_url;
     }
 
     const homeTeam = (pred.home_team as any)?.name || 'Home';
@@ -59,7 +66,7 @@ if (supabase && slug) {
 const enAlternate = `/en/predictions/${slug}/`;
 ---
 
-<Layout title={title} description={description} schema={schema} lang="tl">
+<Layout title={title} description={description} schema={schema} lang="tl" ogImage={ogImage}>
   <Fragment slot="head">
     <link rel="alternate" hreflang="en" href={`${SITE.url}${enAlternate}`} />
     <link rel="alternate" hreflang="fil" href={`${SITE.url}/tl/hula/${slug}/`} />
@@ -69,5 +76,19 @@ const enAlternate = `/en/predictions/${slug}/`;
 
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
     <PredictionDetail client:load slug={slug!} lang="tl" />
+    {cardImageUrl && (
+      <div class="mt-6 text-center">
+        <a
+          href={cardImageUrl}
+          download={`mytaya-${slug}.png`}
+          target="_blank"
+          rel="noopener"
+          class="inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-[var(--t-brand)] text-white font-medium hover:opacity-90 transition-opacity"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          I-download ang Card
+        </a>
+      </div>
+    )}
   </div>
 </Layout>
