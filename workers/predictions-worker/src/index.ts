@@ -7,6 +7,8 @@ import { generatePrediction } from './prediction-gen';
 import { generateNbaPrediction } from './prediction-gen';
 import { resolveFinishedMatches, resolveNbaMatches } from './resolver';
 import { generateBlogArticles } from './blog-gen';
+import { generatePredictionCard } from './card-gen';
+import type { PredictionCardData } from './card-gen';
 import type { ApiFootballFixture } from './types';
 
 /** Delay helper for rate limiting */
@@ -295,6 +297,24 @@ async function fetchAndGeneratePredictions(env: Env): Promise<void> {
       } else {
         created++;
         console.log(`Created prediction: ${slug} (${prediction.pick})`);
+
+        // Generate prediction card (non-blocking: failure does not disrupt pipeline)
+        try {
+          const cardData: PredictionCardData = {
+            slug,
+            homeTeam: fixture.teams.home.name,
+            awayTeam: fixture.teams.away.name,
+            league: fixture.league.name,
+            matchDate: fixture.fixture.date,
+            pick: prediction.pick_label_en,
+            odds: oddsValue,
+            confidence: prediction.confidence,
+            sport: 'football',
+          };
+          await generatePredictionCard(env, cardData);
+        } catch (cardErr) {
+          console.error(`Card generation failed for ${slug}:`, cardErr);
+        }
       }
     } catch (err) {
       console.error(
@@ -461,6 +481,24 @@ async function fetchAndGenerateNbaPredictions(env: Env): Promise<void> {
       } else {
         created++;
         console.log(`Created NBA prediction: ${slug} (${prediction.pick})`);
+
+        // Generate prediction card (non-blocking: failure does not disrupt pipeline)
+        try {
+          const cardData: PredictionCardData = {
+            slug,
+            homeTeam: game.teams.home.name,
+            awayTeam: game.teams.away.name,
+            league: NBA_LEAGUE.name,
+            matchDate: game.date,
+            pick: prediction.pick_label_en,
+            odds: oddsValue,
+            confidence: prediction.confidence,
+            sport: 'basketball',
+          };
+          await generatePredictionCard(env, cardData);
+        } catch (cardErr) {
+          console.error(`Card generation failed for ${slug}:`, cardErr);
+        }
       }
     } catch (err) {
       console.error(`Error processing NBA game ${game.id}:`, err);

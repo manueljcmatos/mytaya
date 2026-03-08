@@ -3,6 +3,8 @@ import type { SupabaseClient } from '@supabase/supabase-js';
 import { createSupabaseClient } from './supabase';
 import { fetchFixtureResult } from './api-football';
 import { fetchNbaGameResult } from './api-basketball';
+import { generateResultCard } from './card-gen';
+import type { ResultCardData } from './card-gen';
 
 /** Delay helper for rate limiting */
 function delay(ms: number): Promise<void> {
@@ -94,10 +96,10 @@ export function determineResult(
 export async function resolveFinishedMatches(env: Env): Promise<void> {
   const supabase = createSupabaseClient(env);
 
-  // Get pending football predictions that have an API fixture ID
+  // Get pending football predictions that have an API fixture ID (join teams for card gen)
   const { data: pendingPredictions, error } = await supabase
     .from('predictions')
-    .select('id, api_fixture_id, pick')
+    .select('id, api_fixture_id, pick, slug, home_team:teams!predictions_home_team_id_fkey(name), away_team:teams!predictions_away_team_id_fkey(name)')
     .eq('status', 'pending')
     .eq('sport', 'football')
     .not('api_fixture_id', 'is', null);
@@ -158,6 +160,26 @@ export async function resolveFinishedMatches(env: Env): Promise<void> {
 
         // Append result to linked blog post
         await appendResultToPost(supabase, pred.id, result, homeGoals, awayGoals);
+
+        // Generate result card (non-blocking: failure does not disrupt pipeline)
+        try {
+          const homeTeamName = (pred.home_team as any)?.name ?? 'Home';
+          const awayTeamName = (pred.away_team as any)?.name ?? 'Away';
+          const resultCardData: ResultCardData = {
+            slug: pred.slug,
+            homeTeam: homeTeamName,
+            awayTeam: awayTeamName,
+            homeScore: homeGoals,
+            awayScore: awayGoals,
+            league: 'Football',
+            pick: pred.pick,
+            result: result as 'win' | 'loss' | 'push',
+            sport: 'football',
+          };
+          await generateResultCard(env, resultCardData);
+        } catch (cardErr) {
+          console.error(`Result card generation failed for ${pred.slug}:`, cardErr);
+        }
       }
     } catch (err) {
       console.error(`Error resolving fixture ${pred.api_fixture_id}:`, err);
@@ -232,10 +254,10 @@ export function determineNbaResult(
 export async function resolveNbaMatches(env: Env): Promise<void> {
   const supabase = createSupabaseClient(env);
 
-  // Get pending basketball predictions that have an API fixture ID
+  // Get pending basketball predictions that have an API fixture ID (join teams for card gen)
   const { data: pendingPredictions, error } = await supabase
     .from('predictions')
-    .select('id, api_fixture_id, pick, spread_line, total_line')
+    .select('id, api_fixture_id, pick, spread_line, total_line, slug, home_team:teams!predictions_home_team_id_fkey(name), away_team:teams!predictions_away_team_id_fkey(name)')
     .eq('status', 'pending')
     .eq('sport', 'basketball')
     .not('api_fixture_id', 'is', null);
@@ -302,6 +324,26 @@ export async function resolveNbaMatches(env: Env): Promise<void> {
 
         // Append result to linked blog post
         await appendResultToPost(supabase, pred.id, result, homeScore, awayScore);
+
+        // Generate result card (non-blocking: failure does not disrupt pipeline)
+        try {
+          const homeTeamName = (pred.home_team as any)?.name ?? 'Home';
+          const awayTeamName = (pred.away_team as any)?.name ?? 'Away';
+          const resultCardData: ResultCardData = {
+            slug: pred.slug,
+            homeTeam: homeTeamName,
+            awayTeam: awayTeamName,
+            homeScore: homeScore,
+            awayScore: awayScore,
+            league: 'NBA',
+            pick: pred.pick,
+            result: result as 'win' | 'loss' | 'push',
+            sport: 'basketball',
+          };
+          await generateResultCard(env, resultCardData);
+        } catch (cardErr) {
+          console.error(`Result card generation failed for ${pred.slug}:`, cardErr);
+        }
       }
     } catch (err) {
       console.error(`Error resolving NBA game ${pred.api_fixture_id}:`, err);
