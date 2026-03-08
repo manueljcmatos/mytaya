@@ -39,8 +39,8 @@ Requirements for initial release. Each maps to roadmap phases.
 
 - [x] **BOX-01**: Boxing predictions can be created manually as editorial content
 - [x] **BOX-02**: Each boxing prediction includes fighter profiles, records, odds, and analysis
-- [ ] **BOX-03**: Boxing predictions are displayed in a dedicated section with fight card format
-- [ ] **BOX-04**: Boxing content is available in both Filipino and English
+- [x] **BOX-03**: Boxing predictions are displayed in a dedicated section with fight card format
+- [x] **BOX-04**: Boxing content is available in both Filipino and English
 
 ### Blog & News
 
@@ -144,8 +144,8 @@ Which phases cover which requirements. Updated during roadmap creation.
 | BASK-06 | Phase 7: PBA, Boxing & Manual Content | Complete |
 | BOX-01 | Phase 7: PBA, Boxing & Manual Content | Complete |
 | BOX-02 | Phase 7: PBA, Boxing & Manual Content | Complete |
-| BOX-03 | Phase 7: PBA, Boxing & Manual Content | Pending |
-| BOX-04 | Phase 7: PBA, Boxing & Manual Content | Pending |
+| BOX-03 | Phase 7: PBA, Boxing & Manual Content | Complete |
+| BOX-04 | Phase 7: PBA, Boxing & Manual Content | Complete |
 | BLOG-01 | Phase 5: Blog Automation | Complete |
 | BLOG-02 | Phase 5: Blog Automation | Complete |
 | BLOG-03 | Phase 5: Blog Automation | Complete |

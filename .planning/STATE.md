@@ -45,6 +45,7 @@ Progress: [#########################] 100%
 | Phase 06 P02 | 4min | 2 tasks | 6 files |
 | Phase 07 P01 | 3min | 2 tasks | 5 files |
 | Phase 07 P03 | 2min | 1 tasks | 1 files |
+| Phase 07 P02 | 4min | 2 tasks | 10 files |
 
 ## Accumulated Context
 
@@ -124,6 +125,9 @@ Recent decisions affecting current work:
 - [07-01]: api_fixture_id made nullable (number | null) to support manual predictions without API source
 - [07-03]: Boxing sport tab added to PredictionList for boxing prediction discoverability (Rule 2)
 - [07-03]: Basketball league filtering confirmed fully dynamic -- no changes needed for PBA/NCAA PH/UAAP support
+- [Phase 07-02]: BoxingList uses red accent (#DC2626) for tab active state to match boxing sport branding
+- [Phase 07-02]: FightCard expandable analysis with toggle button on list, always expanded on detail page
+- [Phase 07-02]: SportTabs boxing link goes to /en/boxing/ (dedicated section) while basketball/football stay on ?sport= query param
 
 ### Pending Todos
 
