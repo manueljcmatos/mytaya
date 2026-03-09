@@ -67,6 +67,9 @@ interface Prediction {
   sport: string;
   spread_line?: number;
   total_line?: number;
+  home_team: { name: string } | null;
+  away_team: { name: string } | null;
+  league: { name: string; slug: string } | null;
 }
 
 interface League {
@@ -211,7 +214,10 @@ export default function PredictionList({ lang, initialTab = 'today' }: Props) {
     const fields = `
       id, slug, pick, pick_label_tl, pick_label_en,
       odds, confidence, stake, match_date, status, result, league_id,
-      sport, spread_line, total_line
+      sport, spread_line, total_line,
+      home_team:teams!home_team_id(name),
+      away_team:teams!away_team_id(name),
+      league:leagues!league_id(name, slug)
     `;
 
     let query = supabase
@@ -427,9 +433,20 @@ export default function PredictionList({ lang, initialTab = 'today' }: Props) {
                           border: '1px solid var(--t-border, #374151)',
                         }}
                       >
-                        {/* Header row: time + sport icon + pick type */}
+                        {/* Header row: league + time + pick type */}
                         <div className="flex items-center justify-between mb-2">
                           <div className="flex items-center gap-2">
+                            {pred.league && (
+                              <span
+                                className="text-xs font-medium px-2 py-0.5 rounded"
+                                style={{
+                                  backgroundColor: 'var(--t-surface, rgba(255,255,255,0.06))',
+                                  color: 'var(--t-text-sec, #9ca3af)',
+                                }}
+                              >
+                                {pred.league.name}
+                              </span>
+                            )}
                             <span
                               className="text-xs"
                               style={{ color: 'var(--t-text-sec, #9ca3af)' }}
@@ -454,10 +471,24 @@ export default function PredictionList({ lang, initialTab = 'today' }: Props) {
                           </span>
                         </div>
 
+                        {/* Teams */}
+                        {pred.home_team && pred.away_team && (
+                          <p
+                            className="font-bold text-base mb-1 leading-snug"
+                            style={{
+                              color: 'var(--t-text, #f9fafb)',
+                              fontFamily: "var(--font-display, 'Bebas Neue', sans-serif)",
+                              letterSpacing: '0.02em',
+                            }}
+                          >
+                            {pred.home_team.name} vs {pred.away_team.name}
+                          </p>
+                        )}
+
                         {/* Pick label */}
                         <p
-                          className="font-semibold mb-3 leading-snug"
-                          style={{ color: 'var(--t-text, #f9fafb)' }}
+                          className="text-sm mb-3 leading-snug"
+                          style={{ color: 'var(--brand-primary, #0F766E)' }}
                         >
                           {pickLabel}
                         </p>
