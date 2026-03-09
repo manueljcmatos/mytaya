@@ -4,6 +4,7 @@ import HeroSection from '../../components/HeroSection.astro';
 import SportTabs from '../../components/SportTabs.astro';
 import TelegramBanner from '../../components/TelegramBanner.astro';
 import EmptyState from '../../components/EmptyState.astro';
+import HomePredictions from '../../components/HomePredictions';
 import LeadCaptureForm from '../../components/LeadCaptureForm';
 import { getLangFromUrl, useTranslations } from '../../i18n/utils';
 
@@ -28,7 +29,7 @@ const t = useTranslations(lang);
       <h2 class="section-title">{t('section.predictions')}</h2>
       <a href="/en/predictions/" class="link-arrow">{t('cta.viewAll')}</a>
     </div>
-    <EmptyState message={t('empty.predictions')} icon="\u{1F3AF}" />
+    <HomePredictions client:visible lang={lang} mode="today" />
   </section>
 
   <!-- Recent Results -->
@@ -37,7 +38,7 @@ const t = useTranslations(lang);
       <h2 class="section-title">{t('section.results')}</h2>
       <a href="/en/results/" class="link-arrow">{t('cta.viewAll')}</a>
     </div>
-    <EmptyState message={t('empty.results')} icon="\u{1F4CA}" />
+    <HomePredictions client:visible lang={lang} mode="results" />
   </section>
 
   <!-- Telegram CTA -->
