@@ -1,0 +1,26 @@
+{
+  "name": "mytaya-video",
+  "version": "1.0.0",
+  "type": "commonjs",
+  "scripts": {
+    "studio": "remotion studio src/index.ts",
+    "render": "remotion render src/index.ts HulaNgAraw out/hula.mp4",
+    "render:file": "npx tsx src/render.ts"
+  },
+  "dependencies": {
+    "@remotion/cli": "^4.0.434",
+    "@remotion/google-fonts": "^4.0.434",
+    "@remotion/renderer": "^4.0.434",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4",
+    "remotion": "^4.0.434",
+    "zod": "^4.3.6"
+  },
+  "devDependencies": {
+    "@remotion/bundler": "^4.0.434",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "tsx": "^4.21.0",
+    "typescript": "^5.9.3"
+  }
+}
