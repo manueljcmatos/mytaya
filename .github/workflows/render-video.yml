@@ -1,0 +1,274 @@
+name: Render Video Reel
+
+on:
+  repository_dispatch:
+    types: [render-video]
+
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        working-directory: video
+        run: npm ci
+
+      - name: Write props file
+        env:
+          PROPS_JSON: ${{ github.event.client_payload.props }}
+        run: echo "$PROPS_JSON" > video/render-props.json
+
+      - name: Set composition ID
+        env:
+          COMP: ${{ github.event.client_payload.composition }}
+        run: |
+          echo "COMPOSITION=${COMP:-HulaNgAraw}" >> $GITHUB_ENV
+
+      - name: Generate TTS narration
+        if: env.COMPOSITION == 'BalitaSports' || env.COMPOSITION == 'AlaminMo' || env.COMPOSITION == 'QuizSports'
+        working-directory: video
+        env:
+          GCP_TTS_KEY: ${{ secrets.GCP_TTS_KEY }}
+        run: |
+          npx tsx src/tts.ts render-props.json "$COMPOSITION"
+          jq '. + {narrationSrc: "narration.mp3"}' render-props.json > render-props-tts.json
+          mv render-props-tts.json render-props.json
+          pip install mutagen -q
+          DURATION_FRAMES=$(python3 -c "
+          from mutagen.mp3 import MP3
+          import math
+          audio = MP3('public/narration.mp3')
+          frames = math.ceil((audio.info.length + 2) * 30)
+          print(frames)
+          ")
+          echo "TTS audio → video: ${DURATION_FRAMES} frames"
+          echo "DURATION_FRAMES=${DURATION_FRAMES}" >> $GITHUB_ENV
+
+      - name: Render video
+        working-directory: video
+        run: npx tsx src/render.ts render-props.json "$COMPOSITION" "${DURATION_FRAMES:-}"
+
+      - name: Install AWS CLI
+        run: pip install awscli
+
+      - name: Upload to R2
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+          R2_BUCKET_NAME: ${{ secrets.R2_BUCKET_NAME }}
+          R2_ENDPOINT: ${{ secrets.R2_ENDPOINT }}
+          R2_PUBLIC_URL: ${{ secrets.R2_PUBLIC_URL }}
+        run: |
+          TODAY=$(date +%Y-%m-%d)
+          VIDEO_FILE=$(ls video/out/*.mp4 | head -1)
+          COMP_LOWER=$(echo "$COMPOSITION" | tr '[:upper:]' '[:lower:]')
+          FILENAME="${COMP_LOWER}-${TODAY}-$(date +%s).mp4"
+          aws s3 cp "$VIDEO_FILE" "s3://${R2_BUCKET_NAME}/videos/${FILENAME}" \
+            --endpoint-url "${R2_ENDPOINT}" \
+            --content-type "video/mp4"
+          echo "VIDEO_URL=${R2_PUBLIC_URL}/videos/${FILENAME}" >> $GITHUB_ENV
+          echo "VIDEO_FILENAME=${FILENAME}" >> $GITHUB_ENV
+
+      - name: Upload to YouTube
+        if: github.event.client_payload.skip_youtube != 'true'
+        env:
+          YOUTUBE_CLIENT_ID: ${{ secrets.YOUTUBE_CLIENT_ID }}
+          YOUTUBE_CLIENT_SECRET: ${{ secrets.YOUTUBE_CLIENT_SECRET }}
+          YOUTUBE_REFRESH_TOKEN: ${{ secrets.YOUTUBE_REFRESH_TOKEN }}
+        run: |
+          TOKEN_RES=$(curl -s -X POST https://oauth2.googleapis.com/token \
+            -d "client_id=${YOUTUBE_CLIENT_ID}" \
+            -d "client_secret=${YOUTUBE_CLIENT_SECRET}" \
+            -d "refresh_token=${YOUTUBE_REFRESH_TOKEN}" \
+            -d "grant_type=refresh_token")
+          ACCESS_TOKEN=$(echo $TOKEN_RES | jq -r '.access_token')
+
+          VIDEO_FILE=$(ls video/out/*.mp4 | head -1)
+
+          # Build title/description based on composition
+          if [ "$COMPOSITION" = "HulaNgAraw" ]; then
+            TITLE=$(jq -r '.hookText' video/render-props.json)
+            HOME=$(jq -r '.homeTeam' video/render-props.json)
+            AWAY=$(jq -r '.awayTeam' video/render-props.json)
+            YT_TITLE="${TITLE} | ${HOME} vs ${AWAY}"
+            YT_DESC=$(jq -r '.hotTake' video/render-props.json)
+            YT_TAGS=$(jq -c '["sports", "predictions", "basketball", "football", .homeTeam, .awayTeam, .league]' video/render-props.json)
+          elif [ "$COMPOSITION" = "BalitaSports" ]; then
+            YT_TITLE=$(jq -r '.headline.title' video/render-props.json | cut -c1-95)
+            YT_DESC=$(jq -r '.headline.summary + "\n\n" + .opinion' video/render-props.json)
+            YT_TAGS='["sports news", "balita", "sports", "PBA", "NBA"]'
+          elif [ "$COMPOSITION" = "AlaminMo" ]; then
+            YT_TITLE=$(jq -r '"Alam mo ba " + .stat + " " + .factTitle + "?"' video/render-props.json | cut -c1-95)
+            YT_DESC=$(jq -r '.factContext' video/render-props.json)
+            YT_TAGS='["alam mo ba", "sports trivia", "fun facts", "basketball", "football"]'
+          elif [ "$COMPOSITION" = "QuizSports" ]; then
+            YT_TITLE=$(jq -r '.question' video/render-props.json | cut -c1-95)
+            CORRECT_IDX=$(jq -r '.correctIndex' video/render-props.json)
+            CORRECT_ANS=$(jq -r ".options[$CORRECT_IDX]" video/render-props.json)
+            YT_DESC=$(printf 'Sagot: %s\n\n%s' "$CORRECT_ANS" "$(jq -r '.explanation' video/render-props.json)")
+            YT_TAGS='["quiz", "sports quiz", "trivia", "basketball", "football"]'
+          fi
+
+          YT_TITLE="${YT_TITLE:0:100}"
+
+          EXTRA_TAGS=""
+          if [ "$COMPOSITION" = "HulaNgAraw" ]; then
+            EXTRA_TAGS=$(jq -r '" #" + (.homeTeam | gsub(" ";"")) + " #" + (.awayTeam | gsub(" ";"")) + " #" + (.league | gsub(" ";""))' video/render-props.json)
+          fi
+          YT_FULL_DESC=$(printf '%s\n\n📊 Predictions araw-araw: https://mytaya.com/tl/predictions/\n📲 Telegram: https://t.me/mytaborado\n\n#MyTaya #SportsPredictions%s' "$YT_DESC" "$EXTRA_TAGS")
+
+          METADATA=$(jq -n \
+            --arg title "$YT_TITLE" \
+            --arg desc "$YT_FULL_DESC" \
+            --argjson tags "$YT_TAGS" \
+            '{
+              snippet: { title: $title, description: $desc, tags: $tags, categoryId: "17" },
+              status: { privacyStatus: "public", selfDeclaredMadeForKids: false }
+            }')
+
+          if [ -z "$ACCESS_TOKEN" ] || [ "$ACCESS_TOKEN" = "null" ]; then
+            echo "::error::Failed to get YouTube access token"
+            echo "YOUTUBE_URL=" >> $GITHUB_ENV
+            exit 0
+          fi
+
+          INIT_RESPONSE=$(curl -s -D /tmp/yt_headers -o /tmp/yt_body -w "%{http_code}" -X POST \
+            "https://www.googleapis.com/upload/youtube/v3/videos?uploadType=resumable&part=snippet,status" \
+            -H "Authorization: Bearer ${ACCESS_TOKEN}" \
+            -H "Content-Type: application/json" \
+            -d "$METADATA")
+
+          if [ "$INIT_RESPONSE" != "200" ]; then
+            echo "::warning::YouTube upload init failed (HTTP $INIT_RESPONSE)"
+            cat /tmp/yt_body
+            echo "YOUTUBE_URL=" >> $GITHUB_ENV
+            exit 0
+          fi
+
+          UPLOAD_URL=$(grep -i "location:" /tmp/yt_headers | sed 's/location: //i' | tr -d '\r')
+
+          if [ -z "$UPLOAD_URL" ]; then
+            echo "::warning::No upload URL"
+            echo "YOUTUBE_URL=" >> $GITHUB_ENV
+            exit 0
+          fi
+
+          YT_RESPONSE=$(curl -s -X PUT "$UPLOAD_URL" \
+            -H "Content-Type: video/mp4" \
+            --data-binary @"$VIDEO_FILE")
+          YT_VIDEO_ID=$(echo "$YT_RESPONSE" | jq -r '.id // empty')
+          if [ -n "$YT_VIDEO_ID" ]; then
+            echo "Uploaded: https://youtube.com/shorts/${YT_VIDEO_ID}"
+            echo "YOUTUBE_URL=https://youtube.com/shorts/${YT_VIDEO_ID}" >> $GITHUB_ENV
+          else
+            echo "::warning::No video ID returned"
+            echo "YOUTUBE_URL=" >> $GITHUB_ENV
+          fi
+
+      - name: Send video to Telegram
+        env:
+          TG_BOT_TOKEN: ${{ secrets.TG_BOT_TOKEN }}
+          TG_CHANNEL_ID: ${{ secrets.TG_CHANNEL_ID }}
+        run: |
+          VIDEO_FILE="$(pwd)/$(ls video/out/*.mp4 | head -1)"
+
+          YT_LINE=""
+          if [ -n "$YOUTUBE_URL" ]; then
+            YT_LINE="YouTube Shorts: ${YOUTUBE_URL}"
+          fi
+
+          python3 -c "
+          import urllib.request, json, os
+
+          token = os.environ['TG_BOT_TOKEN']
+          chat_id = os.environ['TG_CHANNEL_ID']
+          yt_line = '${YT_LINE}'
+          composition = '${COMPOSITION}'
+
+          with open('video/render-props.json') as f:
+              props = json.load(f)
+
+          if composition == 'HulaNgAraw':
+              caption = f'''HULA NG ARAW
+          {props['homeTeam']} vs {props['awayTeam']}
+          {props['league']}
+
+          Pick: {props['market']}
+          Odds: {props['odds']} | Stake: {props['stake']}/10
+          Kumpiyansa: {props['confidence'].upper()}
+
+          \"{props['hotTake']}\"
+
+          Analysis:
+          - {props['analysis'][0]}
+          - {props['analysis'][1]}
+          - {props['analysis'][2]}
+
+          mytaya.com/tl/predictions'''
+          elif composition == 'BalitaSports':
+              caption = f'''BALITA SA SPORTS
+          {props['date']}
+
+          {props['headline']['title']}
+          {props['headline']['summary']}
+
+          Opinyon: \"{props['opinion']}\"
+
+          mytaya.com'''
+          elif composition == 'AlaminMo':
+              bullets = chr(10).join(f'- {b}' for b in props['bullets'])
+              caption = f'''ALAMIN MO
+
+          {props['stat']} {props['factTitle']}
+
+          {props['factContext']}
+
+          {bullets}
+
+          mytaya.com'''
+          elif composition == 'QuizSports':
+              options_text = chr(10).join(f'{chr(65+i)}) {o}' for i, o in enumerate(props['options']))
+              correct = props['options'][props['correctIndex']]
+              caption = f'''QUIZ SA SPORTS
+
+          {props['question']}
+
+          {options_text}
+
+          Sagot: {correct}
+          {props['explanation']}
+
+          mytaya.com'''
+          else:
+              caption = 'Bagong video mula sa MyTaya'
+
+          if yt_line:
+              caption += chr(10) + yt_line
+          caption += chr(10) + chr(10) + '#MyTaya #Sports #Predictions'
+          caption = chr(10).join(l.strip() for l in caption.split(chr(10)))
+
+          boundary = '----FormBoundary7MA4YWxkTrZu0gW'
+          video_path = '${VIDEO_FILE}'
+          with open(video_path, 'rb') as f:
+              video_data = f.read()
+          body = b''
+          for key, val in [('chat_id', chat_id), ('caption', caption), ('supports_streaming', 'true')]:
+              body += f'--{boundary}\r\nContent-Disposition: form-data; name=\"{key}\"\r\n\r\n{val}\r\n'.encode()
+          body += f'--{boundary}\r\nContent-Disposition: form-data; name=\"video\"; filename=\"video.mp4\"\r\nContent-Type: video/mp4\r\n\r\n'.encode()
+          body += video_data
+          body += f'\r\n--{boundary}--\r\n'.encode()
+
+          req = urllib.request.Request(
+              f'https://api.telegram.org/bot{token}/sendVideo',
+              data=body,
+              headers={'Content-Type': f'multipart/form-data; boundary={boundary}'}
+          )
+          resp = urllib.request.urlopen(req)
+          print(resp.read().decode())
+          "

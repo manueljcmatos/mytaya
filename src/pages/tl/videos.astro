@@ -1,0 +1,135 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { getLangFromUrl, useTranslations } from '../../i18n/utils';
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+
+const pageTitle = 'Mga Video';
+const pageSubtitle = 'Panoorin ang aming mga prediction videos, trivia, at quiz';
+const predictionsLabel = 'Mga Hula sa Video';
+const factsLabel = 'Alamin Mo';
+const quizLabel = 'Quiz sa Sports';
+const comingSoon = 'Mga video ay paparating na! I-subscribe sa aming YouTube channel.';
+const subscribeLabel = 'I-Subscribe sa YouTube';
+
+// Will be populated as videos get uploaded
+const predictionVideos: { id: string; title: string }[] = [];
+const factVideos: { id: string; title: string }[] = [];
+const quizVideos: { id: string; title: string }[] = [];
+
+const youtubeChannel = 'https://www.youtube.com/channel/UC528pjVS-RMykQ2VIP4Qs_g';
+---
+
+<Layout title={`${pageTitle} | MyTaya`} lang={lang}>
+  <main class="max-w-6xl mx-auto px-4 py-12">
+    <!-- Hero -->
+    <div class="text-center mb-12">
+      <h1 class="font-[family-name:var(--font-display)] text-4xl md:text-5xl tracking-wide" style="color: var(--t-text);">
+        {pageTitle}
+      </h1>
+      <p class="mt-3 text-lg" style="color: var(--t-text-sec);">
+        {pageSubtitle}
+      </p>
+      <a href={youtubeChannel} target="_blank" rel="noopener" class="btn-primary mt-6 inline-flex">
+        {subscribeLabel}
+      </a>
+    </div>
+
+    <!-- Predictions Section -->
+    <section class="mb-16">
+      <h2 class="font-[family-name:var(--font-display)] text-2xl md:text-3xl tracking-wide mb-6" style="color: var(--t-text);">
+        {predictionsLabel}
+      </h2>
+      {predictionVideos.length > 0 ? (
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {predictionVideos.map((v) => (
+            <div class="card overflow-hidden">
+              <div class="relative" style="padding-bottom: 177.78%;">
+                <iframe
+                  class="absolute inset-0 w-full h-full"
+                  src={`https://www.youtube.com/embed/${v.id}`}
+                  title={v.title}
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowfullscreen
+                  loading="lazy"
+                />
+              </div>
+              <div class="p-3">
+                <p class="text-sm font-medium" style="color: var(--t-text);">{v.title}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      ) : (
+        <div class="card p-8 text-center">
+          <p style="color: var(--t-text-sec);">{comingSoon}</p>
+        </div>
+      )}
+    </section>
+
+    <!-- Fun Facts Section -->
+    <section class="mb-16">
+      <h2 class="font-[family-name:var(--font-display)] text-2xl md:text-3xl tracking-wide mb-6" style="color: var(--t-text);">
+        {factsLabel}
+      </h2>
+      {factVideos.length > 0 ? (
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {factVideos.map((v) => (
+            <div class="card overflow-hidden">
+              <div class="relative" style="padding-bottom: 177.78%;">
+                <iframe
+                  class="absolute inset-0 w-full h-full"
+                  src={`https://www.youtube.com/embed/${v.id}`}
+                  title={v.title}
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowfullscreen
+                  loading="lazy"
+                />
+              </div>
+              <div class="p-3">
+                <p class="text-sm font-medium" style="color: var(--t-text);">{v.title}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      ) : (
+        <div class="card p-8 text-center">
+          <p style="color: var(--t-text-sec);">{comingSoon}</p>
+        </div>
+      )}
+    </section>
+
+    <!-- Quiz Section -->
+    <section class="mb-16">
+      <h2 class="font-[family-name:var(--font-display)] text-2xl md:text-3xl tracking-wide mb-6" style="color: var(--t-text);">
+        {quizLabel}
+      </h2>
+      {quizVideos.length > 0 ? (
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {quizVideos.map((v) => (
+            <div class="card overflow-hidden">
+              <div class="relative" style="padding-bottom: 177.78%;">
+                <iframe
+                  class="absolute inset-0 w-full h-full"
+                  src={`https://www.youtube.com/embed/${v.id}`}
+                  title={v.title}
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowfullscreen
+                  loading="lazy"
+                />
+              </div>
+              <div class="p-3">
+                <p class="text-sm font-medium" style="color: var(--t-text);">{v.title}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      ) : (
+        <div class="card p-8 text-center">
+          <p style="color: var(--t-text-sec);">{comingSoon}</p>
+        </div>
+      )}
+    </section>
+  </main>
+</Layout>

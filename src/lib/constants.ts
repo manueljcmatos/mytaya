@@ -9,6 +9,7 @@ export const NAV_ITEMS = [
   { key: 'nav.results' as const, path: { tl: '/tl/resulta/', en: '/en/results/' } },
   { key: 'nav.blog' as const, path: { tl: '/tl/blog/', en: '/en/blog/' } },
   { key: 'nav.operators' as const, path: { tl: '/tl/mga-operator/', en: '/en/operators/' } },
+  { key: 'nav.videos' as const, path: { tl: '/tl/videos/', en: '/en/videos/' } },
 ] as const;
 
 // Social links

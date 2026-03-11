@@ -9,6 +9,7 @@ export const ui = {
     'nav.blog': 'Blog',
     'nav.operators': 'Mga Operator',
     'nav.boxing': 'Boksing',
+    'nav.videos': 'Mga Video',
     'nav.responsibleGambling': 'Responsableng Pagsusugal',
 
     // Hero
@@ -143,6 +144,7 @@ export const ui = {
     'nav.blog': 'Blog',
     'nav.operators': 'Operators',
     'nav.boxing': 'Boxing',
+    'nav.videos': 'Videos',
     'nav.responsibleGambling': 'Responsible Gambling',
 
     // Hero
