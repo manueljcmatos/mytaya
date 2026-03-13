@@ -15,6 +15,37 @@ function getCurrentHourUTC() {
   return new Date().getUTCHours();
 }
 
+// Sanitize AI-generated JSON before parsing
+function sanitizeAndParseJSON(text) {
+  // Extract JSON block
+  const jsonMatch = text.match(/\{[\s\S]*\}/);
+  if (!jsonMatch) throw new Error('No JSON found in response');
+  let json = jsonMatch[0];
+  // Remove trailing commas before } or ]
+  json = json.replace(/,\s*([}\]])/g, '$1');
+  // Fix unescaped newlines inside strings
+  json = json.replace(/(?<=:\s*"[^"]*)\n(?=[^"]*")/g, '\\n');
+  return JSON.parse(json);
+}
+
+// Run AI with retry on parse failure
+async function runAIWithRetry(env, messages, maxTokens, temperature, maxRetries = 2) {
+  for (let attempt = 0; attempt <= maxRetries; attempt++) {
+    const response = await env.AI.run('@cf/meta/llama-3.1-8b-instruct', {
+      messages,
+      max_tokens: maxTokens,
+      temperature: attempt === 0 ? temperature : Math.max(0.3, temperature - 0.2),
+    });
+    const text = response.response || '';
+    try {
+      return sanitizeAndParseJSON(text);
+    } catch (e) {
+      console.error(`[video-cron] JSON parse attempt ${attempt + 1} failed: ${e.message}`);
+      if (attempt === maxRetries) throw e;
+    }
+  }
+}
+
 // ===== HULA NG ARAW VIDEOS =====
 
 async function fetchTodayPredictions(env, limit = 3) {
@@ -49,18 +80,10 @@ Halimbawa ng hooks: "WALANG NAGSASABI NITO...", "ANG KATOTOHANAN TUNGKOL SA LARO
 IWASAN: "ITONG ODDS...", "SURE BET", "PICKS NGAYON", anumang reference sa gambling.
 Gumamit ng natural na Filipino/Taglish.`;
 
-  const response = await env.AI.run('@cf/meta/llama-3.1-8b-instruct', {
-    messages: [{ role: 'user', content: prompt }],
-    max_tokens: 500,
-    temperature: 0.9,
-  });
-
   try {
-    const text = response.response || '';
-    const jsonMatch = text.match(/\{[\s\S]*\}/);
-    if (!jsonMatch) throw new Error('No JSON found');
-    return JSON.parse(jsonMatch[0]);
+    return await runAIWithRetry(env, [{ role: 'user', content: prompt }], 500, 0.9);
   } catch (e) {
+    console.error('[video-cron] Failed to generate video script:', e.message);
     return {
       hookText: 'WALANG NAGSASABI NITO',
       hotTake: `Ang ${prediction.home_team.name} vs ${prediction.away_team.name} ay may market na hindi pinapansin ng karamihan`,
@@ -139,17 +162,8 @@ MAHALAGA:
 - Gumamit ng natural na Filipino/Taglish
 - IWASAN ang generic na titulo tulad ng "Balita sa sports" — maging specific at polemiko`;
 
-  const response = await env.AI.run('@cf/meta/llama-3.1-8b-instruct', {
-    messages: [{ role: 'user', content: prompt }],
-    max_tokens: 1000,
-    temperature: 0.7,
-  });
-
   try {
-    const text = response.response || '';
-    const jsonMatch = text.match(/\{[\s\S]*\}/);
-    if (!jsonMatch) throw new Error('No JSON found');
-    return JSON.parse(jsonMatch[0]);
+    return await runAIWithRetry(env, [{ role: 'user', content: prompt }], 1000, 0.7);
   } catch (e) {
     console.error('[video-cron] Failed to parse news script:', e.message);
     return null;
@@ -201,17 +215,8 @@ Ang stat ay pwedeng percentage, malaking numero, taon, atbp. Dapat impactful vis
 Iba-ibahin ang mga paksa: records, kakaibang estadistika, historical data, curiosities ng mga players, atbp.
 Gumamit ng natural na Filipino/Taglish.`;
 
-  const response = await env.AI.run('@cf/meta/llama-3.1-8b-instruct', {
-    messages: [{ role: 'user', content: prompt }],
-    max_tokens: 600,
-    temperature: 0.9,
-  });
-
   try {
-    const text = response.response || '';
-    const jsonMatch = text.match(/\{[\s\S]*\}/);
-    if (!jsonMatch) throw new Error('No JSON found');
-    return JSON.parse(jsonMatch[0]);
+    return await runAIWithRetry(env, [{ role: 'user', content: prompt }], 600, 0.9);
   } catch (e) {
     console.error('[video-cron] Failed to parse alamin script:', e.message);
     return null;
@@ -251,18 +256,8 @@ MAHALAGA:
 - Ang tanong ay dapat kawili-wili at hindi masyadong madali o imposible.
 - Gumamit ng natural na Filipino/Taglish.`;
 
-  const response = await env.AI.run('@cf/meta/llama-3.1-8b-instruct', {
-    messages: [{ role: 'user', content: prompt }],
-    max_tokens: 500,
-    temperature: 0.9,
-  });
-
   try {
-    const text = response.response || '';
-    const jsonMatch = text.match(/\{[\s\S]*\}/);
-    if (!jsonMatch) throw new Error('No JSON found');
-    const parsed = JSON.parse(jsonMatch[0]);
-    // Validate correctIndex
+    const parsed = await runAIWithRetry(env, [{ role: 'user', content: prompt }], 500, 0.9);
     if (typeof parsed.correctIndex !== 'number' || parsed.correctIndex < 0 || parsed.correctIndex > 2) {
       parsed.correctIndex = 0;
     }
