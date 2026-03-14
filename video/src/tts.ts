@@ -97,6 +97,8 @@ function buildNarrationText(propsFile: string, compositionId: string): string {
   }
 
   if (compositionId === "QuizSports") {
+    const labels = ["A", "B", "C"];
+    // Return segments joined — full narration for non-segmented mode
     const lines: string[] = [];
     lines.push("Quiz sa sports.");
     lines.push(props.question);
@@ -104,7 +106,6 @@ function buildNarrationText(propsFile: string, compositionId: string): string {
     lines.push(`Opsyon B: ${props.options[1]}.`);
     lines.push(`Opsyon C: ${props.options[2]}.`);
     lines.push("Tatlo, dalawa, isa...");
-    const labels = ["A", "B", "C"];
     lines.push(`Ang tamang sagot ay ang ${labels[props.correctIndex]}: ${props.options[props.correctIndex]}.`);
     lines.push(props.explanation);
     lines.push(ctaLine);
@@ -112,6 +113,20 @@ function buildNarrationText(propsFile: string, compositionId: string): string {
   }
 
   throw new Error(`TTS not supported for composition: ${compositionId}`);
+}
+
+function getQuizSegments(props: any): string[] {
+  const labels = ["A", "B", "C"];
+  return [
+    // Segment 0: Question scene
+    `Quiz sa sports. ... ${props.question}`,
+    // Segment 1: Options scene
+    `Opsyon A: ${props.options[0]}. ... Opsyon B: ${props.options[1]}. ... Opsyon C: ${props.options[2]}.`,
+    // Segment 2: Countdown scene
+    "Tatlo, dalawa, isa...",
+    // Segment 3: Reveal + explanation + CTA
+    `Ang tamang sagot ay ang ${labels[props.correctIndex]}: ${props.options[props.correctIndex]}. ... ${props.explanation} ... Gusto mo bang makakuha ng mga tama na hula? Sumali sa aming Telegram, link sa description.`,
+  ];
 }
 
 async function main() {
@@ -129,11 +144,36 @@ async function main() {
     process.exit(1);
   }
 
+  const accessToken = await getAccessToken(keyJson);
+
+  // QuizSports: synthesize segments separately for timing sync
+  if (compositionId === "QuizSports") {
+    const props = JSON.parse(fs.readFileSync(propsFile, "utf-8"));
+    const segments = getQuizSegments(props);
+    const buffers: Buffer[] = [];
+
+    for (let i = 0; i < segments.length; i++) {
+      console.log(`Synthesizing segment ${i}: ${segments[i].substring(0, 60)}...`);
+      const buf = await synthesizeSpeech(segments[i], accessToken);
+      const segPath = path.resolve(`public/segment-${i}.mp3`);
+      fs.writeFileSync(segPath, buf);
+      console.log(`  Saved ${segPath} (${buf.length} bytes)`);
+      buffers.push(buf);
+    }
+
+    // Concatenate all segments into narration.mp3
+    const combined = Buffer.concat(buffers);
+    const outputPath = path.resolve("public/narration.mp3");
+    fs.writeFileSync(outputPath, combined);
+    console.log(`Saved combined narration: ${outputPath} (${combined.length} bytes)`);
+    return;
+  }
+
+  // All other compositions: single TTS call
   const text = buildNarrationText(propsFile, compositionId);
   console.log(`Generating TTS for ${compositionId}...`);
   console.log(`Text: ${text.substring(0, 100)}...`);
 
-  const accessToken = await getAccessToken(keyJson);
   const audioBuffer = await synthesizeSpeech(text, accessToken);
 
   const outputPath = path.resolve("public/narration.mp3");

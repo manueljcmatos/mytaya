@@ -40,13 +40,50 @@ jobs:
           jq '. + {narrationSrc: "narration.mp3"}' render-props.json > render-props-tts.json
           mv render-props-tts.json render-props.json
           pip install mutagen -q
-          DURATION_FRAMES=$(python3 -c "
+
+          # QuizSports: measure per-segment durations for visual sync
+          if [ "$COMPOSITION" = "QuizSports" ]; then
+            python3 -c "
+          from mutagen.mp3 import MP3
+          import math, json
+
+          seg_durations = []
+          for i in range(4):
+              audio = MP3(f'public/segment-{i}.mp3')
+              seg_durations.append(audio.info.length)
+              print(f'Segment {i}: {audio.info.length:.2f}s')
+
+          fps = 30
+          # Add 0.5s buffer between segments for visual breathing room
+          buffer = 0.5
+          questionEnd = math.ceil((seg_durations[0] + buffer) * fps)
+          optionsEnd = questionEnd + math.ceil((seg_durations[1] + buffer) * fps)
+          countdownEnd = optionsEnd + math.ceil((seg_durations[2] + buffer) * fps)
+          total = countdownEnd + math.ceil((seg_durations[3] + 2) * fps)
+
+          print(f'questionEnd={questionEnd} optionsEnd={optionsEnd} countdownEnd={countdownEnd} total={total}')
+
+          with open('render-props.json') as f:
+              props = json.load(f)
+          props['questionEnd'] = questionEnd
+          props['optionsEnd'] = optionsEnd
+          props['countdownEnd'] = countdownEnd
+          with open('render-props.json', 'w') as f:
+              json.dump(props, f)
+          print(f'DURATION_FRAMES={total}')
+          " > /tmp/quiz-timing.txt
+            cat /tmp/quiz-timing.txt
+            DURATION_FRAMES=$(grep "DURATION_FRAMES=" /tmp/quiz-timing.txt | sed 's/DURATION_FRAMES=//')
+          else
+            DURATION_FRAMES=$(python3 -c "
           from mutagen.mp3 import MP3
           import math
           audio = MP3('public/narration.mp3')
           frames = math.ceil((audio.info.length + 2) * 30)
           print(frames)
           ")
+          fi
+
           echo "TTS audio → video: ${DURATION_FRAMES} frames"
           echo "DURATION_FRAMES=${DURATION_FRAMES}" >> $GITHUB_ENV
 
