@@ -6,7 +6,7 @@ import { balitaSportsSchema, BALITA_SCENES } from "./BalitaSports/schema";
 import { AlaminMo } from "./AlaminMo";
 import { alaminMoSchema, ALAMIN_SCENES } from "./AlaminMo/schema";
 import { QuizSports } from "./QuizSports";
-import { quizSportsSchema, QUIZ_SCENES } from "./QuizSports/schema";
+import { quizSportsSchema, QUIZ_DEFAULTS } from "./QuizSports/schema";
 import "./fonts";
 
 export const Root: React.FC = () => {
@@ -82,7 +82,7 @@ export const Root: React.FC = () => {
       <Composition
         id="QuizSports"
         component={QuizSports}
-        durationInFrames={QUIZ_SCENES.revealStart + QUIZ_SCENES.ctaDuration}
+        durationInFrames={QUIZ_DEFAULTS.countdownEnd + QUIZ_DEFAULTS.ctaDuration}
         fps={30}
         width={1080}
         height={1920}
