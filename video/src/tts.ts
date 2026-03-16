@@ -49,7 +49,7 @@ async function synthesizeSpeech(text: string, accessToken: string): Promise<Buff
         input: { text },
         voice: {
           languageCode: "fil-PH",
-          name: "fil-PH-Standard-A",
+          name: "fil-PH-Neural2-A",
           ssmlGender: "FEMALE",
         },
         audioConfig: {
