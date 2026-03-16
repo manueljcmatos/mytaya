@@ -17,10 +17,24 @@ function getCurrentHourUTC() {
 
 // Sanitize AI-generated JSON before parsing
 function sanitizeAndParseJSON(text) {
-  // Extract JSON block
-  const jsonMatch = text.match(/\{[\s\S]*\}/);
-  if (!jsonMatch) throw new Error('No JSON found in response');
-  let json = jsonMatch[0];
+  // Find balanced JSON object using brace counting
+  const start = text.indexOf('{');
+  if (start === -1) throw new Error('No JSON found in response');
+  let depth = 0;
+  let inString = false;
+  let escaped = false;
+  let end = -1;
+  for (let i = start; i < text.length; i++) {
+    const ch = text[i];
+    if (escaped) { escaped = false; continue; }
+    if (ch === '\\') { escaped = true; continue; }
+    if (ch === '"') { inString = !inString; continue; }
+    if (inString) continue;
+    if (ch === '{') depth++;
+    if (ch === '}') { depth--; if (depth === 0) { end = i; break; } }
+  }
+  if (end === -1) throw new Error('Unbalanced JSON braces');
+  let json = text.substring(start, end + 1);
   // Remove trailing commas before } or ]
   json = json.replace(/,\s*([}\]])/g, '$1');
   // Fix unescaped newlines inside strings
