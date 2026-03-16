@@ -5,6 +5,7 @@ import { AlaminHook } from "./AlaminHook";
 import { TheFact } from "./TheFact";
 import { Explanation } from "./Explanation";
 import { AlaminCTA } from "./AlaminCTA";
+import { BgImage } from "../components/BgImage";
 
 export const AlaminMo: React.FC<z.infer<typeof alaminMoSchema>> = (props) => {
   const { durationInFrames } = useVideoConfig();
@@ -13,6 +14,7 @@ export const AlaminMo: React.FC<z.infer<typeof alaminMoSchema>> = (props) => {
 
   return (
     <AbsoluteFill>
+      <BgImage src={props.bgImageSrc} opacity={0.18} />
       <Audio src={staticFile("bgm.mp3")} volume={0.3} />
       {props.narrationSrc && <Audio src={staticFile(props.narrationSrc)} volume={0.9} />}
       <Sequence from={ALAMIN_SCENES.hook.start} durationInFrames={ALAMIN_SCENES.hook.end - ALAMIN_SCENES.hook.start}>

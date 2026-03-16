@@ -160,7 +160,8 @@ MAHALAGA:
 - Ang opinyon ay dapat provocative pero may basehan sa datos
 - Unahin ang balita sa Pilipinas, sunod Southeast Asia, sunod international
 - Gumamit ng natural na Filipino/Taglish
-- IWASAN ang generic na titulo tulad ng "Balita sa sports" — maging specific at polemiko`;
+- IWASAN ang generic na titulo tulad ng "Balita sa sports" — maging specific at polemiko
+- SAKLAWIN ang lahat ng sports: basketball (PBA/NBA/UAAP), boxing, billiards, volleyball (PVL), Olympics, football, at iba pa`;
 
   try {
     return await runAIWithRetry(env, [{ role: 'user', content: prompt }], 1000, 0.7);
@@ -208,11 +209,22 @@ Gumawa ng JSON format (walang markdown):
   "factTitle": "ng mga penalty sa Champions League ay nagiging gol",
   "factContext": "Maikling paliwanag kung bakit ito kawili-wili o importante, 1-2 pangungusap",
   "bullets": ["Karagdagang dato 1", "Karagdagang dato 2", "Karagdagang dato 3"],
-  "ctaText": "CTA phrase para i-follow"
+  "ctaText": "CTA phrase para i-follow",
+  "imageSubject": "Pangalan ng tao o paksa para sa background image (hal: 'Manny Pacquiao', 'FIFA World Cup Trophy')"
 }
 
 Ang stat ay pwedeng percentage, malaking numero, taon, atbp. Dapat impactful visually.
-Iba-ibahin ang mga paksa: records, kakaibang estadistika, historical data, curiosities ng mga players, atbp.
+
+UNAHIN ANG MGA ITO NA PAKSA (pumili ng random):
+- Pilipinong atleta: Manny Pacquiao (boxing), Efren "Bata" Reyes (billiards), Django Bustamante (billiards), Carlos Yulo (gymnastics/Olympics), Hidilyn Diaz (weightlifting/Olympics), June Mar Fajardo (PBA), Robert Jaworski (PBA), Tim Cone (PBA coach)
+- Boxing: Pacquiao records, Filipino world champions (Nonito Donaire, Mark Magsayo, Jerwin Ancajas), Muhammad Ali, Floyd Mayweather
+- Billiards/Pool: Efren Reyes achievements, Django Bustamante, world 9-ball, Filipino dominance sa billiards
+- Olympics: Carlos Yulo gold medals, Hidilyn Diaz first PH Olympic gold, EJ Obiena (pole vault)
+- Basketball: PBA legends, NBA records, UAAP rivalries
+- Football: FIFA World Cup, Champions League, Philippine Azkals
+- Volleyball: UAAP volleyball stars, PVL
+
+Iba-ibahin ang mga paksa. HUWAG paulit-ulit ang parehong paksa.
 Gumamit ng natural na Filipino/Taglish.`;
 
   try {
@@ -246,15 +258,26 @@ Gumawa ng JSON format (walang markdown):
   "options": ["Mali na opsyon 1", "Tamang sagot", "Mali na opsyon 2"],
   "correctIndex": 1,
   "explanation": "Maikling paliwanag kung bakit iyan ang tamang sagot, may datos",
-  "ctaText": "CTA phrase para i-follow"
+  "ctaText": "CTA phrase para i-follow",
+  "imageSubject": "Pangalan ng tao o paksa para sa background image (hal: 'Manny Pacquiao', 'NBA basketball')"
 }
 
 MAHALAGA:
 - correctIndex ay ang posisyon ng tamang sagot (0, 1, o 2). Iba-ibahin ang posisyon.
 - Ang mga maling opsyon ay dapat kapani-paniwala, hindi obvious.
-- Iba-ibahin ang mga paksa: records, history, estadistika, rules, World Cup, Champions, players, PBA, UAAP, atbp.
 - Ang tanong ay dapat kawili-wili at hindi masyadong madali o imposible.
-- Gumamit ng natural na Filipino/Taglish.`;
+- Gumamit ng natural na Filipino/Taglish.
+
+UNAHIN ANG MGA ITO NA PAKSA (pumili ng random):
+- Manny Pacquiao: records, fights, achievements
+- Efren "Bata" Reyes: billiards world championships, "The Magician"
+- Carlos Yulo: Olympic gold medals, gymnastics achievements
+- Hidilyn Diaz: first PH Olympic gold medalist
+- PBA: legends (Jaworski, Caidic, Fajardo), records, Grand Slams
+- Boxing: Filipino world champions, weight divisions, historic fights
+- Billiards/Pool: Filipino players, world championships
+- Olympics: PH medalists, memorable moments
+- NBA, FIFA World Cup, Champions League, UAAP, volleyball/PVL`;
 
   try {
     const parsed = await runAIWithRetry(env, [{ role: 'user', content: prompt }], 500, 0.9);

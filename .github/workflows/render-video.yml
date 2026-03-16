@@ -30,6 +30,31 @@ jobs:
         run: |
           echo "COMPOSITION=${COMP:-HulaNgAraw}" >> $GITHUB_ENV
 
+      - name: Fetch background image
+        if: env.COMPOSITION == 'AlaminMo' || env.COMPOSITION == 'QuizSports'
+        working-directory: video
+        run: |
+          SUBJECT=$(jq -r '.imageSubject // empty' render-props.json)
+          if [ -z "$SUBJECT" ]; then
+            echo "No imageSubject in props, skipping"
+            exit 0
+          fi
+          echo "Fetching image for: $SUBJECT"
+
+          # Try Wikipedia API for image
+          ENCODED=$(python3 -c "import urllib.parse; print(urllib.parse.quote('$SUBJECT'))")
+          IMG_URL=$(curl -s "https://en.wikipedia.org/api/rest_v1/page/summary/${ENCODED}" | jq -r '.thumbnail.source // .originalimage.source // empty')
+
+          if [ -n "$IMG_URL" ]; then
+            echo "Found image: $IMG_URL"
+            curl -sL "$IMG_URL" -o public/bg.jpg
+            jq '. + {bgImageSrc: "bg.jpg"}' render-props.json > render-props-img.json
+            mv render-props-img.json render-props.json
+            echo "Background image saved"
+          else
+            echo "No image found for '$SUBJECT', continuing without background"
+          fi
+
       - name: Generate TTS narration
         if: env.COMPOSITION == 'BalitaSports' || env.COMPOSITION == 'AlaminMo' || env.COMPOSITION == 'QuizSports'
         working-directory: video

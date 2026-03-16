@@ -11,6 +11,7 @@ export const quizSportsSchema = z.object({
   questionEnd: z.number().optional(),
   optionsEnd: z.number().optional(),
   countdownEnd: z.number().optional(),
+  bgImageSrc: z.string().optional(),
 });
 
 export type QuizSportsProps = z.infer<typeof quizSportsSchema>;

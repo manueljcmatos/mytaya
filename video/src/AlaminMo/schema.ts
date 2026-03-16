@@ -8,6 +8,7 @@ export const alaminMoSchema = z.object({
   bullets: z.array(z.string()).min(2).max(3),
   ctaText: z.string().default("I-follow para sa iba pa"),
   narrationSrc: z.string().optional(),
+  bgImageSrc: z.string().optional(),
 });
 
 export type AlaminMoProps = z.infer<typeof alaminMoSchema>;
