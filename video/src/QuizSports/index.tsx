@@ -16,7 +16,7 @@ export const QuizSports: React.FC<z.infer<typeof quizSportsSchema>> = (props) =>
 
   return (
     <AbsoluteFill>
-      <BgImage src={props.bgImageSrc} opacity={0.15} />
+      <BgImage src={props.bgImageSrc} opacity={0.45} />
       <Audio src={staticFile("bgm.mp3")} volume={0.3} />
       {props.narrationSrc && <Audio src={staticFile(props.narrationSrc)} volume={0.9} />}
       <Sequence from={scenes.question.start} durationInFrames={scenes.question.end - scenes.question.start}>

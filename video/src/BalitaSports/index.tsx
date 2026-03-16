@@ -566,7 +566,7 @@ export const BalitaSports: React.FC<z.infer<typeof balitaSportsSchema>> = (
 
   return (
     <AbsoluteFill style={{ backgroundColor: THEME.bg }}>
-      <BgImage src={props.bgImageSrc} opacity={0.15} />
+      <BgImage src={props.bgImageSrc} opacity={0.45} />
       <Audio src={staticFile("bgm.mp3")} volume={0.25} />
       {props.narrationSrc && (
         <Audio src={staticFile(props.narrationSrc)} volume={1} />
