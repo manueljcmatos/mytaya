@@ -11,6 +11,7 @@ import {
 import { z } from "zod";
 import { balitaSportsSchema, BALITA_SCENES } from "./schema";
 import { THEME } from "../styles/theme";
+import { BgImage } from "../components/BgImage";
 
 /* ------------------------------------------------------------------ */
 /*  Scene 1 — Intro (frames 0–60)                                     */
@@ -565,6 +566,7 @@ export const BalitaSports: React.FC<z.infer<typeof balitaSportsSchema>> = (
 
   return (
     <AbsoluteFill style={{ backgroundColor: THEME.bg }}>
+      <BgImage src={props.bgImageSrc} opacity={0.15} />
       <Audio src={staticFile("bgm.mp3")} volume={0.25} />
       {props.narrationSrc && (
         <Audio src={staticFile(props.narrationSrc)} volume={1} />

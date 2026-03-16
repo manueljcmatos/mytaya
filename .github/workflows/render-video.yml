@@ -30,45 +30,37 @@ jobs:
         run: |
           echo "COMPOSITION=${COMP:-HulaNgAraw}" >> $GITHUB_ENV
 
-      - name: Fetch background image
-        if: env.COMPOSITION == 'AlaminMo' || env.COMPOSITION == 'QuizSports'
+      - name: Generate background image with AI
         working-directory: video
+        env:
+          WORKER_URL: ${{ secrets.VIDEO_WORKER_URL }}
         run: |
+          # Extract image subject from props based on composition type
           SUBJECT=$(jq -r '.imageSubject // empty' render-props.json)
-          # Fallback: extract subject from content if AI didn't generate imageSubject
           if [ -z "$SUBJECT" ]; then
-            if [ "$COMPOSITION" = "QuizSports" ]; then
-              SUBJECT=$(jq -r '.question' render-props.json | head -c 60)
-            else
-              SUBJECT=$(jq -r '.factTitle' render-props.json | head -c 60)
-            fi
+            case "$COMPOSITION" in
+              QuizSports) SUBJECT=$(jq -r '.question' render-props.json | head -c 80) ;;
+              AlaminMo) SUBJECT=$(jq -r '(.stat + " " + .factTitle)' render-props.json | head -c 80) ;;
+              BalitaSports) SUBJECT=$(jq -r '.headline.title' render-props.json | head -c 80) ;;
+              HulaNgAraw) SUBJECT=$(jq -r '(.homeTeam + " vs " + .awayTeam + " " + .league)' render-props.json | head -c 80) ;;
+            esac
           fi
           if [ -z "$SUBJECT" ]; then
             echo "No subject found, skipping background image"
             exit 0
           fi
-          echo "Fetching image for: $SUBJECT"
 
-          # Try Wikipedia API for image (direct page, then search fallback)
+          WORKER="${WORKER_URL:-https://mytaya-video-cron.manueljcmatos.workers.dev}"
           ENCODED=$(python3 -c "import urllib.parse; print(urllib.parse.quote('$SUBJECT'))")
-          IMG_URL=$(curl -s "https://en.wikipedia.org/api/rest_v1/page/summary/${ENCODED}" | jq -r '.thumbnail.source // .originalimage.source // empty')
-          if [ -z "$IMG_URL" ]; then
-            echo "Direct lookup failed, trying search..."
-            SEARCH_TITLE=$(curl -s "https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch=${ENCODED}&srlimit=1&format=json" | jq -r '.query.search[0].title // empty')
-            if [ -n "$SEARCH_TITLE" ]; then
-              SEARCH_ENC=$(python3 -c "import urllib.parse; print(urllib.parse.quote('$SEARCH_TITLE'))")
-              IMG_URL=$(curl -s "https://en.wikipedia.org/api/rest_v1/page/summary/${SEARCH_ENC}" | jq -r '.thumbnail.source // .originalimage.source // empty')
-            fi
-          fi
+          echo "Generating AI image for: $SUBJECT"
 
-          if [ -n "$IMG_URL" ]; then
-            echo "Found image: $IMG_URL"
-            curl -sL "$IMG_URL" -o public/bg.jpg
-            jq '. + {bgImageSrc: "bg.jpg"}' render-props.json > render-props-img.json
+          HTTP_CODE=$(curl -sL -w "%{http_code}" -o public/bg.png "${WORKER}/generate-image?prompt=${ENCODED}" --max-time 30)
+          if [ "$HTTP_CODE" = "200" ] && [ -s public/bg.png ]; then
+            echo "AI image generated successfully ($(wc -c < public/bg.png) bytes)"
+            jq '. + {bgImageSrc: "bg.png"}' render-props.json > render-props-img.json
             mv render-props-img.json render-props.json
-            echo "Background image saved"
           else
-            echo "No image found for '$SUBJECT', continuing without background"
+            echo "AI image generation failed (HTTP $HTTP_CODE), continuing without background"
           fi
 
       - name: Generate TTS narration

@@ -7,10 +7,12 @@ import { ThePick } from "./ThePick";
 import { Analysis } from "./Analysis";
 import { CTA } from "./CTA";
 import { SCENES } from "../styles/theme";
+import { BgImage } from "../components/BgImage";
 
 export const HulaNgAraw: React.FC<z.infer<typeof hulaNgArawSchema>> = (props) => {
   return (
     <AbsoluteFill>
+      <BgImage src={props.bgImageSrc} opacity={0.12} />
       <Audio src={staticFile("bgm.mp3")} volume={0.6} />
       <Sequence from={SCENES.hook.start} durationInFrames={SCENES.hook.end - SCENES.hook.start}>
         <Hook text={props.hookText} />

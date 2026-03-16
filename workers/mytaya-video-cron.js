@@ -73,7 +73,8 @@ Gumawa ng JSON format (walang markdown):
   "hookText": "Polemikong pahayag na 5-8 salita na magdudulot ng debate, sa UPPERCASE",
   "hotTake": "Kontrobersyal pero may basehan na opinyon tungkol sa partido, 1-2 pangungusap. HUWAG gumamit ng salitang pustahan, odds, taya, bet",
   "analysis": ["Historical head-to-head statistic", "Recent form data ng team", "Key factor na hindi pinapansin ng karamihan"],
-  "ctaText": "CTA phrase para i-follow ang account o tignan ang analysis"
+  "ctaText": "CTA phrase para i-follow ang account o tignan ang analysis",
+  "imageSubject": "Short English description for background image (e.g. basketball arena, soccer stadium)"
 }
 
 Halimbawa ng hooks: "WALANG NAGSASABI NITO...", "ANG KATOTOHANAN TUNGKOL SA LARO NA ITO", "MATATALO SILA AT ALAM MO YAN", "ITONG DATOS ANG MAGBABAGO NG LAHAT"
@@ -132,6 +133,7 @@ async function dispatchHulaByIndex(env, index) {
     hotTake: script.hotTake,
     analysis: script.analysis,
     ctaText: script.ctaText,
+    imageSubject: script.imageSubject,
   };
 
   await triggerRender(env, 'HulaNgAraw', props);
@@ -150,7 +152,7 @@ Gumawa ng JSON format (walang markdown):
 {
   "date": "${date}",
   "headlines": [
-    {"title": "Titulo na may gancho na polemiko (estilo: 'Ang katotohanan tungkol sa...' o 'Walang nagsasabi nito...')", "summary": "Mabilis na konteksto sa 2-3 pangungusap na may konkretong datos", "opinion": "Ang polemiko at direktang opinyon mo na magdudulot ng debate, 2 pangungusap"}
+    {"title": "Titulo na may gancho na polemiko (estilo: 'Ang katotohanan tungkol sa...' o 'Walang nagsasabi nito...')", "summary": "Mabilis na konteksto sa 2-3 pangungusap na may konkretong datos", "opinion": "Ang polemiko at direktang opinyon mo na magdudulot ng debate, 2 pangungusap", "imageSubject": "Short English description for background image"}
   ],
   "ctaTexts": ["CTA phrase para i-follow at makakita ng mas maraming analysis"]
 }
@@ -190,6 +192,7 @@ async function dispatchBalitaByIndex(env, index) {
     headline: { title: headline.title, summary: headline.summary },
     opinion: headline.opinion,
     ctaText: (script.ctaTexts && script.ctaTexts[index]) || 'Mas maraming analysis sa aming channel',
+    imageSubject: headline.imageSubject,
   };
 
   console.log(`[video-cron] Balita: ${headline.title}`);
@@ -402,6 +405,22 @@ export default {
     }
     if (url.pathname === '/run/quiz') {
       return runAndCapture(() => dispatchQuizVideo(env));
+    }
+    if (url.pathname === '/generate-image') {
+      const prompt = url.searchParams.get('prompt');
+      if (!prompt) return new Response('Missing ?prompt=', { status: 400 });
+      try {
+        const result = await env.AI.run('@cf/stabilityai/stable-diffusion-xl-base-1.0', {
+          prompt: `${prompt}, sports photography, dramatic lighting, high quality, 4k, cinematic`,
+          num_steps: 20,
+        });
+        // result is a ReadableStream of PNG bytes
+        return new Response(result, {
+          headers: { 'Content-Type': 'image/png' },
+        });
+      } catch (e) {
+        return new Response(`Image generation failed: ${e.message}`, { status: 500 });
+      }
     }
     if (url.pathname === '/run/all') {
       return runAndCapture(async () => {

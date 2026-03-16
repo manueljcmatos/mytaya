@@ -7,6 +7,7 @@ export const balitaSportsSchema = z.object({
   opinion: z.string(),
   ctaText: z.string(),
   narrationSrc: z.string().optional(),
+  bgImageSrc: z.string().optional(),
 });
 
 export type BalitaSportsProps = z.infer<typeof balitaSportsSchema>;

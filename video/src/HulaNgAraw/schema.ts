@@ -13,6 +13,7 @@ export const hulaNgArawSchema = z.object({
   hotTake: z.string(),
   analysis: z.array(z.string()).length(3),
   ctaText: z.string(),
+  bgImageSrc: z.string().optional(),
 });
 
 export type HulaNgArawProps = z.infer<typeof hulaNgArawSchema>;
