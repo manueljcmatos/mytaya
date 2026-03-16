@@ -35,15 +35,31 @@ jobs:
         working-directory: video
         run: |
           SUBJECT=$(jq -r '.imageSubject // empty' render-props.json)
+          # Fallback: extract subject from content if AI didn't generate imageSubject
           if [ -z "$SUBJECT" ]; then
-            echo "No imageSubject in props, skipping"
+            if [ "$COMPOSITION" = "QuizSports" ]; then
+              SUBJECT=$(jq -r '.question' render-props.json | head -c 60)
+            else
+              SUBJECT=$(jq -r '.factTitle' render-props.json | head -c 60)
+            fi
+          fi
+          if [ -z "$SUBJECT" ]; then
+            echo "No subject found, skipping background image"
             exit 0
           fi
           echo "Fetching image for: $SUBJECT"
 
-          # Try Wikipedia API for image
+          # Try Wikipedia API for image (direct page, then search fallback)
           ENCODED=$(python3 -c "import urllib.parse; print(urllib.parse.quote('$SUBJECT'))")
           IMG_URL=$(curl -s "https://en.wikipedia.org/api/rest_v1/page/summary/${ENCODED}" | jq -r '.thumbnail.source // .originalimage.source // empty')
+          if [ -z "$IMG_URL" ]; then
+            echo "Direct lookup failed, trying search..."
+            SEARCH_TITLE=$(curl -s "https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch=${ENCODED}&srlimit=1&format=json" | jq -r '.query.search[0].title // empty')
+            if [ -n "$SEARCH_TITLE" ]; then
+              SEARCH_ENC=$(python3 -c "import urllib.parse; print(urllib.parse.quote('$SEARCH_TITLE'))")
+              IMG_URL=$(curl -s "https://en.wikipedia.org/api/rest_v1/page/summary/${SEARCH_ENC}" | jq -r '.thumbnail.source // .originalimage.source // empty')
+            fi
+          fi
 
           if [ -n "$IMG_URL" ]; then
             echo "Found image: $IMG_URL"
