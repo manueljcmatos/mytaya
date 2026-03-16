@@ -15,7 +15,7 @@ export const Root: React.FC = () => {
       <Composition
         id="HulaNgAraw"
         component={HulaNgAraw}
-        durationInFrames={1350}
+        durationInFrames={750}
         fps={30}
         width={1080}
         height={1920}

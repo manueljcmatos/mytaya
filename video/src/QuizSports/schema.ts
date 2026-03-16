@@ -18,10 +18,10 @@ export type QuizSportsProps = z.infer<typeof quizSportsSchema>;
 
 // Default timings (used when no TTS / no dynamic timing)
 export const QUIZ_DEFAULTS = {
-  questionEnd: 135,
-  optionsEnd: 390,
-  countdownEnd: 480,
-  ctaDuration: 90,
+  questionEnd: 90,
+  optionsEnd: 270,
+  countdownEnd: 345,
+  ctaDuration: 60,
 } as const;
 
 // Build scene timings from props (dynamic) or defaults (static)

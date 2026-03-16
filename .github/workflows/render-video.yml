@@ -100,7 +100,9 @@ jobs:
           questionEnd = math.ceil((seg_durations[0] + buffer) * fps)
           optionsEnd = questionEnd + math.ceil((seg_durations[1] + buffer) * fps)
           countdownEnd = optionsEnd + math.ceil((seg_durations[2] + buffer) * fps)
-          total = countdownEnd + math.ceil((seg_durations[3] + 2) * fps)
+          total = countdownEnd + math.ceil((seg_durations[3] + 1) * fps)
+          # Cap at 750 frames (25s)
+          if total > 750: total = 750
 
           print(f'questionEnd={questionEnd} optionsEnd={optionsEnd} countdownEnd={countdownEnd} total={total}')
 
@@ -120,11 +122,16 @@ jobs:
           from mutagen.mp3 import MP3
           import math
           audio = MP3('public/narration.mp3')
-          frames = math.ceil((audio.info.length + 2) * 30)
+          frames = min(math.ceil((audio.info.length + 1) * 30), 750)
           print(frames)
           ")
           fi
 
+          # Hard cap at 750 frames (25 seconds)
+          if [ -n "$DURATION_FRAMES" ] && [ "$DURATION_FRAMES" -gt 750 ]; then
+            echo "Duration ${DURATION_FRAMES} exceeds 750 cap, capping to 750"
+            DURATION_FRAMES=750
+          fi
           echo "TTS audio → video: ${DURATION_FRAMES} frames"
           echo "DURATION_FRAMES=${DURATION_FRAMES}" >> $GITHUB_ENV
 

@@ -14,8 +14,8 @@ export const alaminMoSchema = z.object({
 export type AlaminMoProps = z.infer<typeof alaminMoSchema>;
 
 export const ALAMIN_SCENES = {
-  hook: { start: 0, end: 60 },
-  theFact: { start: 60, end: 195 },
-  explanationStart: 195,
-  ctaDuration: 90,
+  hook: { start: 0, end: 45 },
+  theFact: { start: 45, end: 150 },
+  explanationStart: 150,
+  ctaDuration: 60,
 } as const;

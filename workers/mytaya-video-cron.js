@@ -200,32 +200,29 @@ async function dispatchBalitaByIndex(env, index) {
 // ===== ALAMIN MO VIDEO =====
 
 async function generateAlaminScript(env) {
-  const prompt = `Ikaw ay isang eksperto sa mga trivia at datos sa sports. Gumawa ng isang nakakagulat na dato o trivia tungkol sa sports na hindi alam ng karamihan.
+  const prompt = `Ikaw ay isang eksperto sa mga trivia sa sports. Gumawa ng MAIKLI na trivia para sa 25-second YouTube Short.
 
 Gumawa ng JSON format (walang markdown):
 {
   "hookText": "Alam mo ba...",
   "stat": "92%",
-  "factTitle": "ng mga penalty sa Champions League ay nagiging gol",
-  "factContext": "Maikling paliwanag kung bakit ito kawili-wili o importante, 1-2 pangungusap",
-  "bullets": ["Karagdagang dato 1", "Karagdagang dato 2", "Karagdagang dato 3"],
-  "ctaText": "CTA phrase para i-follow",
-  "imageSubject": "Pangalan ng tao o paksa para sa background image (hal: 'Manny Pacquiao', 'FIFA World Cup Trophy')"
+  "factTitle": "ng free throws sa PBA Finals ay nagiging gol",
+  "factContext": "Isang pangungusap lang na paliwanag, maikli at direkta",
+  "bullets": ["Maikli na dato 1", "Maikli na dato 2"],
+  "ctaText": "Follow para sa iba pa",
+  "imageSubject": "Manny Pacquiao"
 }
 
-Ang stat ay pwedeng percentage, malaking numero, taon, atbp. Dapat impactful visually.
+NAPAKA-IMPORTANTE — MAIKLI LANG:
+- factContext: 1 PANGUNGUSAP LANG, max 15 salita
+- bullets: 2 LANG, max 10 salita bawat isa
+- Lahat ng text ay MAIKLI at DIREKTA para maging 25 segundos lang ang video
 
-UNAHIN ANG MGA ITO NA PAKSA (pumili ng random):
-- Pilipinong atleta: Manny Pacquiao (boxing), Efren "Bata" Reyes (billiards), Django Bustamante (billiards), Carlos Yulo (gymnastics/Olympics), Hidilyn Diaz (weightlifting/Olympics), June Mar Fajardo (PBA), Robert Jaworski (PBA), Tim Cone (PBA coach)
-- Boxing: Pacquiao records, Filipino world champions (Nonito Donaire, Mark Magsayo, Jerwin Ancajas), Muhammad Ali, Floyd Mayweather
-- Billiards/Pool: Efren Reyes achievements, Django Bustamante, world 9-ball, Filipino dominance sa billiards
-- Olympics: Carlos Yulo gold medals, Hidilyn Diaz first PH Olympic gold, EJ Obiena (pole vault)
-- Basketball: PBA legends, NBA records, UAAP rivalries
-- Football: FIFA World Cup, Champions League, Philippine Azkals
-- Volleyball: UAAP volleyball stars, PVL
+PAKSA (pumili ng random):
+- Pilipino: Pacquiao, Efren Reyes, Carlos Yulo, Hidilyn Diaz, June Mar Fajardo, Jaworski
+- Boxing, Billiards, Olympics, PBA, NBA, FIFA World Cup, UAAP, Volleyball/PVL
 
-Iba-ibahin ang mga paksa. HUWAG paulit-ulit ang parehong paksa.
-Gumamit ng natural na Filipino/Taglish.`;
+Gumamit ng Taglish.`;
 
   try {
     return await runAIWithRetry(env, [{ role: 'user', content: prompt }], 600, 0.9);
@@ -250,34 +247,26 @@ async function dispatchAlaminVideo(env) {
 // ===== QUIZ SPORTS VIDEO =====
 
 async function generateQuizScript(env) {
-  const prompt = `Ikaw ay isang eksperto sa sports trivia. Gumawa ng isang quiz question tungkol sa sports na may 3 options at isang tamang sagot.
+  const prompt = `Gumawa ng sports quiz para sa 25-second YouTube Short. MAIKLI lang lahat.
 
-Gumawa ng JSON format (walang markdown):
+JSON format (walang markdown):
 {
-  "question": "Kawili-wiling tanong tungkol sa sports, malinaw at direkta",
-  "options": ["Mali na opsyon 1", "Tamang sagot", "Mali na opsyon 2"],
+  "question": "Maikli na tanong, max 12 salita",
+  "options": ["Maikli 1", "Maikli 2", "Maikli 3"],
   "correctIndex": 1,
-  "explanation": "Maikling paliwanag kung bakit iyan ang tamang sagot, may datos",
-  "ctaText": "CTA phrase para i-follow",
-  "imageSubject": "Pangalan ng tao o paksa para sa background image (hal: 'Manny Pacquiao', 'NBA basketball')"
+  "explanation": "1 pangungusap lang, max 15 salita",
+  "ctaText": "Follow para sa quiz",
+  "imageSubject": "Manny Pacquiao"
 }
 
-MAHALAGA:
-- correctIndex ay ang posisyon ng tamang sagot (0, 1, o 2). Iba-ibahin ang posisyon.
-- Ang mga maling opsyon ay dapat kapani-paniwala, hindi obvious.
-- Ang tanong ay dapat kawili-wili at hindi masyadong madali o imposible.
-- Gumamit ng natural na Filipino/Taglish.
+RULES:
+- question: MAX 12 salita, direkta
+- options: MAX 5 salita bawat isa
+- explanation: MAX 15 salita, 1 pangungusap
+- correctIndex: 0, 1, o 2 (iba-ibahin)
+- Taglish
 
-UNAHIN ANG MGA ITO NA PAKSA (pumili ng random):
-- Manny Pacquiao: records, fights, achievements
-- Efren "Bata" Reyes: billiards world championships, "The Magician"
-- Carlos Yulo: Olympic gold medals, gymnastics achievements
-- Hidilyn Diaz: first PH Olympic gold medalist
-- PBA: legends (Jaworski, Caidic, Fajardo), records, Grand Slams
-- Boxing: Filipino world champions, weight divisions, historic fights
-- Billiards/Pool: Filipino players, world championships
-- Olympics: PH medalists, memorable moments
-- NBA, FIFA World Cup, Champions League, UAAP, volleyball/PVL`;
+PAKSA (random): Pacquiao, Efren Reyes, Carlos Yulo, Hidilyn Diaz, PBA, Boxing, Billiards, Olympics, NBA, FIFA, UAAP, Volleyball`;
 
   try {
     const parsed = await runAIWithRetry(env, [{ role: 'user', content: prompt }], 500, 0.9);

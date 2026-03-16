@@ -54,7 +54,7 @@ async function synthesizeSpeech(text: string, accessToken: string): Promise<Buff
         },
         audioConfig: {
           audioEncoding: "MP3",
-          speakingRate: 1.0,
+          speakingRate: 1.15,
           pitch: 0,
         },
       }),
@@ -73,13 +73,12 @@ async function synthesizeSpeech(text: string, accessToken: string): Promise<Buff
 function buildNarrationText(propsFile: string, compositionId: string): string {
   const props = JSON.parse(fs.readFileSync(propsFile, "utf-8"));
 
-  const ctaLine = "Gusto mo bang makakuha ng mga tama na hula? Sumali sa aming Telegram, link sa description.";
+  const ctaLine = "Follow para sa iba pa!";
 
   if (compositionId === "BalitaSports") {
     const lines: string[] = [];
-    lines.push("Balita ngayon sa sports.");
-    lines.push(`${props.headline.title}. ${props.headline.summary}`);
-    lines.push(`Opinyon ko: ${props.opinion}`);
+    lines.push(`${props.headline.title}.`);
+    lines.push(props.headline.summary);
     lines.push(ctaLine);
     return lines.join(" ... ");
   }
@@ -89,9 +88,8 @@ function buildNarrationText(propsFile: string, compositionId: string): string {
     lines.push(props.hookText);
     lines.push(`${props.stat} ${props.factTitle}.`);
     lines.push(props.factContext);
-    for (const b of props.bullets) {
-      lines.push(b);
-    }
+    // Only first bullet to keep under 25s
+    if (props.bullets && props.bullets[0]) lines.push(props.bullets[0]);
     lines.push(ctaLine);
     return lines.join(" ... ");
   }
@@ -119,13 +117,13 @@ function getQuizSegments(props: any): string[] {
   const labels = ["A", "B", "C"];
   return [
     // Segment 0: Question scene
-    `Quiz sa sports. ... ${props.question}`,
+    props.question,
     // Segment 1: Options scene
-    `Opsyon A: ${props.options[0]}. ... Opsyon B: ${props.options[1]}. ... Opsyon C: ${props.options[2]}.`,
+    `A: ${props.options[0]}. B: ${props.options[1]}. C: ${props.options[2]}.`,
     // Segment 2: Countdown scene
-    "Tatlo, dalawa, isa...",
-    // Segment 3: Reveal + explanation + CTA
-    `Ang tamang sagot ay ang ${labels[props.correctIndex]}: ${props.options[props.correctIndex]}. ... ${props.explanation} ... Gusto mo bang makakuha ng mga tama na hula? Sumali sa aming Telegram, link sa description.`,
+    "Tatlo, dalawa, isa.",
+    // Segment 3: Reveal + short explanation
+    `Sagot: ${labels[props.correctIndex]}, ${props.options[props.correctIndex]}. ${props.explanation}`,
   ];
 }
 
