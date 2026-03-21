@@ -1,0 +1,15 @@
+name = "mytaya-blog-cron"
+main = "mytaya-blog-cron.js"
+compatibility_date = "2024-01-01"
+compatibility_flags = ["nodejs_compat"]
+
+[ai]
+binding = "AI"
+
+[triggers]
+crons = ["0 4 * * *", "0 8 * * *", "0 12 * * *"]
+
+# Env vars needed (set via wrangler secret):
+#   SUPABASE_URL — Supabase project URL
+#   SUPABASE_ANON_KEY — for reading predictions
+#   SUPABASE_SERVICE_KEY — for inserting blog posts (needs service role key with write access)

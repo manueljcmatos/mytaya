@@ -46,6 +46,7 @@ interface BlogPost {
   published_at: string;
   read_time_minutes: number | null;
   prediction_id: string | null;
+  featured_image_url: string | null;
   prediction?: {
     slug: string;
     result: string | null;
@@ -121,7 +122,7 @@ export default function BlogList({ lang }: Props) {
     const fields = `
       id, title_en, title_tl, slug_en, slug_tl,
       excerpt_en, excerpt_tl, sport, published_at,
-      read_time_minutes, prediction_id,
+      read_time_minutes, prediction_id, featured_image_url,
       prediction:predictions!posts_prediction_id_fkey(slug, result, status)
     `;
 
@@ -240,13 +241,26 @@ export default function BlogList({ lang }: Props) {
           {featuredPost && (
             <a
               href={`${blogBase}/${getSlug(featuredPost)}/`}
-              className="block rounded-xl p-6 mb-8 transition-shadow hover:shadow-lg"
+              className="block rounded-xl mb-8 transition-shadow hover:shadow-lg overflow-hidden"
               style={{
                 backgroundColor:
                   'var(--t-bg-card, var(--t-surface, #1f2937))',
                 border: '1px solid var(--t-border, #374151)',
               }}
             >
+              {featuredPost.featured_image_url && (
+                <img
+                  src={featuredPost.featured_image_url}
+                  alt={getTitle(featuredPost)}
+                  loading="lazy"
+                  style={{
+                    width: '100%',
+                    height: '240px',
+                    objectFit: 'cover',
+                  }}
+                />
+              )}
+              <div style={{ padding: '1.5rem' }}>
               <div className="flex items-center gap-2 mb-3">
                 <span
                   className="text-xs font-semibold uppercase tracking-wider px-2 py-0.5 rounded-full"
@@ -314,6 +328,7 @@ export default function BlogList({ lang }: Props) {
                   </>
                 )}
               </div>
+              </div>
             </a>
           )}
 
@@ -330,13 +345,26 @@ export default function BlogList({ lang }: Props) {
                   <a
                     key={post.id}
                     href={`${blogBase}/${getSlug(post)}/`}
-                    className="block rounded-xl p-4 transition-shadow hover:shadow-lg"
+                    className="block rounded-xl transition-shadow hover:shadow-lg overflow-hidden"
                     style={{
                       backgroundColor:
                         'var(--t-bg-card, var(--t-surface, #1f2937))',
                       border: '1px solid var(--t-border, #374151)',
                     }}
                   >
+                    {post.featured_image_url && (
+                      <img
+                        src={post.featured_image_url}
+                        alt={getTitle(post)}
+                        loading="lazy"
+                        style={{
+                          width: '100%',
+                          height: '160px',
+                          objectFit: 'cover',
+                        }}
+                      />
+                    )}
+                    <div style={{ padding: '1rem' }}>
                     {/* Sport badge + result badge */}
                     <div className="flex items-center gap-2 mb-2">
                       <span
@@ -397,6 +425,7 @@ export default function BlogList({ lang }: Props) {
                           </span>
                         </>
                       )}
+                    </div>
                     </div>
                   </a>
                 );
