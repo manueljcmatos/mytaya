@@ -13,6 +13,7 @@ export interface Operator {
   rating: number;
   features: string[];
   sportsCovered: string[];
+  featured?: boolean;
 }
 
 export const operators: Operator[] = [
@@ -110,31 +111,46 @@ Their welcome bonus is a 100% match up to PHP 7,000, with a reasonable 5x rollov
     slug: '1xbet',
     name: '1xBet',
     logo: '/operators/1xbet.png',
+    featured: true,
     welcomeBonus: {
-      tl: '100% Welcome Bonus hanggang PHP 8,500',
-      en: '100% Welcome Bonus up to PHP 8,500',
+      tl: '100% Welcome Bonus hanggang PHP 8,500 + Free Bet',
+      en: '100% Welcome Bonus up to PHP 8,500 + Free Bet',
     },
     description: {
-      tl: 'Global na sportsbook na may advanced na betting features tulad ng bet builder at cash out options.',
-      en: 'Global sportsbook with advanced betting features like bet builder and cash out options.',
+      tl: 'Ang #1 na sportsbook sa Pilipinas — may live streaming, bet builder, cash out, at pinakamaraming sports markets. Ang pinaka-recommended ng MyTaya!',
+      en: 'The #1 sportsbook in the Philippines — with live streaming, bet builder, cash out, and the most sports markets. MyTaya\'s top recommendation!',
     },
     review: {
       tl: `Ang 1xBet ay isa sa mga pinakamalaking global sportsbook na may presensya sa mahigit 50 bansa. Sa Pilipinas, kilala sila sa kanilang advanced betting features na hindi madalas makita sa ibang platforms.
 
-Ang kanilang welcome bonus ay 100% match hanggang PHP 8,500. Bukod dito, may regular na promotions sila tulad ng accumulator bonus na nagdadagdag ng hanggang 40% sa iyong parlay winnings. Ang kanilang bet builder feature ay nagbibigay-daan sa iyo na lumikha ng custom bets sa isang event.
+Ang kanilang welcome bonus ay 100% match hanggang PHP 8,500 kasama ang free bet para sa mga bagong manlalaro. Bukod dito, may regular na promotions sila tulad ng accumulator bonus na nagdadagdag ng hanggang 40% sa iyong parlay winnings. Ang kanilang bet builder feature ay nagbibigay-daan sa iyo na lumikha ng custom bets sa isang event.
 
-Ang 1xBet ay may live streaming feature para sa maraming events, kaya pwede kang manood habang nagbe-bet. Ang kanilang cash out option ay available sa karamihan ng bets, nagbibigay sa iyo ng kontrol sa iyong mga taya kahit ongoing pa ang laro.`,
+Ang 1xBet ay may live streaming feature para sa maraming events — PBA, NBA, football, boxing, at marami pa — kaya pwede kang manood habang nagbe-bet. Ang kanilang cash out option ay available sa karamihan ng bets, nagbibigay sa iyo ng kontrol sa iyong mga taya kahit ongoing pa ang laro.
+
+Bakit inirerekomenda ng MyTaya ang 1xBet:
+- Pinakamaraming sports markets: basketball, football, boxing, billiards, volleyball, MMA, e-sports, at iba pa
+- Mabilis na deposito at withdrawal gamit ang GCash, Maya, at crypto
+- 24/7 customer support sa Filipino
+- Mobile app para sa Android at iOS
+- Live streaming ng libo-libong events araw-araw`,
       en: `1xBet is one of the largest global sportsbooks with a presence in over 50 countries. In the Philippines, they are known for their advanced betting features that are not commonly found on other platforms.
 
-Their welcome bonus is a 100% match up to PHP 8,500. Beyond this, they have regular promotions such as an accumulator bonus that adds up to 40% to your parlay winnings. Their bet builder feature allows you to create custom bets on a single event.
+Their welcome bonus is a 100% match up to PHP 8,500 plus a free bet for new players. Beyond this, they have regular promotions such as an accumulator bonus that adds up to 40% to your parlay winnings. Their bet builder feature allows you to create custom bets on a single event.
 
-1xBet has a live streaming feature for many events, so you can watch while you bet. Their cash out option is available on most bets, giving you control over your wagers even while the game is still in progress.`,
+1xBet has a live streaming feature for many events — PBA, NBA, football, boxing, and more — so you can watch while you bet. Their cash out option is available on most bets, giving you control over your wagers even while the game is still in progress.
+
+Why MyTaya recommends 1xBet:
+- Most sports markets: basketball, football, boxing, billiards, volleyball, MMA, e-sports, and more
+- Fast deposits and withdrawals via GCash, Maya, and crypto
+- 24/7 customer support in Filipino
+- Mobile app for Android and iOS
+- Live streaming of thousands of events daily`,
     },
-    affiliateUrl: '#placeholder-affiliate-url-1xbet',
+    affiliateUrl: 'https://reffpa.com/L?tag=d_5348720m_97c_&site=5348720&ad=97',
     pagcorLicensed: true,
-    rating: 4.0,
-    features: ['Bet Builder', 'Live Streaming', 'Cash Out', 'Accumulator Bonus'],
-    sportsCovered: ['Basketball', 'Football', 'Boxing', 'Tennis', 'MMA', 'E-sports'],
+    rating: 4.8,
+    features: ['Bet Builder', 'Live Streaming', 'Cash Out', 'Accumulator Bonus', 'GCash/Maya', 'Mobile App', 'Free Bet'],
+    sportsCovered: ['Basketball', 'Football', 'Boxing', 'Tennis', 'MMA', 'E-sports', 'Billiards', 'Volleyball', 'Cockfighting'],
   },
   {
     slug: 'betway',

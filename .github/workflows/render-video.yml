@@ -202,7 +202,7 @@ jobs:
             # Extract hashtags from tags array
             EXTRA_TAGS=$(jq -r 'if .tags then " " + (.tags | map("#" + gsub(" ";"")) | join(" ")) else "" end' video/render-props.json)
           fi
-          YT_FULL_DESC=$(printf '%s\n\n📊 Predictions araw-araw: https://mytaya.com/tl/predictions/\n📲 Telegram: https://t.me/mytaborado\n\n#MyTaya #SportsPH #Shorts%s' "$YT_DESC" "$EXTRA_TAGS")
+          YT_FULL_DESC=$(printf '%s\n\n🏆 Mag-sign up sa 1xBet — 100%% Welcome Bonus: https://reffpa.com/L?tag=d_5348720m_97c_&site=5348720&ad=97\n📊 Predictions araw-araw: https://mytaya.com/tl/predictions/\n📲 Telegram: https://t.me/mytaborado\n\n#MyTaya #SportsPH #Shorts #1xBet%s' "$YT_DESC" "$EXTRA_TAGS")
 
           METADATA=$(jq -n \
             --arg title "$YT_TITLE" \

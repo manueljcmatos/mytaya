@@ -32,9 +32,9 @@ const lang = getLangFromUrl(Astro.url);
             </tr>
           </thead>
           <tbody>
-            {operators.map((op) => (
-              <tr>
-                <td class="op-name">{op.name}</td>
+            {[...operators].sort((a, b) => (b.featured ? 1 : 0) - (a.featured ? 1 : 0)).map((op) => (
+              <tr class={op.featured ? 'row-featured' : ''}>
+                <td class="op-name">{op.name} {op.featured ? '⭐' : ''}</td>
                 <td class="op-bonus">{op.welcomeBonus.tl}</td>
                 <td class="op-rating">
                   <span class="rating-star">{'\u2605'}</span> {op.rating}
