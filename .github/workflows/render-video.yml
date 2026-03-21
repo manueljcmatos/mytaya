@@ -179,26 +179,30 @@ jobs:
           elif [ "$COMPOSITION" = "BalitaSports" ]; then
             YT_TITLE=$(jq -r '.headline.title' video/render-props.json | cut -c1-95)
             YT_DESC=$(jq -r '.headline.summary + "\n\n" + .opinion' video/render-props.json)
-            YT_TAGS='["sports news", "balita", "sports", "PBA", "NBA"]'
+            YT_TAGS=$(jq -c '["sports news", "balita", "Pilipinas", "Filipino sports"] + (if .tags then .tags else [] end)' video/render-props.json)
           elif [ "$COMPOSITION" = "AlaminMo" ]; then
             YT_TITLE=$(jq -r '"Alam mo ba " + .stat + " " + .factTitle + "?"' video/render-props.json | cut -c1-95)
             YT_DESC=$(jq -r '.factContext' video/render-props.json)
-            YT_TAGS='["alam mo ba", "sports trivia", "fun facts", "basketball", "football"]'
+            YT_TAGS=$(jq -c '["alam mo ba", "sports trivia", "fun facts", "Pilipinas"] + (if .tags then .tags else [] end)' video/render-props.json)
           elif [ "$COMPOSITION" = "QuizSports" ]; then
             YT_TITLE=$(jq -r '.question' video/render-props.json | cut -c1-95)
             CORRECT_IDX=$(jq -r '.correctIndex' video/render-props.json)
             CORRECT_ANS=$(jq -r ".options[$CORRECT_IDX]" video/render-props.json)
             YT_DESC=$(printf 'Sagot: %s\n\n%s' "$CORRECT_ANS" "$(jq -r '.explanation' video/render-props.json)")
-            YT_TAGS='["quiz", "sports quiz", "trivia", "basketball", "football"]'
+            YT_TAGS=$(jq -c '["quiz", "sports quiz", "trivia", "Pilipinas"] + (if .tags then .tags else [] end)' video/render-props.json)
           fi
 
           YT_TITLE="${YT_TITLE:0:100}"
 
+          # Build dynamic hashtags from content
           EXTRA_TAGS=""
           if [ "$COMPOSITION" = "HulaNgAraw" ]; then
             EXTRA_TAGS=$(jq -r '" #" + (.homeTeam | gsub(" ";"")) + " #" + (.awayTeam | gsub(" ";"")) + " #" + (.league | gsub(" ";""))' video/render-props.json)
+          else
+            # Extract hashtags from tags array
+            EXTRA_TAGS=$(jq -r 'if .tags then " " + (.tags | map("#" + gsub(" ";"")) | join(" ")) else "" end' video/render-props.json)
           fi
-          YT_FULL_DESC=$(printf '%s\n\n📊 Predictions araw-araw: https://mytaya.com/tl/predictions/\n📲 Telegram: https://t.me/mytaborado\n\n#MyTaya #SportsPredictions%s' "$YT_DESC" "$EXTRA_TAGS")
+          YT_FULL_DESC=$(printf '%s\n\n📊 Predictions araw-araw: https://mytaya.com/tl/predictions/\n📲 Telegram: https://t.me/mytaborado\n\n#MyTaya #SportsPH #Shorts%s' "$YT_DESC" "$EXTRA_TAGS")
 
           METADATA=$(jq -n \
             --arg title "$YT_TITLE" \
@@ -246,6 +250,55 @@ jobs:
           else
             echo "::warning::No video ID returned"
             echo "YOUTUBE_URL=" >> $GITHUB_ENV
+          fi
+
+      - name: Pin comment on YouTube video
+        if: env.YOUTUBE_URL != ''
+        env:
+          YOUTUBE_CLIENT_ID: ${{ secrets.YOUTUBE_CLIENT_ID }}
+          YOUTUBE_CLIENT_SECRET: ${{ secrets.YOUTUBE_CLIENT_SECRET }}
+          YOUTUBE_REFRESH_TOKEN: ${{ secrets.YOUTUBE_REFRESH_TOKEN }}
+        run: |
+          # Get fresh token
+          TOKEN_RES=$(curl -s -X POST https://oauth2.googleapis.com/token \
+            -d "client_id=${YOUTUBE_CLIENT_ID}" \
+            -d "client_secret=${YOUTUBE_CLIENT_SECRET}" \
+            -d "refresh_token=${YOUTUBE_REFRESH_TOKEN}" \
+            -d "grant_type=refresh_token")
+          ACCESS_TOKEN=$(echo $TOKEN_RES | jq -r '.access_token')
+
+          YT_VIDEO_ID=$(echo "$YOUTUBE_URL" | sed 's|.*/||')
+
+          # Build engaging comment based on composition type
+          if [ "$COMPOSITION" = "QuizSports" ]; then
+            COMMENT="Nakuha mo ba ang tamang sagot? 🤔 Comment sa baba! 👇\n\nI-follow para sa bagong quiz araw-araw! 🏀"
+          elif [ "$COMPOSITION" = "AlaminMo" ]; then
+            COMMENT="Alam mo na ba ito? 🤯 Tag ang kaibigan mo na fan ng sports! 👇\n\nI-follow para sa bagong trivia araw-araw! 📊"
+          elif [ "$COMPOSITION" = "BalitaSports" ]; then
+            COMMENT="Ano sa tingin mo? Comment ang opinyon mo! 👇\n\nI-follow para sa pinakabagong balita sa sports! 🗞️"
+          elif [ "$COMPOSITION" = "HulaNgAraw" ]; then
+            COMMENT="Agree ka ba? O may ibang tingin ka? Comment sa baba! 👇\n\nI-follow para sa araw-araw na analysis! 🔥"
+          fi
+
+          # Post comment
+          COMMENT_RES=$(curl -s -o /tmp/comment_res.json -w "%{http_code}" -X POST \
+            "https://www.googleapis.com/youtube/v3/commentThreads?part=snippet" \
+            -H "Authorization: Bearer ${ACCESS_TOKEN}" \
+            -H "Content-Type: application/json" \
+            -d "$(jq -n --arg vid "$YT_VIDEO_ID" --arg text "$COMMENT" '{
+              snippet: {
+                videoId: $vid,
+                topLevelComment: {
+                  snippet: { textOriginal: $text }
+                }
+              }
+            }')")
+
+          if [ "$COMMENT_RES" = "200" ]; then
+            echo "Pinned comment posted successfully"
+          else
+            echo "::warning::Comment post returned HTTP $COMMENT_RES"
+            cat /tmp/comment_res.json
           fi
 
       - name: Send video to Telegram

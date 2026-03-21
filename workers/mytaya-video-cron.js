@@ -1,8 +1,8 @@
-// mytaya-video-cron — Generates daily video reels (2 per day)
+// mytaya-video-cron — Generates daily video reels (3 per day)
 // Cron schedule (UTC → Philippines = UTC+8):
-//   Mon/Wed/Fri: 13h Trivia + 21h Analysis
-//   Tue/Thu:     13h Trivia + 15h Balita
-//   Sat/Sun:     13h Analysis#1 + 21h Analysis#2
+//   05:00 UTC (13h PHT): Trivia (AlaminMo/QuizSports alternating)
+//   09:00 UTC (17h PHT): Balita or extra Trivia
+//   13:00 UTC (21h PHT): HulaNgAraw analysis (when predictions available) or Trivia
 
 const REPO_OWNER = 'manueljcmatos';
 const REPO_NAME = 'mytaya';
@@ -88,7 +88,8 @@ Gumawa ng JSON format (walang markdown):
   "hotTake": "Kontrobersyal pero may basehan na opinyon tungkol sa partido, 1-2 pangungusap. HUWAG gumamit ng salitang pustahan, odds, taya, bet",
   "analysis": ["Historical head-to-head statistic", "Recent form data ng team", "Key factor na hindi pinapansin ng karamihan"],
   "ctaText": "CTA phrase para i-follow ang account o tignan ang analysis",
-  "imageSubject": "Short English description for background image (e.g. basketball arena, soccer stadium)"
+  "imageSubject": "Short English description for background image (e.g. basketball arena, soccer stadium)",
+  "tags": ["team1", "team2", "league", "sport"]
 }
 
 Halimbawa ng hooks: "WALANG NAGSASABI NITO...", "ANG KATOTOHANAN TUNGKOL SA LARO NA ITO", "MATATALO SILA AT ALAM MO YAN", "ITONG DATOS ANG MAGBABAGO NG LAHAT"
@@ -166,7 +167,7 @@ Gumawa ng JSON format (walang markdown):
 {
   "date": "${date}",
   "headlines": [
-    {"title": "Titulo na may gancho na polemiko (estilo: 'Ang katotohanan tungkol sa...' o 'Walang nagsasabi nito...')", "summary": "Mabilis na konteksto sa 2-3 pangungusap na may konkretong datos", "opinion": "Ang polemiko at direktang opinyon mo na magdudulot ng debate, 2 pangungusap", "imageSubject": "Short English description for background image"}
+    {"title": "Titulo na may gancho na polemiko (estilo: 'Ang katotohanan tungkol sa...' o 'Walang nagsasabi nito...')", "summary": "Mabilis na konteksto sa 2-3 pangungusap na may konkretong datos", "opinion": "Ang polemiko at direktang opinyon mo na magdudulot ng debate, 2 pangungusap", "imageSubject": "Short English description for background image", "tags": ["athlete name", "sport", "league"]}
   ],
   "ctaTexts": ["CTA phrase para i-follow at makakita ng mas maraming analysis"]
 }
@@ -207,6 +208,7 @@ async function dispatchBalitaByIndex(env, index) {
     opinion: headline.opinion,
     ctaText: (script.ctaTexts && script.ctaTexts[index]) || 'Mas maraming analysis sa aming channel',
     imageSubject: headline.imageSubject,
+    tags: headline.tags || [],
   };
 
   console.log(`[video-cron] Balita: ${headline.title}`);
@@ -227,12 +229,14 @@ Gumawa ng JSON format (walang markdown):
   "factContext": "Isang pangungusap lang na paliwanag, maikli at direkta",
   "bullets": ["Maikli na dato 1", "Maikli na dato 2"],
   "ctaText": "Follow para sa iba pa",
-  "imageSubject": "Manny Pacquiao"
+  "imageSubject": "Manny Pacquiao",
+  "tags": ["Pacquiao", "boxing", "PBA"]
 }
 
 NAPAKA-IMPORTANTE — MAIKLI LANG:
 - factContext: 1 PANGUNGUSAP LANG, max 15 salita
 - bullets: 2 LANG, max 10 salita bawat isa
+- tags: 3-5 keywords na relevant (pangalan ng atleta, sport, liga)
 - Lahat ng text ay MAIKLI at DIREKTA para maging 25 segundos lang ang video
 
 PAKSA (pumili ng random):
@@ -273,7 +277,8 @@ JSON format (walang markdown):
   "correctIndex": 1,
   "explanation": "1 pangungusap lang, max 15 salita",
   "ctaText": "Follow para sa quiz",
-  "imageSubject": "Manny Pacquiao"
+  "imageSubject": "Manny Pacquiao",
+  "tags": ["Pacquiao", "boxing", "PBA"]
 }
 
 RULES:
@@ -281,6 +286,7 @@ RULES:
 - options: MAX 5 salita bawat isa
 - explanation: MAX 15 salita, 1 pangungusap
 - correctIndex: 0, 1, o 2 (iba-ibahin)
+- tags: 3-5 keywords na relevant sa tanong (pangalan ng atleta, sport, liga)
 - Taglish
 
 PAKSA (random): Pacquiao, Efren Reyes, Carlos Yulo, Hidilyn Diaz, PBA, Boxing, Billiards, Olympics, NBA, FIFA, UAAP, Volleyball`;
@@ -365,41 +371,39 @@ export default {
     const dayOfMonth = new Date().getUTCDate();
     console.log(`[video-cron] Starting for ${today} (dow=${dow}) at ${hour}:00 UTC`);
 
-    // Weekly schedule (PHT = UTC+8):
-    //   Mon/Wed/Fri: 05:00 UTC (13h PHT) AlaminMo/QuizSports + 13:00 UTC (21h PHT) HulaNgAraw
-    //   Tue/Thu:     05:00 UTC (13h PHT) AlaminMo/QuizSports + 07:00 UTC (15h PHT) BalitaSports
-    //   Sat/Sun:     05:00 UTC (13h PHT) HulaNgAraw + 13:00 UTC (21h PHT) HulaNgAraw
+    // 3 videos per day schedule (PHT = UTC+8):
+    //   05:00 UTC (13h PHT): Trivia — AlaminMo or QuizSports (alternating)
+    //   09:00 UTC (17h PHT): BalitaSports (news) or QuizSports/AlaminMo
+    //   13:00 UTC (21h PHT): HulaNgAraw (analysis) or Trivia fallback
 
-    if (dow === 1 || dow === 3 || dow === 5) {
-      // Mon / Wed / Fri — Trivia + Analysis
-      if (hour === 5) {
-        const count = dayOfMonth % 2 === 1
-          ? await dispatchAlaminVideo(env)
-          : await dispatchQuizVideo(env);
-        console.log(`[video-cron] Dispatched ${count} trivia video`);
-      } else if (hour === 13) {
-        const count = await dispatchHulaByIndex(env, 0);
-        console.log(`[video-cron] Dispatched ${count} analysis video`);
-      }
-    } else if (dow === 2 || dow === 4) {
-      // Tue / Thu — Trivia + Balita
-      if (hour === 5) {
-        const count = dayOfMonth % 2 === 1
-          ? await dispatchAlaminVideo(env)
-          : await dispatchQuizVideo(env);
-        console.log(`[video-cron] Dispatched ${count} trivia video`);
-      } else if (hour === 7) {
+    if (hour === 5) {
+      // Slot 1: Trivia (alternating AlaminMo / QuizSports)
+      const count = dayOfMonth % 2 === 1
+        ? await dispatchAlaminVideo(env)
+        : await dispatchQuizVideo(env);
+      console.log(`[video-cron] Slot 1: Dispatched ${count} trivia video`);
+    } else if (hour === 9) {
+      // Slot 2: Balita on weekdays, Quiz/Alamin on weekends
+      if (dow >= 1 && dow <= 5) {
         const count = await dispatchBalitaByIndex(env, 0);
-        console.log(`[video-cron] Dispatched ${count} balita video`);
+        console.log(`[video-cron] Slot 2: Dispatched ${count} balita video`);
+      } else {
+        const count = dayOfMonth % 2 === 0
+          ? await dispatchAlaminVideo(env)
+          : await dispatchQuizVideo(env);
+        console.log(`[video-cron] Slot 2: Dispatched ${count} trivia video`);
       }
-    } else {
-      // Sat / Sun — 2x Analysis
-      if (hour === 5) {
-        const count = await dispatchHulaByIndex(env, 0);
-        console.log(`[video-cron] Dispatched ${count} analysis video (1/2)`);
-      } else if (hour === 13) {
-        const count = await dispatchHulaByIndex(env, 1);
-        console.log(`[video-cron] Dispatched ${count} analysis video (2/2)`);
+    } else if (hour === 13) {
+      // Slot 3: HulaNgAraw if predictions available, otherwise trivia
+      const hulaCount = await dispatchHulaByIndex(env, 0);
+      if (hulaCount === 0) {
+        // No predictions — post trivia instead
+        const count = dayOfMonth % 2 === 0
+          ? await dispatchQuizVideo(env)
+          : await dispatchAlaminVideo(env);
+        console.log(`[video-cron] Slot 3: No predictions, dispatched ${count} trivia video`);
+      } else {
+        console.log(`[video-cron] Slot 3: Dispatched ${hulaCount} analysis video`);
       }
     }
   },
