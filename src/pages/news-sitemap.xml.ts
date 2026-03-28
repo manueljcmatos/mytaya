@@ -7,7 +7,7 @@ export const GET: APIRoute = async () => {
 
   if (supabase) {
     const twoDaysAgo = new Date();
-    twoDaysAgo.setDate(twoDaysAgo.getDate() - 2);
+    twoDaysAgo.setDate(twoDaysAgo.getDate() - 7);
 
     const { data: posts } = await supabase
       .from('posts')

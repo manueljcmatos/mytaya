@@ -265,7 +265,28 @@ async function generateAndPublish(env, type) {
     ? await fetchBlogImage(post.imageSubject)
     : null;
 
-  await insertBlogPost(env, post, imageUrl);
+  const slug = await insertBlogPost(env, post, imageUrl);
+
+  // Post to Twitter if configured
+  if (env.TWITTER_WORKER_URL) {
+    try {
+      await fetch(`${env.TWITTER_WORKER_URL}/tweet/blog`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          title_en: post.title_en,
+          title_tl: post.title_tl,
+          excerpt_en: post.excerpt_en,
+          excerpt_tl: post.excerpt_tl,
+          slug_en: slug,
+          sport: post.sport,
+        }),
+      });
+      console.log('[blog-cron] Tweeted about new post');
+    } catch (e) {
+      console.error('[blog-cron] Twitter post failed (non-fatal):', e.message);
+    }
+  }
 }
 
 async function runAndCapture(fn) {

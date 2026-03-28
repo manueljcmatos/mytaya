@@ -403,3 +403,18 @@ jobs:
           resp = urllib.request.urlopen(req)
           print(resp.read().decode())
           "
+
+      - name: Post to Twitter/X
+        continue-on-error: true
+        env:
+          TWITTER_WORKER_URL: ${{ secrets.TWITTER_WORKER_URL }}
+        run: |
+          if [ -z "$TWITTER_WORKER_URL" ]; then
+            echo "TWITTER_WORKER_URL not set, skipping"
+            exit 0
+          fi
+          PROPS=$(cat video/render-props.json)
+          curl -s -X POST "${TWITTER_WORKER_URL}/tweet/video" \
+            -H "Content-Type: application/json" \
+            -d "$(jq -n --arg comp "$COMPOSITION" --argjson props "$PROPS" '{composition: $comp, props: $props}')" \
+            --max-time 15 || echo "Twitter post failed (non-fatal)"

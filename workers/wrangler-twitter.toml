@@ -1,0 +1,7 @@
+name = "mytaya-twitter"
+main = "mytaya-twitter.js"
+compatibility_date = "2024-01-01"
+
+[triggers]
+# Post daily predictions at 06:00 UTC (14:00 PHT) — after videos are dispatched
+crons = ["0 6 * * *"]
