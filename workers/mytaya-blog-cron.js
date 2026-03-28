@@ -77,67 +77,74 @@ async function fetchBlogImage(subject) {
 // ===== BLOG POST TYPES =====
 
 async function generateSportsTrivia(env) {
-  const prompt = `Ikaw ay isang sports writer na Pilipino. Gumawa ng BLOG POST tungkol sa isang kawili-wiling trivia o fact sa sports para sa mga Filipino readers.
+  const prompt = `Ikaw ay isang EXPERT sports writer na Pilipino na gumagawa ng in-depth, well-researched articles. Gumawa ng MAHABANG blog post tungkol sa isang kawili-wiling trivia o fact sa sports para sa Filipino readers.
 
 Gumawa ng JSON format (walang markdown):
 {
-  "title_tl": "Catchy na titulo sa Taglish (max 15 salita)",
-  "title_en": "Catchy English title (max 15 words)",
-  "content_tl": "Buong blog post sa Taglish, 3-4 na paragrapho. Gumamit ng ## para sa headings. May datos at statistics. Minimum 200 salita.",
-  "content_en": "Full blog post in English, 3-4 paragraphs. Use ## for headings. Include stats and data. Minimum 200 words.",
-  "excerpt_tl": "Maikli na summary sa Taglish (1-2 pangungusap)",
-  "excerpt_en": "Short English summary (1-2 sentences)",
+  "title_tl": "SEO-optimized na titulo sa Taglish na may keyword (max 15 salita). Halimbawa: '10 Records ni Manny Pacquiao na Hindi Mo Alam' o 'Ang Kasaysayan ng PBA: 5 Pinakamagaling na Player ng Lahat ng Panahon'",
+  "title_en": "SEO-optimized English title with target keyword (max 15 words). Example: '10 Manny Pacquiao Records You Didn't Know About' or 'PBA History: Top 5 Greatest Players of All Time'",
+  "content_tl": "MAHABANG blog post sa Taglish na may MINIMUM 800 salita. KAILANGAN: 5-7 sections na may ## headings. Bawat section ay may 2-3 paragrapho. Isama ang: specific statistics, dates, names, records, comparisons. Gumamit ng numbered lists o bullet points. Magdagdag ng FAQ section sa dulo na may 2-3 tanong at sagot. Ang bawat paragrapho ay MAHABA at DETALYADO.",
+  "content_en": "LONG blog post in English with MINIMUM 800 words. MUST HAVE: 5-7 sections with ## headings. Each section has 2-3 paragraphs. Include: specific statistics, dates, names, records, comparisons. Use numbered lists or bullet points. Add FAQ section at the end with 2-3 questions and answers. Each paragraph must be DETAILED and INFORMATIVE.",
+  "excerpt_tl": "Compelling summary sa Taglish na may keyword (2-3 pangungusap, max 160 characters)",
+  "excerpt_en": "Compelling English summary with target keyword (2-3 sentences, max 160 characters)",
   "sport": "basketball",
   "category": "tips",
-  "imageSubject": "Short English description for image"
+  "imageSubject": "Short English description for image",
+  "metaKeyword": "main target keyword for this article in English (e.g. 'Manny Pacquiao records', 'PBA greatest players')"
 }
 
 PAKSA (pumili ng random):
-- Pacquiao records at achievements
-- Efren Reyes billiards legacy
-- Carlos Yulo Olympic glory
-- Hidilyn Diaz weightlifting history
-- PBA all-time records
-- UAAP basketball legends
-- Filipino boxing champions
-- Gilas Pilipinas FIBA journey
-- PVL volleyball stars
-- June Mar Fajardo stats
+- Pacquiao records at achievements (boxing records, world titles, weight classes)
+- Efren Reyes billiards legacy (world championships, notable matches)
+- Carlos Yulo Olympic glory (gymnastics medals, training journey)
+- Hidilyn Diaz weightlifting history (Olympic gold, records)
+- PBA all-time records (scoring, assists, championships)
+- UAAP basketball legends (dynasties, records, notable players)
+- Filipino boxing champions (world champions list, history)
+- Gilas Pilipinas FIBA journey (World Cup, Asian Games)
+- PVL volleyball stars (Alas Pilipinas, top players)
+- June Mar Fajardo stats (MVP awards, career milestones)
 
 MAHALAGA:
 - sport field: pumili ng basketball, football, boxing, o general
-- Gumamit ng Taglish sa TL version, natural na Filipino
-- Content ay INFORMATIVE at may DATOS
-- Isama ang 1xBet mention: "Para sa mga gustong sumubaybay sa mga laro, i-check ang 1xBet para sa live streaming at updates."`;
+- Gumamit ng natural na Taglish sa TL version
+- Content ay DEEPLY INFORMATIVE — may SPECIFIC dates, numbers, records
+- MINIMUM 800 words bawat version — mas mahaba mas maganda
+- May FAQ section sa dulo
+- Isama ang 1xBet mention sa isang natural na paraan: "Para sa mga gustong sumubaybay sa mga laro, i-check ang 1xBet para sa live streaming at updates."`;
 
-  return await runAIWithRetry(env, [{ role: 'user', content: prompt }], 2000, 0.8);
+  return await runAIWithRetry(env, [{ role: 'user', content: prompt }], 4000, 0.8);
 }
 
 async function generateSportsNews(env) {
   const date = new Date().toLocaleDateString('fil-PH', { day: 'numeric', month: 'short', year: 'numeric' });
-  const prompt = `Ikaw ay isang sports journalist na Pilipino. Gumawa ng BLOG POST tungkol sa pinakabagong balita sa sports ngayon (${getToday()}).
+  const prompt = `Ikaw ay isang SENIOR sports journalist na Pilipino na kilala sa malalim na analysis. Gumawa ng MAHABANG BLOG POST tungkol sa pinakabagong balita sa sports ngayon (${getToday()}).
 
 Gumawa ng JSON format (walang markdown):
 {
-  "title_tl": "Maikling titulo na catchy sa Taglish (max 12 salita)",
-  "title_en": "Catchy English headline (max 12 words)",
-  "content_tl": "Buong blog post sa Taglish. 3-4 paragrapho na may ## headings. May analysis, opinyon, at datos. Min 200 salita.",
-  "content_en": "Full blog post in English. 3-4 paragraphs with ## headings. Include analysis, opinion, data. Min 200 words.",
-  "excerpt_tl": "Maikli na summary sa Taglish (1-2 pangungusap)",
-  "excerpt_en": "Short English summary (1-2 sentences)",
+  "title_tl": "SEO-optimized na titulo sa Taglish na may keyword at petsa (max 15 salita). Halimbawa: 'PBA Philippine Cup 2026: Sino ang Paborito sa Finals?' o 'NBA Playoffs Update: Pinoy Fans Abangan ang Lakers vs Celtics'",
+  "title_en": "SEO-optimized English headline with keyword and date reference (max 15 words)",
+  "content_tl": "MAHABANG blog post sa Taglish na may MINIMUM 800 salita. KAILANGAN: ## Introduction (background at context), ## Ano ang Nangyari (detailed account ng balita), ## Analysis (bakit ito importante, epekto sa liga/sport), ## Reaksyon (quotes o opinyon ng mga eksperto/fans), ## Ano ang Susunod (predictions at expectations), ## FAQ (2-3 tanong at sagot). Bawat section ay may 2-3 paragrapho na DETALYADO.",
+  "content_en": "LONG blog post in English with MINIMUM 800 words. MUST HAVE: ## Introduction (background and context), ## What Happened (detailed account), ## Analysis (why it matters, impact), ## Reactions (expert opinions, fan perspectives), ## What's Next (predictions, expectations), ## FAQ (2-3 questions and answers). Each section has 2-3 DETAILED paragraphs.",
+  "excerpt_tl": "Compelling summary sa Taglish na may keyword (2-3 pangungusap, max 160 characters)",
+  "excerpt_en": "Compelling English summary with target keyword (2-3 sentences, max 160 characters)",
   "sport": "basketball",
   "category": "news",
-  "imageSubject": "Short English description for image"
+  "imageSubject": "Short English description for image",
+  "metaKeyword": "main target keyword (e.g. 'PBA Philippine Cup 2026', 'NBA playoffs update March 2026')"
 }
 
 SAKLAWIN: PBA, NBA, UAAP, boxing, volleyball (PVL), billiards, Olympics, football
 MAHALAGA:
 - sport field: basketball, football, boxing, o general
-- May opinyon na matapang pero may basehan
-- Taglish sa TL version
-- Isama ang link mention sa dulo: "Sumubaybay sa mga laro sa 1xBet — may live streaming at bet builder features."`;
+- May opinyon na matapang pero may basehan sa datos
+- MINIMUM 800 words bawat version
+- Natural na Taglish sa TL version
+- Isama ang specific dates, scores, statistics, player names
+- May FAQ section sa dulo
+- Isama ang link mention sa natural na paraan: "Sumubaybay sa mga laro sa 1xBet — may live streaming at bet builder features."`;
 
-  return await runAIWithRetry(env, [{ role: 'user', content: prompt }], 2000, 0.7);
+  return await runAIWithRetry(env, [{ role: 'user', content: prompt }], 4000, 0.7);
 }
 
 async function generatePredictionAnalysis(env) {
@@ -160,44 +167,48 @@ async function generatePredictionAnalysis(env) {
     .map(p => `${p.home_team.name} vs ${p.away_team.name} (${p.league.name}) — Pick: ${p.pick}, Confidence: ${p.confidence}`)
     .join('\n');
 
-  const prompt = `Ikaw ay isang sports analyst na Pilipino. Gumawa ng BLOG POST na nag-aanalyze ng mga laro ngayon.
+  const prompt = `Ikaw ay isang EXPERT sports analyst na Pilipino na kilala sa data-driven analysis. Gumawa ng MAHABANG BLOG POST na nag-aanalyze ng mga laro ngayon.
 
 Mga laro ngayon:
 ${matchesText}
 
 Gumawa ng JSON format (walang markdown):
 {
-  "title_tl": "Catchy na titulo sa Taglish tungkol sa analysis (max 12 salita)",
-  "title_en": "Catchy English title about analysis (max 12 words)",
-  "content_tl": "Buong blog post sa Taglish. 4-5 paragrapho na may ## headings para sa bawat laro. May historical data, form analysis, at prediction. Min 250 salita.",
-  "content_en": "Full English blog post. 4-5 paragraphs with ## headings per match. Include historical data, form analysis, prediction. Min 250 words.",
-  "excerpt_tl": "Maikli na summary ng analysis (1-2 pangungusap)",
-  "excerpt_en": "Short analysis summary (1-2 sentences)",
+  "title_tl": "SEO-optimized na titulo sa Taglish na may team names at petsa (max 15 salita). Halimbawa: 'Analysis: Lakers vs Celtics March 2026 — Sino ang Panalo?' o 'Preview ng PBA Finals 2026: San Miguel vs Ginebra'",
+  "title_en": "SEO-optimized English title with team names and date (max 15 words)",
+  "content_tl": "MAHABANG blog post sa Taglish na may MINIMUM 800 salita. KAILANGAN para sa BAWAT LARO: ## Match Preview (teams, standings, context), ## Head-to-Head Record (historical data, previous meetings, win/loss record), ## Key Players to Watch (stats, form, injuries), ## Form Analysis (last 5 games, home/away record), ## Prediction at Takeaway (analysis-based opinion). Sa dulo: ## FAQ (2-3 tanong at sagot tungkol sa mga laro).",
+  "content_en": "LONG English blog post with MINIMUM 800 words. MUST HAVE per match: ## Match Preview, ## Head-to-Head Record, ## Key Players to Watch, ## Form Analysis (last 5 games), ## Prediction and Takeaway. At end: ## FAQ (2-3 questions and answers about the matches).",
+  "excerpt_tl": "Compelling summary na may team names (2-3 pangungusap, max 160 characters)",
+  "excerpt_en": "Compelling summary with team names (2-3 sentences, max 160 characters)",
   "sport": "football",
   "category": "analysis",
-  "imageSubject": "football match stadium atmosphere"
+  "imageSubject": "football match stadium atmosphere",
+  "metaKeyword": "main target keyword (e.g. 'Lakers vs Celtics prediction March 2026')"
 }
 
 MAHALAGA:
 - HUWAG banggitin ang odds, taya, o betting amounts
 - Gumamit ng "probabilidad" at "analysis" hindi "bet" o "taya"
-- Taglish sa TL version
-- Isama sa dulo: "Para sa kumpletong analysis at live updates, i-check ang 1xBet."`;
+- MINIMUM 800 words bawat version — detalyadong analysis
+- Natural na Taglish sa TL version
+- Isama ang SPECIFIC statistics — scores, percentages, records
+- May FAQ section sa dulo
+- Isama sa natural na paraan: "Para sa kumpletong analysis at live updates, i-check ang 1xBet."`;
 
-  return await runAIWithRetry(env, [{ role: 'user', content: prompt }], 2500, 0.7);
+  return await runAIWithRetry(env, [{ role: 'user', content: prompt }], 4000, 0.7);
 }
 
 // ===== INSERT INTO SUPABASE =====
 
 async function insertBlogPost(env, post, imageUrl) {
   const today = getToday();
-  const timestamp = Date.now();
   const slugBase = slugify(post.title_en);
+  const slugTl = slugify(post.title_tl);
 
   const body = {
-    slug: `${slugBase}-${timestamp}`,
-    slug_en: `${slugBase}-${timestamp}`,
-    slug_tl: `${slugify(post.title_tl)}-${timestamp}`,
+    slug: `${slugBase}-${today}`,
+    slug_en: `${slugBase}-${today}`,
+    slug_tl: `${slugTl}-${today}`,
     title_en: post.title_en,
     title_tl: post.title_tl,
     content_en: post.content_en,

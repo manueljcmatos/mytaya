@@ -7,7 +7,11 @@ const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
 ---
 
-<Layout title={`${t('predictions.title')} - MyTaya`} lang={lang}>
+<Layout
+  title="Sports Predictions Today — Basketball, Football & Boxing | MyTaya"
+  description="Free daily sports predictions with expert analysis. Get picks for PBA, NBA, Premier League, boxing, and more. Data-driven predictions for Filipino bettors."
+  lang={lang}
+>
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
     <h1 class="text-4xl sm:text-5xl tracking-wide mb-6 text-gradient-brand">{t('predictions.title')}</h1>
 

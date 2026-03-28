@@ -7,9 +7,14 @@ const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
 ---
 
-<Layout title={`${t('nav.blog')} - MyTaya`} lang={lang}>
+<Layout
+  title="Sports Blog Philippines — News, Analysis & Trivia | MyTaya"
+  description="Read the latest sports news, predictions analysis, and trivia about PBA, NBA, boxing, and more. Updated daily for Filipino sports fans."
+  lang={lang}
+>
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
     <h1 class="text-4xl sm:text-5xl tracking-wide mb-6 text-gradient-brand">{t('nav.blog')}</h1>
+    <p class="text-lg mb-8" style="color: var(--t-text-sec);">Daily sports news, in-depth analysis, and fun trivia about PBA, NBA, boxing, volleyball, and more Filipino sports.</p>
 
     <BlogList client:load lang="en" />
   </div>

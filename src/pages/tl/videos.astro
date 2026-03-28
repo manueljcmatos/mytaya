@@ -8,14 +8,18 @@ const apiKey = import.meta.env.PUBLIC_YOUTUBE_API_KEY || '';
 const youtubeChannel = `https://www.youtube.com/channel/${channelId}`;
 ---
 
-<Layout title="Mga Video | MyTaya" lang={lang}>
+<Layout
+  title="Mga Video sa Sports Philippines — Predictions, Trivia at Quiz | MyTaya"
+  description="Panoorin ang mga daily sports shorts — prediction analysis, trivia tungkol kay Pacquiao, PBA legends, Carlos Yulo, at sports quiz. Bagong video araw-araw para sa Filipino sports fans."
+  lang={lang}
+>
   <main class="max-w-6xl mx-auto px-4 py-12">
     <div class="text-center mb-12">
       <h1 class="font-[family-name:var(--font-display)] text-4xl md:text-5xl tracking-wide" style="color: var(--t-text);">
-        Mga Video
+        Mga Video sa Sports
       </h1>
       <p class="mt-3 text-lg" style="color: var(--t-text-sec);">
-        Panoorin ang aming mga prediction videos, trivia, at quiz
+        Panoorin ang aming mga daily prediction videos, sports trivia, at quiz
       </p>
       <a href={youtubeChannel} target="_blank" rel="noopener" class="btn-primary mt-6 inline-flex">
         I-Subscribe sa YouTube
