@@ -22,6 +22,12 @@ export default defineConfig({
         defaultLocale: 'tl',
         locales: { tl: 'fil-PH', en: 'en-PH' },
       },
+      filter: (page) => {
+        // Exclude root redirect page and any non-locale pages from sitemap
+        if (page === 'https://mytaya.com/' || page === 'https://mytaya.com') return false;
+        // Only include pages under /tl/ or /en/
+        return page.includes('/tl/') || page.includes('/en/');
+      },
     }),
     AstroPWA({
       registerType: 'autoUpdate',
