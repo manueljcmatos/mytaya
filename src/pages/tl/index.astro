@@ -12,7 +12,11 @@ const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
 ---
 
-<Layout title="MyTaya - Mga Tamang Hula sa Sports" lang={lang}>
+<Layout
+  title="MyTaya - Mga Hula sa Sports Philippines | PBA, NBA, Boxing Predictions"
+  description="Libreng sports predictions para sa Pilipinas — PBA, NBA, UAAP, boxing, at football. Data-driven analysis araw-araw para sa Filipino sports fans. PAGCOR compliant."
+  lang={lang}
+>
   <!-- Hero -->
   <HeroSection lang={lang} />
 

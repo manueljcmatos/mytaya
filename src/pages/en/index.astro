@@ -12,7 +12,11 @@ const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
 ---
 
-<Layout title="MyTaya - Expert Sports Predictions" lang={lang}>
+<Layout
+  title="MyTaya - Sports Predictions Philippines | PBA, NBA, Boxing Tips"
+  description="Free expert sports predictions for the Philippines — PBA, NBA, UAAP, boxing, and football. Daily data-driven analysis for Filipino sports bettors. PAGCOR compliant."
+  lang={lang}
+>
   <!-- Hero -->
   <HeroSection lang={lang} />
 

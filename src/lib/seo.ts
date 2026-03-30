@@ -118,6 +118,16 @@ export function buildOrganizationSchema(): Record<string, unknown> {
       '@type': 'ImageObject',
       url: `${SITE.url}/icon-512.png`,
     },
+    areaServed: {
+      '@type': 'Country',
+      name: 'Philippines',
+      sameAs: 'https://en.wikipedia.org/wiki/Philippines',
+    },
+    knowsLanguage: ['fil', 'en'],
+    sameAs: [
+      'https://t.me/mytaya',
+      'https://www.youtube.com/@MyTaya',
+    ],
   };
 }
 

@@ -66,10 +66,17 @@ const ogLocale = currentLang === 'tl' ? 'fil_PH' : 'en_PH';
     {noindex && <meta name="robots" content="noindex, follow" />}
     <link rel="canonical" href={canonicalURL} />
 
-    <!-- Hreflang tags for bilingual SEO -->
-    <link rel="alternate" hreflang="fil" href={tlUrl} />
-    <link rel="alternate" hreflang="en" href={enUrl} />
+    <!-- Hreflang tags for bilingual SEO — targeting Philippines -->
+    <link rel="alternate" hreflang="fil-PH" href={tlUrl} />
+    <link rel="alternate" hreflang="en-PH" href={enUrl} />
     <link rel="alternate" hreflang="x-default" href={tlUrl} />
+
+    <!-- Geographic targeting: Philippines -->
+    <meta name="geo.region" content="PH" />
+    <meta name="geo.placename" content="Philippines" />
+    <meta name="geo.position" content="12.8797;121.7740" />
+    <meta name="ICBM" content="12.8797, 121.7740" />
+    <meta name="content-language" content={currentLang === 'tl' ? 'fil-PH' : 'en-PH'} />
 
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="generator" content={Astro.generator} />

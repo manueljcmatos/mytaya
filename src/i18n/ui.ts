@@ -13,8 +13,8 @@ export const ui = {
     'nav.responsibleGambling': 'Responsableng Pagsusugal',
 
     // Hero
-    'hero.title': 'Mga Tamang Hula sa Sports',
-    'hero.subtitle': 'Basketball, Football, at Boxing para sa Filipino',
+    'hero.title': 'Sports Predictions Philippines',
+    'hero.subtitle': 'Libreng hula sa PBA, NBA, UAAP, boxing, at football araw-araw para sa Pinoy',
 
     // CTAs
     'cta.telegram': 'Sumali sa Telegram',
@@ -148,8 +148,8 @@ export const ui = {
     'nav.responsibleGambling': 'Responsible Gambling',
 
     // Hero
-    'hero.title': 'Expert Sports Predictions',
-    'hero.subtitle': 'Basketball, Football, and Boxing for the Filipino Bettor',
+    'hero.title': 'Sports Predictions Philippines',
+    'hero.subtitle': 'Free daily PBA, NBA, UAAP, boxing, and football predictions for Filipino sports fans',
 
     // CTAs
     'cta.telegram': 'Join Telegram',
