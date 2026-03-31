@@ -514,6 +514,39 @@ async function fetchAndGenerateNbaPredictions(env: Env): Promise<void> {
 // - "0 6 * * *": Daily fetch + generate predictions (06:00 UTC = 14:00 PHT)
 // - "*/30 * * * *": Resolve finished matches every 30 minutes
 export default {
+  async fetch(request: Request, env: Env): Promise<Response> {
+    const url = new URL(request.url);
+    if (url.pathname === '/run/fetch') {
+      const logs: string[] = [];
+      const origLog = console.log;
+      const origErr = console.error;
+      console.log = (...args: any[]) => { logs.push('[LOG] ' + args.join(' ')); origLog(...args); };
+      console.error = (...args: any[]) => { logs.push('[ERR] ' + args.join(' ')); origErr(...args); };
+      try {
+        await fetchAndGeneratePredictions(env);
+        try { await fetchAndGenerateNbaPredictions(env); } catch (e: any) { logs.push('[ERR] NBA: ' + e.message); }
+        logs.push('[DONE]');
+      } catch (e: any) {
+        logs.push('[FATAL] ' + e.message + '\n' + e.stack);
+      }
+      console.log = origLog;
+      console.error = origErr;
+      return new Response(logs.join('\n'), { headers: { 'Content-Type': 'text/plain' } });
+    }
+    if (url.pathname === '/run/resolve') {
+      try {
+        await resolveFinishedMatches(env);
+        try { await resolveNbaMatches(env); } catch (e) { console.error('NBA resolve failed:', e); }
+        return new Response('Matches resolved', { status: 200 });
+      } catch (e: any) {
+        return new Response(`Error: ${e.message}\n${e.stack}`, { status: 500 });
+      }
+    }
+    return new Response('mytaya-predictions\n\nEndpoints:\n  /run/fetch    — fetch fixtures and generate predictions\n  /run/resolve  — resolve finished matches', {
+      headers: { 'Content-Type': 'text/plain' },
+    });
+  },
+
   async scheduled(
     controller: ScheduledController,
     env: Env,
